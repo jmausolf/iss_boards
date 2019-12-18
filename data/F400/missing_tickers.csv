@@ -1,0 +1,37 @@
+fec_company,list_id,cid_master,found_fec,ticker_alt,search_ticker,rank,ticker,revenue,website
+USAA,f1000_101,USAA,True,,False,114.0,,24361.0,www.usaa.com
+Andeavor,f1000_116,Andeavor,True,,False,,,,
+Verizon Communications,f1000_13,Verizon Communications,True,,False,,,,
+Jabil,f1000_151,Jabil,True,,False,,,,
+Walgreens Boots Alliance,f1000_16,Walgreens Boots Alliance,True,,False,,,,
+Bank of New York Mellon,f1000_176,Bank of New York Mellon,True,,False,,,,
+Synchrony Financial,f1000_184,Synchrony Financial,True,,False,,,,
+Conagra Brands,f1000_196,Conagra Brands,True,,False,,,,
+Farmers Insurance Exchange,f1000_221,Farmers Insurance Exchange,True,,False,227.0,,12626.0,www.farmers.com
+Principal Financial,f1000_226,Principal Financial,True,,False,,,,
+Dominion Energy,f1000_237,Dominion Energy,True,,False,,,,
+Toys 'R' Us,f1000_243,Toys 'R' Us,True,,False,,,,
+Mastercard,f1000_266,Mastercard,True,,False,,,,
+L3 Technologies,f1000_272,L3 Technologies,True,,False,,,,
+Alcoa,f1000_299,Alcoa,True,,False,,,,
+Pacific Life,f1000_301,Pacific Life,True,,False,326.0,,8642.0,www.pacificlife.com
+American Family Insurance Group,f1000_314,American Family Insurance Group,True,,False,332.0,,8286.0,www.amfam.com
+Thrivent Financial for Lutherans,f1000_315,Thrivent Financial for Lutherans,True,,False,318.0,,8789.0,www.thrivent.com
+Peter Kiewit Sons',f1000_323,Peter Kiewit Sons',True,,False,314.0,,8992.0,www.kiewit.com
+Mutual of Omaha Insurance,f1000_341,Mutual of Omaha Insurance,True,,False,367.0,,7236.0,www.mutualofomaha.com
+Harris,f1000_362,Harris,True,,False,,,,
+Leidos Holdings,f1000_380,Leidos Holdings,True,,False,,,,
+Tesla,f1000_382,Tesla,True,,False,,,,
+Ascena Retail Group,f1000_383,Ascena Retail Group,True,,False,,,,
+Nvidia,f1000_386,Nvidia,True,,False,,,,
+Auto-Owners Insurance,f1000_397,Auto-Owners Insurance,True,,False,398.0,,6517.0,www.auto-owners.com
+Dell Technologies,f1000_40,Dell Technologies,True,,False,,,,
+Albertsons Cos.,f1000_48,Albertsons Cos.,True,,False,,,,
+Hewlett Packard Enterprise,f1000_58,Hewlett Packard Enterprise,True,,False,,,,
+New York Life Insurance,f1000_64,New York Life Insurance,True,,False,61.0,,45891.0,www.newyorklife.com
+Nationwide,f1000_67,Nationwide,True,,False,69.0,,40222.0,www.nationwide.com
+Liberty Mutual Insurance Group,f1000_74,Liberty Mutual Insurance Group,True,,False,73.0,,39450.0,www.libertymutual.com
+Massachusetts Mutual Life Insurance,f1000_76,Massachusetts Mutual Life Insurance,True,,False,76.0,,38243.0,www.massmutual.com
+TIAA,f1000_79,TIAA,True,,False,82.0,,35181.0,www.tiaa.org
+Publix Super Markets,f1000_84,Publix Super Markets,True,,False,87.0,,32619.0,www.publix.com
+Northwestern Mutual,f1000_96,Northwestern Mutual,True,,False,100.0,,28111.0,www.northwesternmutual.com

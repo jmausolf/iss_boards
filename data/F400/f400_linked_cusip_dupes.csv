@@ -1,0 +1,471 @@
+list_id,fec_company,cid_master,iss_id,ticker,ticker_alt,cusip,found_fec,search_ticker
+f1000_0,Walmart,Walmart,162025.0,WMT,,931142103,True,False
+f1000_01,Berkshire Hathaway,Berkshire Hathaway,15501.0,BRK.B,,084670702,True,False
+f1000_1,Berkshire Hathaway,Berkshire Hathaway,15501.0,BRK.B,,084670702,True,False
+f1000_10,AmerisourceBergen,AmerisourceBergen,528565.0,ABC,,,True,False
+f1000_10,AmerisourceBergen,AmerisourceBergen,528565.0,ABC,,03073E105,True,False
+f1000_100,Twenty-First Century Fox,Twenty-First Century Fox,109048.0,FOXA,,90130A101,True,False
+f1000_102,World Fuel Services,World Fuel Services,168727.0,INT,,981475106,True,False
+f1000_103,Philip Morris International,Philip Morris International,584623.0,PM,,718172109,True,False
+f1000_104,Deere,Deere,41398.0,DE,,244199105,True,False
+f1000_105,Kraft Heinz,Kraft Heinz,618913.0,KHC,,500754106,True,False
+f1000_106,Tech Data,Tech Data,150682.0,TECD,,878237106,True,False
+f1000_107,Avnet,Avnet,10665.0,AVT,,053807103,True,False
+f1000_109,Macy's,Macy's,52793.0,M,,314099102,True,False
+f1000_109,Macy's,Macy's,52793.0,M,,55616P104,True,False
+f1000_11,Amazon.com,Amazon.com,4525.0,AMZN,,023135106,True,False
+f1000_110,AbbVie,AbbVie,620364.0,ABBV,,00287Y109,True,False
+f1000_111,McDonald's,McDonald's,96478.0,MCD,,580135101,True,False
+f1000_112,DuPont,DuPont,44672.0,DD,,263534109,True,False
+f1000_113,Northrop Grumman,Northrop Grumman,111362.0,NOC,,666807102,True,False
+f1000_114,ConocoPhillips,ConocoPhillips,535271.0,COP,,20825C104,True,False
+f1000_114,ConocoPhillips,ConocoPhillips,535271.0,COP,,718507106,True,False
+f1000_115,Raytheon,Raytheon,128654.0,RTN,,755111119,True,False
+f1000_115,Raytheon,Raytheon,128654.0,RTN,,755111507,True,False
+f1000_117,Arrow Electronics,Arrow Electronics,7355.0,ARW,,042735100,True,False
+f1000_118,Qualcomm,Qualcomm,127063.0,QCOM,,747525103,True,False
+f1000_119,Progressive,Progressive,125823.0,PGR,,743315103,True,False
+f1000_12,General Electric,General Electric,61715.0,GE,,36959CAA6,True,False
+f1000_12,General Electric,General Electric,61715.0,GE,,369604103,True,False
+f1000_120,Duke Energy,Duke Energy,44805.0,DUK,,264399106,True,False
+f1000_120,Duke Energy,Duke Energy,44805.0,DUK,,26441C105,True,False
+f1000_120,Duke Energy,Duke Energy,44805.0,DUK,,26441C204,True,False
+f1000_121,Enterprise Products Partners,Enterprise Products Partners,,EPD,,,True,False
+f1000_122,Amgen,Amgen,6437.0,AMGN,,031162100,True,False
+f1000_124,U.S. Bancorp,U.S. Bancorp,156067.0,USB,,902973106,True,False
+f1000_124,U.S. Bancorp,U.S. Bancorp,156067.0,USB,,902973304,True,False
+f1000_125,Aflac,Aflac,282.0,AFL,,001055102,True,False
+f1000_126,Sears Holdings,Sears Holdings,541755.0,SHLD,,812350106,True,False
+f1000_127,Dollar General,Dollar General,43620.0,DG,,256677105,True,False
+f1000_128,AutoNation,AutoNation,514379.0,AN,,05329R103,True,False
+f1000_128,AutoNation,AutoNation,514379.0,AN,,05329W102,True,False
+f1000_129,Community Health Systems,Community Health Systems,34116.0,CYH,,203666AA0,True,False
+f1000_129,Community Health Systems,Community Health Systems,34116.0,CYH,,203668108,True,False
+f1000_130,Starbucks,Starbucks,146082.0,SBUX,,855244109,True,False
+f1000_130,Starbucks,Starbucks,146082.0,SBUX,,855244208,True,False
+f1000_131,Eli Lilly,Eli Lilly,88891.0,LLY,,532457108,True,False
+f1000_133,Tenet Healthcare,Tenet Healthcare,151418.0,THC,,636886202,True,False
+f1000_133,Tenet Healthcare,Tenet Healthcare,151418.0,THC,,88033G100,True,False
+f1000_133,Tenet Healthcare,Tenet Healthcare,151418.0,THC,,88033G407,True,False
+f1000_134,Abbott Laboratories,Abbott Laboratories,749.0,ABT,,002824100,True,False
+f1000_135,Dollar Tree,Dollar Tree,43628.0,DLTR,,256746108,True,False
+f1000_135,Dollar Tree,Dollar Tree,43628.0,DLTR,,256747106,True,False
+f1000_136,Whirlpool,Whirlpool,166363.0,WHR,,963320106,True,False
+f1000_137,Southwest Airlines,Southwest Airlines,144300.0,LUV,,844741108,True,False
+f1000_138,Emerson Electric,Emerson Electric,48541.0,EMR,,291011104,True,False
+f1000_139,Staples,Staples,146016.0,SPLS,,855030102,True,False
+f1000_14,Cardinal Health,Cardinal Health,24785.0,CAH,,141487AC2,True,False
+f1000_14,Cardinal Health,Cardinal Health,24785.0,CAH,,14149Y108,True,False
+f1000_141,Penske Automotive Group,Penske Automotive Group,,PAG,,,True,False
+f1000_142,Union Pacific,Union Pacific,28832.0,UNP,,167155100,True,False
+f1000_142,Union Pacific,Union Pacific,28832.0,UNP,,907818108,True,False
+f1000_143,Danaher,Danaher,40005.0,DHR,,235851102,True,False
+f1000_144,Southern,Southern,143938.0,SO,,842587107,True,False
+f1000_145,ManpowerGroup,ManpowerGroup,93941.0,MAN,,56418H100,True,False
+f1000_146,Bristol-Myers Squibb,Bristol-Myers Squibb,19348.0,BMY,,110122108,True,False
+f1000_147,Altria Group,Altria Group,538084.0,MO,,02209S103,True,False
+f1000_148,Fluor,Fluor,525289.0,FLR,,343412102,True,False
+f1000_149,Kohl's,Kohl's,84074.0,KSS,,500255104,True,False
+f1000_15,Costco,Costco,518204.0,COST,,22160K105,True,False
+f1000_150,Lear,Lear,87255.0,LEA,,521865105,True,False
+f1000_152,Hartford Financial Services Group,Hartford Financial Services Group,69429.0,HIG,,416515104,True,False
+f1000_153,Thermo Fisher Scientific,Thermo Fisher Scientific,152130.0,TMO,,883556102,True,False
+f1000_154,Kimberly-Clark,Kimberly-Clark,83226.0,KMB,,494368103,True,False
+f1000_155,Molina Healthcare,Molina Healthcare,539207.0,MOH,,60855R100,True,False
+f1000_157,Supervalu,Supervalu,166171.0,SVU,,868035106,True,False
+f1000_157,Supervalu,Supervalu,166171.0,SVU,,868536103,True,False
+f1000_157,Supervalu,Supervalu,166171.0,SVU,,868536301,True,False
+f1000_158,Cummins,Cummins,38926.0,CMI,,231021106,True,False
+f1000_159,CenturyLink,CenturyLink,515374.0,CTL,,156686107,True,False
+f1000_159,CenturyLink,CenturyLink,515374.0,CTL,,156700106,True,False
+f1000_160,AECOM,AECOM,575838.0,ACM,,00766T100,True,False
+f1000_161,Xerox,Xerox,169225.0,XRX,,984121103,True,False
+f1000_161,Xerox,Xerox,169225.0,XRX,,984121608,True,False
+f1000_163,Paccar,Paccar,116854.0,PCAR,,693718108,True,False
+f1000_164,General Mills,General Mills,61839.0,GIS,,370334104,True,False
+f1000_165,PNC Financial Services Group,PNC Financial Services Group,116690.0,PNC,,693475105,True,False
+f1000_166,American Electric Power,American Electric Power,5133.0,AEP,,025537101,True,False
+f1000_167,Icahn Enterprises,Icahn Enterprises,,IEP,,,True,False
+f1000_168,Nucor,Nucor,112052.0,NUE,,670346105,True,False
+f1000_169,NextEra Energy,NextEra Energy,51230.0,NEE,,65339F101,True,False
+f1000_17,Kroger,Kroger,84246.0,KR,,501044101,True,False
+f1000_170,Performance Food Group,Performance Food Group,120426.0,PFGC,,713755106,True,False
+f1000_171,PBF Energy,PBF Energy,620425.0,PBF,,69318G106,True,False
+f1000_172,Halliburton,Halliburton,67839.0,HAL,,406216101,True,False
+f1000_173,CarMax,CarMax,535693.0,KMX,,143130102,True,False
+f1000_174,Freeport-McMoRan,Freeport-McMoRan,59431.0,FCX,,35671D105,True,False
+f1000_174,Freeport-McMoRan,Freeport-McMoRan,59431.0,FCX,,35671D857,True,False
+f1000_175,Whole Foods Market,Whole Foods Market,166749.0,WFM,,966837106,True,False
+f1000_177,Gap,Gap,61015.0,GPS,,364760108,True,False
+f1000_178,Omnicom Group,Omnicom Group,114384.0,OMC,,681919106,True,False
+f1000_179,Genuine Parts,Genuine Parts,62194.0,GPC,,372460105,True,False
+f1000_18,Chevron,Chevron,529503.0,CVX,,166764100,True,False
+f1000_180,DaVita,DaVita,524945.0,DVA,,23918K108,True,False
+f1000_181,Colgate-Palmolive,Colgate-Palmolive,32396.0,CL,,194162103,True,False
+f1000_182,PPG Industries,PPG Industries,116729.0,PPG,,693506107,True,False
+f1000_183,Goodyear Tire & Rubber,Goodyear Tire & Rubber,,G,,,True,False
+f1000_185,DISH Network,DISH Network,46791.0,DISH,,25470M109,True,False
+f1000_186,Visa,Visa,584479.0,V,,92826C839,True,False
+f1000_187,Nordstrom,Nordstrom,109672.0,JWN,,655664100,True,False
+f1000_188,INTL FCStone,INTL FCStone,518088.0,INTL,,46116V105,True,False
+f1000_189,WestRock,WestRock,131867.0,WRK,,96145D105,True,False
+f1000_19,Fannie Mae,Fannie Mae,,FNMA,,,True,False
+f1000_190,XPO Logistics,XPO Logistics,,XPO,,,True,False
+f1000_191,Aramark,Aramark,,ARMK,,,True,False
+f1000_192,CBS,CBS,160556.0,CBS,,124857202,True,False
+f1000_192,CBS,CBS,160556.0,CBS,,925524AC4,True,False
+f1000_193,AES,AES,335.0,AES,,00130H105,True,False
+f1000_194,WellCare Health Plans,WellCare Health Plans,555860.0,WCG,,94946T106,True,False
+f1000_195,FirstEnergy,FirstEnergy,56674.0,FE,,337932107,True,False
+f1000_197,Synnex,Synnex,551810.0,SNX,,87162W100,True,False
+f1000_198,CDW,CDW,,CDW,,,True,False
+f1000_199,Textron,Textron,152031.0,TXT,,883203101,True,False
+f1000_2,Apple,Apple,,APPL,,,True,False
+f1000_20,J.P. Morgan Chase,J.P. Morgan Chase,525302.0,JPM,,16161LAA2,True,False
+f1000_20,J.P. Morgan Chase,J.P. Morgan Chase,525302.0,JPM,,46625H100,True,False
+f1000_200,Waste Management,Waste Management,163042.0,WM,,040420AA9,True,False
+f1000_200,Waste Management,Waste Management,513289.0,WM,,94106L109,True,False
+f1000_201,Illinois Tool Works,Illinois Tool Works,75161.0,ITW,,452308109,True,False
+f1000_202,Office Depot,Office Depot,113481.0,ODP,,676220106,True,False
+f1000_203,Monsanto,Monsanto,524483.0,MON,,61166W101,True,False
+f1000_204,Cognizant Technology Solutions,Cognizant Technology Solutions,513577.0,CTSH,,192446102,True,False
+f1000_205,Texas Instruments,Texas Instruments,151872.0,TXN,,882508104,True,False
+f1000_205,Texas Instruments,Texas Instruments,151872.0,TXN,,882508203,True,False
+f1000_206,Lincoln National,Lincoln National,89127.0,LNC,,534187109,True,False
+f1000_207,Newell Brands,Newell Brands,513326.0,NWL,,651229106,True,False
+f1000_208,Land O'Lakes,Land O'Lakes,,LAKE,,,True,False
+f1000_209,Marsh & McLennan,Marsh & McLennan,95064.0,MMC,,571748102,True,False
+f1000_21,Express Scripts Holding,Express Scripts Holding,50943.0,ESRX,,302182100,True,False
+f1000_21,Express Scripts Holding,Express Scripts Holding,50943.0,ESRX,,30219G108,True,False
+f1000_210,Ecolab,Ecolab,46821.0,ECL,,278865100,True,False
+f1000_211,C.H. Robinson Worldwide,C.H. Robinson Worldwide,501999.0,CHRW,,12541W209,True,False
+f1000_212,Loews,Loews,89979.0,L,,540424108,True,False
+f1000_213,CBRE Group,CBRE Group,555528.0,CBG,,12497T101,True,False
+f1000_213,CBRE Group,CBRE Group,555528.0,CBG,,12504L109,True,False
+f1000_214,Kinder Morgan,Kinder Morgan,517730.0,KMI,,49456B101,True,False
+f1000_215,Kellogg,Kellogg,82155.0,K,,487836108,True,False
+f1000_216,Western Digital,Western Digital,165432.0,WDC,,958102105,True,False
+f1000_218,Ross Stores,Ross Stores,132673.0,ROST,,778296103,True,False
+f1000_219,L Brands,L Brands,88926.0,LB,,501797104,True,False
+f1000_22,Home Depot,Home Depot,72444.0,HD,,437076102,True,False
+f1000_220,J.C. Penney,J.C. Penney,119738.0,JCP,,708160106,True,False
+f1000_220,J.C. Penney,J.C. Penney,119738.0,JCP,,708160AC0,True,False
+f1000_222,Reynolds American,Reynolds American,515433.0,RAI,,761713106,True,False
+f1000_222,Reynolds American,Reynolds American,515433.0,RAI,,76182K105,True,False
+f1000_223,Viacom,Viacom,565883.0,VIAB,,92553P201,True,False
+f1000_224,Becton Dickinson,Becton Dickinson,14363.0,BDX,,075887109,True,False
+f1000_225,Micron Technology,Micron Technology,99345.0,MU,,595112103,True,False
+f1000_227,Arconic,Arconic,512970.0,ARNC,,03965L100,True,False
+f1000_228,NRG Energy,NRG Energy,523471.0,NRG,,629377508,True,False
+f1000_229,VF,VF,159004.0,VFC,,918204108,True,False
+f1000_23,Boeing,Boeing,17451.0,BA,,05563QAA8,True,False
+f1000_23,Boeing,Boeing,17451.0,BA,,097023105,True,False
+f1000_230,Devon Energy,Devon Energy,42628.0,DVN,,251799102,True,False
+f1000_230,Devon Energy,Devon Energy,42628.0,DVN,,25179M103,True,False
+f1000_231,D.R. Horton,D.R. Horton,39530.0,DHI,,23331A109,True,False
+f1000_232,Bed Bath & Beyond,Bed Bath & Beyond,14364.0,BBBY,,075896100,True,False
+f1000_233,Consolidated Edison,Consolidated Edison,513236.0,ED,,209111103,True,False
+f1000_233,Consolidated Edison,Consolidated Edison,513236.0,ED,,209115104,True,False
+f1000_235,Sherwin-Williams,Sherwin-Williams,140575.0,SHW,,824348106,True,False
+f1000_236,NGL Energy Partners,NGL Energy Partners,,NGL,,,True,False
+f1000_238,Ameriprise Financial,Ameriprise Financial,563950.0,AMP,,03076C106,True,False
+f1000_239,ADP,ADP,10466.0,ADP,,053015103,True,False
+f1000_24,Wells Fargo,Wells Fargo,164268.0,WFC,,66938FAA2,True,False
+f1000_24,Wells Fargo,Wells Fargo,164268.0,WFC,,949746101,True,False
+f1000_241,First Data,First Data,,FDC,,,True,False
+f1000_242,Henry Schein,Henry Schein,137555.0,HSIC,,806407102,True,False
+f1000_245,Reinsurance Group of America,Reinsurance Group of America,129520.0,RGA,,759351604,True,False
+f1000_247,Biogen,Biogen,74502.0,BIIB,,09062X103,True,False
+f1000_247,Biogen,Biogen,74502.0,BIIB,,449370105,True,False
+f1000_248,Las Vegas Sands,Las Vegas Sands,,LVS,,,True,False
+f1000_249,Stanley Black & Decker,Stanley Black & Decker,145941.0,SWK,,284054103,True,False
+f1000_249,Stanley Black & Decker,Stanley Black & Decker,145941.0,SWK,,854502101,True,False
+f1000_249,Stanley Black & Decker,Stanley Black & Decker,145941.0,SWK,,854616109,True,False
+f1000_25,Bank of America Corp.,Bank of America Corp.,515366.0,BAC,,060505104,True,False
+f1000_25,Bank of America Corp.,Bank of America Corp.,515366.0,BAC,,06605LAF6,True,False
+f1000_250,Parker-Hannifin,Parker-Hannifin,118579.0,PH,,701094104,True,False
+f1000_251,Stryker,Stryker,147528.0,SYK,,863667101,True,False
+f1000_252,Estee Lauder,Estee Lauder,86784.0,EL,,518439104,True,False
+f1000_253,Celgene,Celgene,26285.0,CELG,,151020104,True,False
+f1000_254,BlackRock,BlackRock,517583.0,BLK,,09247X101,True,False
+f1000_255,Xcel Energy,Xcel Energy,523645.0,XEL,,98389B100,True,False
+f1000_256,CSX,CSX,21890.0,CSX,,126408103,True,False
+f1000_257,Unum Group,Unum Group,520064.0,UNM,,903192102,True,False
+f1000_257,Unum Group,Unum Group,520064.0,UNM,,91529Y106,True,False
+f1000_258,Jacobs Engineering Group,Jacobs Engineering Group,79627.0,JEC,,469814107,True,False
+f1000_259,Lennar,Lennar,87906.0,LEN,,526057104,True,False
+f1000_259,Lennar,Lennar,87906.0,LEN,,526057203,True,False
+f1000_26,Alphabet,Alphabet,543331.0,GOOGL,,02079K305,True,False
+f1000_26,Alphabet,Alphabet,543331.0,GOOGL,,38259P508,True,False
+f1000_260,Group 1 Automotive,Group 1 Automotive,513122.0,GPI,,398905109,True,False
+f1000_261,Leucadia National,Leucadia National,88077.0,LUK,,527288104,True,False
+f1000_262,Entergy,Entergy,,ELA,,,True,False
+f1000_263,PayPal Holdings,PayPal Holdings,633560.0,PYPL,,70450Y103,True,False
+f1000_264,Applied Materials,Applied Materials,7764.0,AMAT,,038222105,True,False
+f1000_265,Voya Financial,Voya Financial,,VOYA,,,True,False
+f1000_267,Priceline Group,Priceline Group,515426.0,PCLN,,741503403,True,False
+f1000_268,Liberty Interactive,Liberty Interactive,,QVCA,,,True,False
+f1000_269,AutoZone,AutoZone,10524.0,AZO,,053332102,True,False
+f1000_27,Microsoft,Microsoft,142533.0,MSFT,,594918104,True,False
+f1000_27,Microsoft,Microsoft,142533.0,MSFT,,594918203,True,False
+f1000_271,DTE Energy,DTE Energy,39548.0,DTE,,233331107,True,False
+f1000_273,HollyFrontier,HollyFrontier,72228.0,HFC,,436106108,True,False
+f1000_274,Praxair,Praxair,124785.0,PX,,74005P104,True,False
+f1000_275,Universal Health Services,Universal Health Services,158272.0,UHS,,913903100,True,False
+f1000_276,Discover Financial Services,Discover Financial Services,576129.0,DFS,,254709108,True,False
+f1000_277,Occidental Petroleum,Occidental Petroleum,113153.0,OXY,,674599105,True,False
+f1000_278,United States Steel,United States Steel,531622.0,X,,912656303,True,False
+f1000_278,United States Steel,United States Steel,531622.0,X,,912909108,True,False
+f1000_279,Sempra Energy,Sempra Energy,513073.0,SRE,,816851109,True,False
+f1000_28,Anthem,Anthem,529772.0,ANTM,,036752103,True,False
+f1000_281,W.W. Grainger,W.W. Grainger,64489.0,GWW,,384802104,True,False
+f1000_282,Autoliv,Autoliv,,ALV,,,True,False
+f1000_283,Norfolk Southern,Norfolk Southern,109698.0,NSC,,655844108,True,False
+f1000_284,Baker Hughes,Baker Hughes,11475.0,BHI,,057224107,True,False
+f1000_285,Ally Financial,Ally Financial,,ALLY,,,True,False
+f1000_286,Sonic Automotive,Sonic Automotive,512716.0,SAH,,83545G102,True,False
+f1000_287,Owens & Minor,Owens & Minor,116192.0,OMI,,690732102,True,False
+f1000_288,Huntsman,Huntsman,,HUN,,,True,False
+f1000_29,Citigroup,Citigroup,513010.0,C,,172967101,True,False
+f1000_29,Citigroup,Citigroup,513010.0,C,,172967424,True,False
+f1000_29,Citigroup,Citigroup,513010.0,C,,17303MAA7,True,False
+f1000_290,Murphy USA,Murphy USA,623612.0,MUSA,,626755102,True,False
+f1000_291,Advance Auto Parts,Advance Auto Parts,531421.0,AAP,,00751Y106,True,False
+f1000_292,Fidelity National Financial,Fidelity National Financial,564390.0,FNF,,31620R105,True,False
+f1000_292,Fidelity National Financial,Fidelity National Financial,564390.0,FNF,,31620R303,True,False
+f1000_293,Air Products & Chemicals,Air Products & Chemicals,2266.0,APD,,009158106,True,False
+f1000_294,Hormel Foods,Hormel Foods,72986.0,HRL,,440452100,True,False
+f1000_295,Hertz Global Holdings,Hertz Global Holdings,,HRI,,,True,False
+f1000_297,Corning,Corning,36978.0,GLW,,219350105,True,False
+f1000_297,Corning,Corning,36978.0,GLW,,219350113,True,False
+f1000_298,Republic Services,Republic Services,513057.0,RSG,,760759100,True,False
+f1000_3,Exxon Mobil,Exxon Mobil,50980.0,XOM,,30231G102,True,False
+f1000_30,Comcast,Comcast,33490.0,CMCSA,,200300101,True,False
+f1000_30,Comcast,Comcast,33490.0,CMCSA,,20030N101,True,False
+f1000_300,Fidelity National Information Services,Fidelity National Information Services,528088.0,FIS,,156880AA4,True,False
+f1000_300,Fidelity National Information Services,Fidelity National Information Services,528088.0,FIS,,31620M106,True,False
+f1000_302,SunTrust Banks,SunTrust Banks,148574.0,STI,,867914103,True,False
+f1000_303,LKQ,LKQ,549662.0,LKQ,,501889208,True,False
+f1000_304,BorgWarner,BorgWarner,17923.0,BWA,,099724106,True,False
+f1000_305,Ball,Ball,11654.0,BLL,,058498106,True,False
+f1000_306,CST Brands,CST Brands,621941.0,CST,,12646R105,True,False
+f1000_307,Public Service Enterprise Group,Public Service Enterprise Group,126347.0,PEG,,744573106,True,False
+f1000_308,Eastman Chemical,Eastman Chemical,46579.0,EMN,,277432100,True,False
+f1000_309,eBay,eBay,513346.0,EBAY,,278642103,True,False
+f1000_31,IBM,IBM,77251.0,IBM,,459200101,True,False
+f1000_310,Mohawk Industries,Mohawk Industries,101657.0,MHK,,23426R108,True,False
+f1000_310,Mohawk Industries,Mohawk Industries,101657.0,MHK,,608190104,True,False
+f1000_311,Oneok,Oneok,114647.0,OKE,,682678107,True,False
+f1000_311,Oneok,Oneok,114647.0,OKE,,682680103,True,False
+f1000_312,Frontier Communications,Frontier Communications,30283.0,FTR,,35906A108,True,False
+f1000_312,Frontier Communications,Frontier Communications,30283.0,FTR,,35906A306,True,False
+f1000_313,Netflix,Netflix,534296.0,NFLX,,64110L106,True,False
+f1000_316,Expedia,Expedia,517034.0,EXPE,,302125109,True,False
+f1000_316,Expedia,Expedia,517034.0,EXPE,,30212P105,True,False
+f1000_316,Expedia,Expedia,517034.0,EXPE,,30212P303,True,False
+f1000_317,Lithia Motors,Lithia Motors,89519.0,LAD,,536797103,True,False
+f1000_318,Avis Budget Group,Avis Budget Group,502003.0,CAR,,053774105,True,False
+f1000_318,Avis Budget Group,Avis Budget Group,502003.0,CAR,,151313AA1,True,False
+f1000_319,Reliance Steel & Aluminum,Reliance Steel & Aluminum,129566.0,RS,,759509102,True,False
+f1000_32,State Farm Insurance Cos.,State Farm Insurance Cos.,,STFGX,,,True,False
+f1000_320,GameStop,GameStop,532380.0,GME,,36467W109,True,False
+f1000_321,Tenneco,Tenneco,,TEN,,,True,False
+f1000_322,O'Reilly Automotive,O'Reilly Automotive,115399.0,ORLY,,67103H107,True,False
+f1000_322,O'Reilly Automotive,O'Reilly Automotive,115399.0,ORLY,,686091109,True,False
+f1000_324,United Natural Foods,United Natural Foods,157553.0,UNFI,,911163103,True,False
+f1000_325,salesforce.com,salesforce.com,555743.0,CRM,,79466L302,True,False
+f1000_326,Boston Scientific,Boston Scientific,18106.0,BSX,,101137107,True,False
+f1000_327,Newmont Mining,Newmont Mining,108924.0,NEM,,651639106,True,False
+f1000_328,Genworth Financial,Genworth Financial,555155.0,GNW,,37247D106,True,False
+f1000_329,Live Nation Entertainment,Live Nation Entertainment,565949.0,LYV,,538034109,True,False
+f1000_33,Phillips 66,Phillips 66,613536.0,PSX,,718546104,True,False
+f1000_330,Veritiv,Veritiv,628240.0,VRTV,,923454102,True,False
+f1000_332,Crown Holdings,Crown Holdings,,CCK,,,True,False
+f1000_333,Global Partners,Global Partners,,GLP,,,True,False
+f1000_334,PVH,PVH,121298.0,PVH,,693656100,True,False
+f1000_334,PVH,PVH,121298.0,PVH,,718592108,True,False
+f1000_335,Level 3 Communications,Level 3 Communications,513373.0,LVLT,,52729N308,True,False
+f1000_337,Univar,Univar,,UNVR,,,True,False
+f1000_338,Campbell Soup,Campbell Soup,23355.0,CPB,,134429109,True,False
+f1000_339,Dick's Sporting Goods,Dick's Sporting Goods,536990.0,DKS,,253393102,True,False
+f1000_34,Johnson & Johnson,Johnson & Johnson,80710.0,JNJ,,478160104,True,False
+f1000_340,Weyerhaeuser,Weyerhaeuser,166202.0,WY,,962166104,True,False
+f1000_342,Chesapeake Energy,Chesapeake Energy,28590.0,CHK,,165167107,True,False
+f1000_343,Anadarko Petroleum,Anadarko Petroleum,6689.0,APC,,032511107,True,False
+f1000_344,Interpublic Group,Interpublic Group,77994.0,IPG,,460690100,True,False
+f1000_345,J.M. Smucker,J.M. Smucker,142233.0,SJM,,832696306,True,False
+f1000_345,J.M. Smucker,J.M. Smucker,142233.0,SJM,,832696405,True,False
+f1000_346,Steel Dynamics,Steel Dynamics,146514.0,STLD,,858119100,True,False
+f1000_347,Foot Locker,Foot Locker,529825.0,FL,,344849104,True,False
+f1000_347,Foot Locker,Foot Locker,529825.0,FL,,922944103,True,False
+f1000_348,Western Refining,Western Refining,565880.0,WNR,,959319104,True,False
+f1000_349,SpartanNash,SpartanNash,523568.0,SPTN,,846822104,True,False
+f1000_349,SpartanNash,SpartanNash,523568.0,SPTN,,847215100,True,False
+f1000_35,Procter & Gamble,Procter & Gamble,125606.0,PG,,742718109,True,False
+f1000_350,Dean Foods,Dean Foods,531464.0,DF,,242370104,True,False
+f1000_350,Dean Foods,Dean Foods,531464.0,DF,,242370203,True,False
+f1000_350,Dean Foods,Dean Foods,531464.0,DF,,865077101,True,False
+f1000_351,Zimmer Biomet Holdings,Zimmer Biomet Holdings,528272.0,ZBH,,98956P102,True,False
+f1000_352,PulteGroup,PulteGroup,116608.0,PHM,,69333C106,True,False
+f1000_352,PulteGroup,PulteGroup,116608.0,PHM,,745867101,True,False
+f1000_353,W.R. Berkley,W.R. Berkley,15460.0,WRB,,084423102,True,False
+f1000_354,Quanta Services,Quanta Services,513312.0,PWR,,,True,False
+f1000_354,Quanta Services,Quanta Services,513312.0,PWR,,74762E102,True,False
+f1000_355,EOG Resources,EOG Resources,518324.0,EOG,,26875P101,True,False
+f1000_356,Charles Schwab,Charles Schwab,137775.0,SCHW,,808513105,True,False
+f1000_357,Eversource Energy,Eversource Energy,110983.0,ES,,30040W108,True,False
+f1000_359,EMCOR Group,EMCOR Group,79216.0,EME,,29084Q100,True,False
+f1000_36,Valero Energy,Valero Energy,159220.0,VLO,,90389XAA7,True,False
+f1000_36,Valero Energy,Valero Energy,159220.0,VLO,,91913Y100,True,False
+f1000_360,Assurant,Assurant,552922.0,AIZ,,04621X108,True,False
+f1000_361,CenterPoint Energy,CenterPoint Energy,535696.0,CNP,,15189T107,True,False
+f1000_361,CenterPoint Energy,CenterPoint Energy,535696.0,CNP,,442161AA3,True,False
+f1000_364,PPL,PPL,519969.0,PPL,,69351T106,True,False
+f1000_365,Quest Diagnostics,Quest Diagnostics,127332.0,DGX,,74834L100,True,False
+f1000_366,Williams,Williams,167109.0,WMB,,969457100,True,False
+f1000_367,WEC Energy Group,WEC Energy Group,168076.0,WEC,,92939U106,True,False
+f1000_367,WEC Energy Group,WEC Energy Group,168076.0,WEC,,976657106,True,False
+f1000_368,Hershey,Hershey,71089.0,HSY,,427866108,True,False
+f1000_369,AGCO,AGCO,304.0,AGCO,,001084102,True,False
+f1000_37,Target,Target,520620.0,TGT,,,True,False
+f1000_37,Target,Target,520620.0,TGT,,239753106,True,False
+f1000_37,Target,Target,520620.0,TGT,,87612E106,True,False
+f1000_370,Ralph Lauren,Ralph Lauren,123490.0,RL,,731572103,True,False
+f1000_370,Ralph Lauren,Ralph Lauren,123490.0,RL,,751212101,True,False
+f1000_371,Masco,Masco,95484.0,MAS,,574599106,True,False
+f1000_373,LifePoint Health,LifePoint Health,515404.0,LPNT,,53219L109,True,False
+f1000_374,National Oilwell Varco,National Oilwell Varco,,NO8,,,True,False
+f1000_375,Kindred Healthcare,Kindred Healthcare,527659.0,KND,,494580103,True,False
+f1000_376,Mosaic,Mosaic,557519.0,MOS,,61945C103,True,False
+f1000_377,Alliance Data Systems,Alliance Data Systems,530546.0,ADS,,018581108,True,False
+f1000_378,Computer Sciences,Computer Sciences,34598.0,CSC,,205363104,True,False
+f1000_379,Huntington Ingalls Industries,Huntington Ingalls Industries,604917.0,HII,,446413106,True,False
+f1000_38,Freddie Mac,Freddie Mac,,FMCC,,,True,False
+f1000_381,Erie Insurance Group,Erie Insurance Group,,ERIE,,,True,False
+f1000_384,Darden Restaurants,Darden Restaurants,40166.0,DRI,,237194105,True,False
+f1000_387,R.R. Donnelley & Sons,R.R. Donnelley & Sons,43807.0,RRD,,257867101,True,False
+f1000_387,R.R. Donnelley & Sons,R.R. Donnelley & Sons,43807.0,RRD,,257867200,True,False
+f1000_388,Fifth Third Bancorp,Fifth Third Bancorp,53359.0,FITB,,230626103,True,False
+f1000_388,Fifth Third Bancorp,Fifth Third Bancorp,53359.0,FITB,,316773100,True,False
+f1000_39,Lowe's,Lowe's,91205.0,LOW,,548661107,True,False
+f1000_390,Jones Lang LaSalle,Jones Lang LaSalle,514431.0,JLL,,48020Q107,True,False
+f1000_391,Dover,Dover,44105.0,DOV,,260003108,True,False
+f1000_393,Ryder System,Ryder System,133478.0,R,,783549108,True,False
+f1000_394,A-Mark Precious Metals,A-Mark Precious Metals,,AMRK,,,True,False
+f1000_395,Tractor Supply,Tractor Supply,153683.0,TSCO,,892356106,True,False
+f1000_396,Sealed Air,Sealed Air,138403.0,SEE,,812115103,True,False
+f1000_396,Sealed Air,Sealed Air,138403.0,SEE,,81211K100,True,False
+f1000_399,Calpine,Calpine,,CPN,,,True,False
+f1000_4,McKesson,McKesson,514028.0,MCK,,58155Q103,True,False
+f1000_41,MetLife,MetLife,523434.0,MET,,59156R108,True,False
+f1000_42,Aetna,Aetna,1992.0,AET,,008117103,True,False
+f1000_42,Aetna,Aetna,1992.0,AET,,00817Y108,True,False
+f1000_43,PepsiCo,PepsiCo,120358.0,PEP,,713448108,True,False
+f1000_44,Archer Daniels Midland,Archer Daniels Midland,8052.0,ADM,,039483102,True,False
+f1000_45,UPS,UPS,520388.0,UPS,,911308AA2,True,False
+f1000_45,UPS,UPS,520388.0,UPS,,911312106,True,False
+f1000_46,Intel,Intel,76759.0,INTC,,458140100,True,False
+f1000_47,Prudential Financial,Prudential Financial,531297.0,PRU,,744320102,True,False
+f1000_49,United Technologies,United Technologies,157996.0,UTX,,913017109,True,False
+f1000_5,UnitedHealth Group,UnitedHealth Group,128133.0,UNH,,751581109,True,False
+f1000_5,UnitedHealth Group,UnitedHealth Group,128133.0,UNH,,91324P102,True,False
+f1000_50,Marathon Petroleum,Marathon Petroleum,606619.0,MPC,,56585A102,True,False
+f1000_51,Disney,Disney,43227.0,DIS,,254687106,True,False
+f1000_52,Humana,Humana,24871.0,HUM,,141725101,True,False
+f1000_52,Humana,Humana,24871.0,HUM,,444859102,True,False
+f1000_53,Pfizer,Pfizer,121040.0,PFE,,717081103,True,False
+f1000_535,Marathon Oil,Marathon Oil,531623.0,MRO,,565849106,True,False
+f1000_535,Marathon Oil,Marathon Oil,531623.0,MRO,,902905108,True,False
+f1000_54,AIG,AIG,5492.0,AIG,,02637XAA2,True,False
+f1000_54,AIG,AIG,5492.0,AIG,,026874107,True,False
+f1000_54,AIG,AIG,5492.0,AIG,,026874784,True,False
+f1000_55,Lockheed Martin,Lockheed Martin,89913.0,LMT,,539821116,True,False
+f1000_55,Lockheed Martin,Lockheed Martin,89913.0,LMT,,539830109,True,False
+f1000_56,Sysco,Sysco,149326.0,SYY,,871829107,True,False
+f1000_57,FedEx,FedEx,523291.0,FDX,,31428X106,True,False
+f1000_59,Cisco Systems,Cisco Systems,29810.0,CSCO,,17275R102,True,False
+f1000_6,CVS Health,CVS Health,21959.0,CVS,,126650100,True,False
+f1000_60,HP,HP,71167.0,HPQ,,40434L105,True,False
+f1000_60,HP,HP,71167.0,HPQ,,428236103,True,False
+f1000_61,Dow Chemical,Dow Chemical,44158.0,DOW,,260543103,True,False
+f1000_62,HCA Holdings,HCA Holdings,604778.0,HCA,,40412C101,True,False
+f1000_63,Coca-Cola,Coca-Cola,31989.0,KO,,191216100,True,False
+f1000_65,Centene,Centene,531291.0,CNC,,15135B101,True,False
+f1000_66,American Airlines Group,American Airlines Group,441.0,AAL,,02376R102,True,False
+f1000_68,Merck,Merck,98044.0,MRK,,589331107,True,False
+f1000_68,Merck,Merck,98044.0,MRK,,58933Y105,True,False
+f1000_69,Cigna,Cigna,21551.0,CI,,125509109,True,False
+f1000_69,Cigna,Cigna,21551.0,CI,,125523100,True,False
+f1000_7,General Motors,General Motors,61865.0,GM,,370442105,True,False
+f1000_7,General Motors,General Motors,61865.0,GM,,37045V100,True,False
+f1000_70,Delta Air Lines,Delta Air Lines,41843.0,DAL,,247361702,True,False
+f1000_71,Best Buy,Best Buy,15706.0,BBY,,086516101,True,False
+f1000_73,Caterpillar,Caterpillar,25969.0,CAT,,149123101,True,False
+f1000_73,Caterpillar,Caterpillar,25969.0,CAT,,149123AC5,True,False
+f1000_75,Morgan Stanley,Morgan Stanley,517989.0,MS,,617446448,True,False
+f1000_77,Goldman Sachs Group,Goldman Sachs Group,515391.0,GS,,38141G104,True,False
+f1000_78,Energy Transfer Equity,Energy Transfer Equity,,ETE,,,True,False
+f1000_8,AT&T,AT&T,133543.0,T,,00206R102,True,False
+f1000_8,AT&T,AT&T,133543.0,T,,78387G103,True,False
+f1000_80,Oracle,Oracle,114959.0,ORCL,,68389X105,True,False
+f1000_80,Oracle,Oracle,114959.0,ORCL,,68389Y111,True,False
+f1000_81,Tyson Foods,Tyson Foods,155911.0,TSN,,902494103,True,False
+f1000_82,United Continental Holdings,United Continental Holdings,155925.0,UAL,,910047109,True,False
+f1000_83,Allstate,Allstate,3967.0,ALL,,020002101,True,False
+f1000_85,American Express,American Express,5191.0,AXP,,025816109,True,False
+f1000_86,TJX,TJX,149604.0,TJX,,872540109,True,False
+f1000_87,Nike,Nike,109313.0,NKE,,654106103,True,False
+f1000_88,Exelon,Exelon,524639.0,EXC,,30161N101,True,False
+f1000_89,General Dynamics,General Dynamics,61708.0,GD,,007548100,True,False
+f1000_89,General Dynamics,General Dynamics,61708.0,GD,,369550108,True,False
+f1000_9,Ford Motor,Ford Motor,57796.0,F,,345343206,True,False
+f1000_9,Ford Motor,Ford Motor,57796.0,F,,345370860,True,False
+f1000_90,Rite Aid,Rite Aid,,RAD,,,True,False
+f1000_91,Gilead Sciences,Gilead Sciences,62672.0,GILD,,375558103,True,False
+f1000_92,CHS,CHS,28998.0,CHS,,168615102,True,False
+f1000_93,3M,3M,533666.0,MMM,,604059AA3,True,False
+f1000_93,3M,3M,533666.0,MMM,,88579Y101,True,False
+f1000_94,Time Warner,Time Warner,525434.0,TWX,,00184A105,True,False
+f1000_94,Time Warner,Time Warner,525434.0,TWX,,887317105,True,False
+f1000_94,Time Warner,Time Warner,525434.0,TWX,,887317303,True,False
+f1000_95,Charter Communications,Charter Communications,517742.0,CHTR,,16119P108,True,False
+f1000_97,Facebook,Facebook,614906.0,FB,,30303M102,True,False
+f1000_98,Travelers Cos.,Travelers Cos.,135164.0,TRV,,,True,False
+f1000_98,Travelers Cos.,Travelers Cos.,135164.0,TRV,,89417E109,True,False
+f1000_99,Capital One Financial,Capital One Financial,24476.0,COF,,14040H105,True,False
+f1000_101,USAA,USAA,,,,,True,False
+f1000_116,Andeavor,Andeavor,,,,,True,False
+f1000_13,Verizon Communications,Verizon Communications,,VZ,,92343V104,True,True
+f1000_151,Jabil,Jabil,,JBL,,466313103,True,True
+f1000_16,Walgreens Boots Alliance,Walgreens Boots Alliance,,WBA,WAG,931427108,True,True
+f1000_176,Bank of New York Mellon,Bank of New York Mellon,,BK,,64058100,True,True
+f1000_184,Synchrony Financial,Synchrony Financial,,SYF,,87165B103,True,True
+f1000_196,Conagra Brands,Conagra Brands,,CAG,,205887102,True,True
+f1000_221,Farmers Insurance Exchange,Farmers Insurance Exchange,,,,,True,False
+f1000_226,Principal Financial,Principal Financial,,PFG,,74251UAA2,True,True
+f1000_237,Dominion Energy,Dominion Energy,,D,,25746U109,True,True
+f1000_243,Toys 'R' Us,Toys 'R' Us,,,,,True,False
+f1000_266,Mastercard,Mastercard,,MA,,57636Q104,True,True
+f1000_272,L3 Technologies,L3 Technologies,,LLL,,502413107,True,True
+f1000_299,Alcoa,Alcoa,,AA,,13817101,True,True
+f1000_301,Pacific Life,Pacific Life,,,,,True,False
+f1000_314,American Family Insurance Group,American Family Insurance Group,,,,,True,False
+f1000_315,Thrivent Financial for Lutherans,Thrivent Financial for Lutherans,,,,,True,False
+f1000_323,Peter Kiewit Sons',Peter Kiewit Sons',,,,,True,False
+f1000_341,Mutual of Omaha Insurance,Mutual of Omaha Insurance,,,,,True,False
+f1000_362,Harris,Harris,,HRS,,413875105,True,True
+f1000_380,Leidos Holdings,Leidos Holdings,,LDOS,,525327102,True,True
+f1000_382,Tesla,Tesla,,,,,True,False
+f1000_383,Ascena Retail Group,Ascena Retail Group,,ASNA,,04351G101,True,True
+f1000_386,Nvidia,Nvidia,,NVDA,,67066G104,True,True
+f1000_397,Auto-Owners Insurance,Auto-Owners Insurance,,,,,True,False
+f1000_40,Dell Technologies,Dell Technologies,,DELL,,24702R101,True,True
+f1000_48,Albertsons Cos.,Albertsons Cos.,,,,,True,False
+f1000_58,Hewlett Packard Enterprise,Hewlett Packard Enterprise,,HPQ,,40434L105,True,True
+f1000_64,New York Life Insurance,New York Life Insurance,,,,,True,False
+f1000_67,Nationwide,Nationwide,,,,,True,False
+f1000_74,Liberty Mutual Insurance Group,Liberty Mutual Insurance Group,,,,,True,False
+f1000_76,Massachusetts Mutual Life Insurance,Massachusetts Mutual Life Insurance,,,,,True,False
+f1000_79,TIAA,TIAA,,,,,True,False
+f1000_84,Publix Super Markets,Publix Super Markets,,,,,True,False
+f1000_96,Northwestern Mutual,Northwestern Mutual,,,,,True,False

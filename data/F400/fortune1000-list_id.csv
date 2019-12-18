@@ -1,0 +1,1002 @@
+fec_company,list_id
+Walmart,f1000_0
+Berkshire Hathaway,f1000_1
+Apple,f1000_2
+Exxon Mobil,f1000_3
+McKesson,f1000_4
+UnitedHealth Group,f1000_5
+CVS Health,f1000_6
+General Motors,f1000_7
+AT&T,f1000_8
+Ford Motor,f1000_9
+AmerisourceBergen,f1000_10
+Amazon.com,f1000_11
+General Electric,f1000_12
+Verizon Communications,f1000_13
+Cardinal Health,f1000_14
+Costco,f1000_15
+Walgreens Boots Alliance,f1000_16
+Kroger,f1000_17
+Chevron,f1000_18
+Fannie Mae,f1000_19
+J.P. Morgan Chase,f1000_20
+Express Scripts Holding,f1000_21
+Home Depot,f1000_22
+Boeing,f1000_23
+Wells Fargo,f1000_24
+Bank of America Corp.,f1000_25
+Alphabet,f1000_26
+Microsoft,f1000_27
+Anthem,f1000_28
+Citigroup,f1000_29
+Comcast,f1000_30
+IBM,f1000_31
+State Farm Insurance Cos.,f1000_32
+Phillips 66,f1000_33
+Johnson & Johnson,f1000_34
+Procter & Gamble,f1000_35
+Valero Energy,f1000_36
+Target,f1000_37
+Freddie Mac,f1000_38
+Lowe's,f1000_39
+Dell Technologies,f1000_40
+MetLife,f1000_41
+Aetna,f1000_42
+PepsiCo,f1000_43
+Archer Daniels Midland,f1000_44
+UPS,f1000_45
+Intel,f1000_46
+Prudential Financial,f1000_47
+Albertsons Cos.,f1000_48
+United Technologies,f1000_49
+Marathon Petroleum,f1000_50
+Disney,f1000_51
+Humana,f1000_52
+Pfizer,f1000_53
+AIG,f1000_54
+Lockheed Martin,f1000_55
+Sysco,f1000_56
+FedEx,f1000_57
+Hewlett Packard Enterprise,f1000_58
+Cisco Systems,f1000_59
+HP,f1000_60
+Dow Chemical,f1000_61
+HCA Holdings,f1000_62
+Coca-Cola,f1000_63
+New York Life Insurance,f1000_64
+Centene,f1000_65
+American Airlines Group,f1000_66
+Nationwide,f1000_67
+Merck,f1000_68
+Cigna,f1000_69
+Delta Air Lines,f1000_70
+Best Buy,f1000_71
+Honeywell International,f1000_72
+Caterpillar,f1000_73
+Liberty Mutual Insurance Group,f1000_74
+Morgan Stanley,f1000_75
+Massachusetts Mutual Life Insurance,f1000_76
+Goldman Sachs Group,f1000_77
+Energy Transfer Equity,f1000_78
+TIAA,f1000_79
+Oracle,f1000_80
+Tyson Foods,f1000_81
+United Continental Holdings,f1000_82
+Allstate,f1000_83
+Publix Super Markets,f1000_84
+American Express,f1000_85
+TJX,f1000_86
+Nike,f1000_87
+Exelon,f1000_88
+General Dynamics,f1000_89
+Rite Aid,f1000_90
+Gilead Sciences,f1000_91
+CHS,f1000_92
+3M,f1000_93
+Time Warner,f1000_94
+Charter Communications,f1000_95
+Northwestern Mutual,f1000_96
+Facebook,f1000_97
+Travelers Cos.,f1000_98
+Capital One Financial,f1000_99
+Twenty-First Century Fox,f1000_100
+USAA,f1000_101
+World Fuel Services,f1000_102
+Philip Morris International,f1000_103
+Deere,f1000_104
+Kraft Heinz,f1000_105
+Tech Data,f1000_106
+Avnet,f1000_107
+Mondelez International,f1000_108
+Macy's,f1000_109
+AbbVie,f1000_110
+McDonald's,f1000_111
+DuPont,f1000_112
+Northrop Grumman,f1000_113
+ConocoPhillips,f1000_114
+Raytheon,f1000_115
+Andeavor,f1000_116
+Arrow Electronics,f1000_117
+Qualcomm,f1000_118
+Progressive,f1000_119
+Duke Energy,f1000_120
+Enterprise Products Partners,f1000_121
+Amgen,f1000_122
+US Foods Holding,f1000_123
+U.S. Bancorp,f1000_124
+Aflac,f1000_125
+Sears Holdings,f1000_126
+Dollar General,f1000_127
+AutoNation,f1000_128
+Community Health Systems,f1000_129
+Starbucks,f1000_130
+Eli Lilly,f1000_131
+International Paper,f1000_132
+Tenet Healthcare,f1000_133
+Abbott Laboratories,f1000_134
+Dollar Tree,f1000_135
+Whirlpool,f1000_136
+Southwest Airlines,f1000_137
+Emerson Electric,f1000_138
+Staples,f1000_139
+Plains GP Holdings,f1000_140
+Penske Automotive Group,f1000_141
+Union Pacific,f1000_142
+Danaher,f1000_143
+Southern,f1000_144
+ManpowerGroup,f1000_145
+Bristol-Myers Squibb,f1000_146
+Altria Group,f1000_147
+Fluor,f1000_148
+Kohl's,f1000_149
+Lear,f1000_150
+Jabil,f1000_151
+Hartford Financial Services Group,f1000_152
+Thermo Fisher Scientific,f1000_153
+Kimberly-Clark,f1000_154
+Molina Healthcare,f1000_155
+PG&E Corp.,f1000_156
+Supervalu,f1000_157
+Cummins,f1000_158
+CenturyLink,f1000_159
+AECOM,f1000_160
+Xerox,f1000_161
+Marriott International,f1000_162
+Paccar,f1000_163
+General Mills,f1000_164
+PNC Financial Services Group,f1000_165
+American Electric Power,f1000_166
+Icahn Enterprises,f1000_167
+Nucor,f1000_168
+NextEra Energy,f1000_169
+Performance Food Group,f1000_170
+PBF Energy,f1000_171
+Halliburton,f1000_172
+CarMax,f1000_173
+Freeport-McMoRan,f1000_174
+Whole Foods Market,f1000_175
+Bank of New York Mellon,f1000_176
+Gap,f1000_177
+Omnicom Group,f1000_178
+Genuine Parts,f1000_179
+DaVita,f1000_180
+Colgate-Palmolive,f1000_181
+PPG Industries,f1000_182
+Goodyear Tire & Rubber,f1000_183
+Synchrony Financial,f1000_184
+DISH Network,f1000_185
+Visa,f1000_186
+Nordstrom,f1000_187
+INTL FCStone,f1000_188
+WestRock,f1000_189
+XPO Logistics,f1000_190
+Aramark,f1000_191
+CBS,f1000_192
+AES,f1000_193
+WellCare Health Plans,f1000_194
+FirstEnergy,f1000_195
+Conagra Brands,f1000_196
+Synnex,f1000_197
+CDW,f1000_198
+Textron,f1000_199
+Waste Management,f1000_200
+Illinois Tool Works,f1000_201
+Office Depot,f1000_202
+Monsanto,f1000_203
+Cognizant Technology Solutions,f1000_204
+Texas Instruments,f1000_205
+Lincoln National,f1000_206
+Newell Brands,f1000_207
+Land O'Lakes,f1000_208
+Marsh & McLennan,f1000_209
+Ecolab,f1000_210
+C.H. Robinson Worldwide,f1000_211
+Loews,f1000_212
+CBRE Group,f1000_213
+Kinder Morgan,f1000_214
+Kellogg,f1000_215
+Western Digital,f1000_216
+Guardian Life Ins. Co. of America,f1000_217
+Ross Stores,f1000_218
+L Brands,f1000_219
+J.C. Penney,f1000_220
+Farmers Insurance Exchange,f1000_221
+Reynolds American,f1000_222
+Viacom,f1000_223
+Becton Dickinson,f1000_224
+Micron Technology,f1000_225
+Principal Financial,f1000_226
+Arconic,f1000_227
+NRG Energy,f1000_228
+VF,f1000_229
+Devon Energy,f1000_230
+D.R. Horton,f1000_231
+Bed Bath & Beyond,f1000_232
+Consolidated Edison,f1000_233
+Edison International,f1000_234
+Sherwin-Williams,f1000_235
+NGL Energy Partners,f1000_236
+Dominion Energy,f1000_237
+Ameriprise Financial,f1000_238
+ADP,f1000_239
+Hilton Worldwide Holdings,f1000_240
+First Data,f1000_241
+Henry Schein,f1000_242
+Toys 'R' Us,f1000_243
+BB&T Corp.,f1000_244
+Reinsurance Group of America,f1000_245
+Core-Mark Holding,f1000_246
+Biogen,f1000_247
+Las Vegas Sands,f1000_248
+Stanley Black & Decker,f1000_249
+Parker-Hannifin,f1000_250
+Stryker,f1000_251
+Estee Lauder,f1000_252
+Celgene,f1000_253
+BlackRock,f1000_254
+Xcel Energy,f1000_255
+CSX,f1000_256
+Unum Group,f1000_257
+Jacobs Engineering Group,f1000_258
+Lennar,f1000_259
+Group 1 Automotive,f1000_260
+Leucadia National,f1000_261
+Entergy,f1000_262
+PayPal Holdings,f1000_263
+Applied Materials,f1000_264
+Voya Financial,f1000_265
+Mastercard,f1000_266
+Priceline Group,f1000_267
+Liberty Interactive,f1000_268
+AutoZone,f1000_269
+State Street Corp.,f1000_270
+DTE Energy,f1000_271
+L3 Technologies,f1000_272
+HollyFrontier,f1000_273
+Praxair,f1000_274
+Universal Health Services,f1000_275
+Discover Financial Services,f1000_276
+Occidental Petroleum,f1000_277
+United States Steel,f1000_278
+Sempra Energy,f1000_279
+Baxter International,f1000_280
+W.W. Grainger,f1000_281
+Autoliv,f1000_282
+Norfolk Southern,f1000_283
+Baker Hughes,f1000_284
+Ally Financial,f1000_285
+Sonic Automotive,f1000_286
+Owens & Minor,f1000_287
+Huntsman,f1000_288
+Laboratory Corp. of America,f1000_289
+Murphy USA,f1000_290
+Advance Auto Parts,f1000_291
+Fidelity National Financial,f1000_292
+Air Products & Chemicals,f1000_293
+Hormel Foods,f1000_294
+Hertz Global Holdings,f1000_295
+MGM Resorts International,f1000_296
+Corning,f1000_297
+Republic Services,f1000_298
+Alcoa,f1000_299
+Fidelity National Information Services,f1000_300
+Pacific Life,f1000_301
+SunTrust Banks,f1000_302
+LKQ,f1000_303
+BorgWarner,f1000_304
+Ball,f1000_305
+CST Brands,f1000_306
+Public Service Enterprise Group,f1000_307
+Eastman Chemical,f1000_308
+eBay,f1000_309
+Mohawk Industries,f1000_310
+Oneok,f1000_311
+Frontier Communications,f1000_312
+Netflix,f1000_313
+American Family Insurance Group,f1000_314
+Thrivent Financial for Lutherans,f1000_315
+Expedia,f1000_316
+Lithia Motors,f1000_317
+Avis Budget Group,f1000_318
+Reliance Steel & Aluminum,f1000_319
+GameStop,f1000_320
+Tenneco,f1000_321
+O'Reilly Automotive,f1000_322
+Peter Kiewit Sons',f1000_323
+United Natural Foods,f1000_324
+salesforce.com,f1000_325
+Boston Scientific,f1000_326
+Newmont Mining,f1000_327
+Genworth Financial,f1000_328
+Live Nation Entertainment,f1000_329
+Veritiv,f1000_330
+News Corp.,f1000_331
+Crown Holdings,f1000_332
+Global Partners,f1000_333
+PVH,f1000_334
+Level 3 Communications,f1000_335
+Navistar International,f1000_336
+Univar,f1000_337
+Campbell Soup,f1000_338
+Dick's Sporting Goods,f1000_339
+Weyerhaeuser,f1000_340
+Mutual of Omaha Insurance,f1000_341
+Chesapeake Energy,f1000_342
+Anadarko Petroleum,f1000_343
+Interpublic Group,f1000_344
+J.M. Smucker,f1000_345
+Steel Dynamics,f1000_346
+Foot Locker,f1000_347
+Western Refining,f1000_348
+SpartanNash,f1000_349
+Dean Foods,f1000_350
+Zimmer Biomet Holdings,f1000_351
+PulteGroup,f1000_352
+W.R. Berkley,f1000_353
+Quanta Services,f1000_354
+EOG Resources,f1000_355
+Charles Schwab,f1000_356
+Eversource Energy,f1000_357
+Anixter International,f1000_358
+EMCOR Group,f1000_359
+Assurant,f1000_360
+CenterPoint Energy,f1000_361
+Harris,f1000_362
+HD Supply Holdings,f1000_363
+PPL,f1000_364
+Quest Diagnostics,f1000_365
+Williams,f1000_366
+WEC Energy Group,f1000_367
+Hershey,f1000_368
+AGCO,f1000_369
+Ralph Lauren,f1000_370
+Masco,f1000_371
+WESCO International,f1000_372
+LifePoint Health,f1000_373
+National Oilwell Varco,f1000_374
+Kindred Healthcare,f1000_375
+Mosaic,f1000_376
+Alliance Data Systems,f1000_377
+Computer Sciences,f1000_378
+Huntington Ingalls Industries,f1000_379
+Leidos Holdings,f1000_380
+Erie Insurance Group,f1000_381
+Tesla,f1000_382
+Ascena Retail Group,f1000_383
+Darden Restaurants,f1000_384
+Harman International Industries,f1000_385
+Nvidia,f1000_386
+R.R. Donnelley & Sons,f1000_387
+Fifth Third Bancorp,f1000_388
+Quintiles IMS Holdings,f1000_389
+Jones Lang LaSalle,f1000_390
+Dover,f1000_391
+Spirit AeroSystems Holdings,f1000_392
+Ryder System,f1000_393
+A-Mark Precious Metals,f1000_394
+Tractor Supply,f1000_395
+Sealed Air,f1000_396
+Auto-Owners Insurance,f1000_397
+Yum China Holdings,f1000_398
+Calpine,f1000_399
+Owens-Illinois,f1000_400
+Targa Resources,f1000_401
+JetBlue Airways,f1000_402
+Jones Financial (Edward Jones),f1000_403
+Franklin Resources,f1000_404
+Activision Blizzard,f1000_405
+J.B. Hunt Transport Services,f1000_406
+Constellation Brands,f1000_407
+NCR,f1000_408
+Asbury Automotive Group,f1000_409
+American Financial Group,f1000_410
+Discovery Communications,f1000_411
+Berry Global Group,f1000_412
+Sanmina,f1000_413
+CalAtlantic Group,f1000_414
+Dr Pepper Snapple Group,f1000_415
+Dillard's,f1000_416
+HRG Group,f1000_417
+CMS Energy,f1000_418
+Graybar Electric,f1000_419
+Builders FirstSource,f1000_420
+Yum Brands,f1000_421
+Casey's General Stores,f1000_422
+Amphenol,f1000_423
+Oshkosh,f1000_424
+iHeartMedia,f1000_425
+TreeHouse Foods,f1000_426
+Alleghany,f1000_427
+Expeditors International of Washington,f1000_428
+Avery Dennison,f1000_429
+Ameren,f1000_430
+Hanesbrands,f1000_431
+Motorola Solutions,f1000_432
+St. Jude Medical,f1000_433
+Harley-Davidson,f1000_434
+Regions Financial,f1000_435
+Intercontinental Exchange,f1000_436
+Alaska Air Group,f1000_437
+Old Republic International,f1000_438
+Lam Research,f1000_439
+AK Steel Holding,f1000_440
+Rockwell Automation,f1000_441
+Adobe Systems,f1000_442
+Avon Products,f1000_443
+Terex,f1000_444
+NVR,f1000_445
+Dana,f1000_446
+Realogy Holdings,f1000_447
+American Tower,f1000_448
+Packaging Corp. of America,f1000_449
+Citizens Financial Group,f1000_450
+United Rentals,f1000_451
+Clorox,f1000_452
+Genesis Healthcare,f1000_453
+M&T Bank Corp.,f1000_454
+Ingredion,f1000_455
+UGI,f1000_456
+Owens Corning,f1000_457
+S&P Global,f1000_458
+Markel,f1000_459
+Wyndham Worldwide,f1000_460
+Arthur J. Gallagher,f1000_461
+Burlington Stores,f1000_462
+First American Financial,f1000_463
+Symantec,f1000_464
+Patterson,f1000_465
+Olin,f1000_466
+NetApp,f1000_467
+Raymond James Financial,f1000_468
+TravelCenters of America,f1000_469
+Fiserv,f1000_470
+Host Hotels & Resorts,f1000_471
+Insight Enterprises,f1000_472
+Mattel,f1000_473
+AmTrust Financial Services,f1000_474
+Cincinnati Financial,f1000_475
+Simon Property Group,f1000_476
+Western Union,f1000_477
+KeyCorp,f1000_478
+Delek US Holdings,f1000_479
+Booz Allen Hamilton Holding,f1000_480
+Chemours,f1000_481
+Western & Southern Financial Group,f1000_482
+Celanese,f1000_483
+Windstream Holdings,f1000_484
+Seaboard,f1000_485
+Essendant,f1000_486
+Apache,f1000_487
+Airgas,f1000_488
+Kelly Services,f1000_489
+Liberty Media,f1000_490
+Rockwell Collins,f1000_491
+Robert Half International,f1000_492
+CH2M Hill,f1000_493
+Big Lots,f1000_494
+Michaels Cos.,f1000_495
+Toll Brothers,f1000_496
+Yahoo,f1000_497
+Vistra Energy,f1000_498
+ABM Industries,f1000_499
+Northern Trust,f1000_500
+MasTec,f1000_501
+Blackstone Group,f1000_502
+Telephone & Data Systems,f1000_503
+Domtar,f1000_504
+Williams-Sonoma,f1000_505
+Westlake Chemical,f1000_506
+Post Holdings,f1000_507
+Hasbro,f1000_508
+Juniper Networks,f1000_509
+Fortune Brands Home & Security,f1000_510
+Brookdale Senior Living,f1000_511
+Tutor Perini,f1000_512
+Navient,f1000_513
+Neiman Marcus Group,f1000_514
+Ashland Global Holdings,f1000_515
+Hanover Insurance Group,f1000_516
+CommScope Holding,f1000_517
+Spectra Energy,f1000_518
+Cintas,f1000_519
+Zoetis,f1000_520
+Molson Coors Brewing,f1000_521
+Regeneron Pharmaceuticals,f1000_522
+Ulta Beauty,f1000_523
+Hess,f1000_524
+Magellan Health,f1000_525
+Intuit,f1000_526
+Under Armour,f1000_527
+RPM International,f1000_528
+Cerner,f1000_529
+Sonoco Products,f1000_530
+Securian Financial Group,f1000_531
+Peabody Energy,f1000_532
+YRC Worldwide,f1000_533
+Commercial Metals,f1000_534
+Marathon Oil,f1000_535
+Polaris Industries,f1000_536
+Envision Healthcare,f1000_537
+Trinity Industries,f1000_538
+Thor Industries,f1000_539
+Caesars Entertainment,f1000_540
+Levi Strauss,f1000_541
+FMC Technologies,f1000_542
+VWR,f1000_543
+NiSource,f1000_544
+Coach,f1000_545
+Brunswick,f1000_546
+Wynn Resorts,f1000_547
+Orbital ATK,f1000_548
+CIT Group,f1000_549
+Science Applications International,f1000_550
+Hyatt Hotels,f1000_551
+McCormick,f1000_552
+Diplomat Pharmacy,f1000_553
+Barnes & Noble,f1000_554
+Electronic Arts,f1000_555
+FM Global,f1000_556
+Coty,f1000_557
+Smart & Final Stores,f1000_558
+Quad/Graphics,f1000_559
+Dynegy,f1000_560
+Graphic Packaging Holding,f1000_561
+Select Medical Holdings,f1000_562
+Welltower,f1000_563
+Advanced Micro Devices,f1000_564
+USG,f1000_565
+KBR,f1000_566
+Bloomin' Brands,f1000_567
+MDU Resources Group,f1000_568
+CSRA,f1000_569
+Laureate Education,f1000_570
+SCANA,f1000_571
+T. Rowe Price,f1000_572
+Watsco,f1000_573
+Rush Enterprises,f1000_574
+Agilent Technologies,f1000_575
+WhiteWave Foods,f1000_576
+Valspar,f1000_577
+Total System Services,f1000_578
+Torchmark,f1000_579
+Cabela's,f1000_580
+Beacon Roofing Supply,f1000_581
+CA,f1000_582
+LPL Financial Holdings,f1000_583
+Sprouts Farmers Market,f1000_584
+Swift Transportation,f1000_585
+Bemis,f1000_586
+Tiffany,f1000_587
+Flowserve,f1000_588
+CNO Financial Group,f1000_589
+Fastenal,f1000_590
+Sally Beauty Holdings,f1000_591
+American Axle & Manufacturing,f1000_592
+Flowers Foods,f1000_593
+Andersons,f1000_594
+Crown Castle International,f1000_595
+Boise Cascade,f1000_596
+ON Semiconductor,f1000_597
+Chipotle Mexican Grill,f1000_598
+Amkor Technology,f1000_599
+Triumph Group,f1000_600
+OneMain Holdings,f1000_601
+General Cable,f1000_602
+Ametek,f1000_603
+Alon USA Energy,f1000_604
+Pioneer Natural Resources,f1000_605
+Martin Marietta Materials,f1000_606
+Ingles Markets,f1000_607
+Roper Technologies,f1000_608
+Huntington Bancshares,f1000_609
+Xylem,f1000_610
+Unified Grocers,f1000_611
+Leggett & Platt,f1000_612
+Dentsply Sirona,f1000_613
+CACI International,f1000_614
+Mead Johnson Nutrition,f1000_615
+C.R. Bard,f1000_616
+Snap-on,f1000_617
+HealthSouth,f1000_618
+Nasdaq,f1000_619
+Avaya,f1000_620
+CF Industries Holdings,f1000_621
+Carlisle,f1000_622
+Equinix,f1000_623
+LSC Communications,f1000_624
+Colfax,f1000_625
+Lennox International,f1000_626
+Iasis Healthcare,f1000_627
+Silgan Holdings,f1000_628
+American Eagle Outfitters,f1000_629
+Moody's,f1000_630
+Calumet Specialty Products Partners,f1000_631
+CME Group,f1000_632
+KB Home,f1000_633
+Vulcan Materials,f1000_634
+Platform Specialty Products,f1000_635
+Vantiv,f1000_636
+Skechers U.S.A.,f1000_637
+Zebra Technologies,f1000_638
+Hub Group,f1000_639
+HSN,f1000_640
+Stericycle,f1000_641
+National General Holdings,f1000_642
+Taylor Morrison Home,f1000_643
+Urban Outfitters,f1000_644
+Resolute Forest Products,f1000_645
+ScanSource,f1000_646
+Camping World Holdings,f1000_647
+Iron Mountain,f1000_648
+Hubbell,f1000_649
+Pinnacle West Capital,f1000_650
+Church & Dwight,f1000_651
+Noble Energy,f1000_652
+Albemarle,f1000_653
+Cooper-Standard Holdings,f1000_654
+KKR,f1000_655
+Country Financial,f1000_656
+Ventas,f1000_657
+Hexion,f1000_658
+Analog Devices,f1000_659
+Citrix Systems,f1000_660
+Green Plains,f1000_661
+Pitney Bowes,f1000_662
+Scripps Networks Interactive,f1000_663
+Darling Ingredients,f1000_664
+Wayfair,f1000_665
+Tailored Brands,f1000_666
+Sabre,f1000_667
+Global Payments,f1000_668
+Atmos Energy,f1000_669
+TEGNA,f1000_670
+Diebold Nixdorf,f1000_671
+PolyOne,f1000_672
+TD Ameritrade Holding,f1000_673
+Abercrombie & Fitch,f1000_674
+Greif,f1000_675
+Alliant Energy,f1000_676
+American Water Works,f1000_677
+Acuity Brands,f1000_678
+Skyworks Solutions,f1000_679
+FMC,f1000_680
+Amerco,f1000_681
+CUNA Mutual Group,f1000_682
+Brinker International,f1000_683
+Buckeye Partners,f1000_684
+Warner Music Group,f1000_685
+Universal Forest Products,f1000_686
+American National Insurance,f1000_687
+Mercury General,f1000_688
+Regal Beloit,f1000_689
+Varian Medical Systems,f1000_690
+Aaron's,f1000_691
+Visteon,f1000_692
+Carter's,f1000_693
+Meritor,f1000_694
+Regal Entertainment Group,f1000_695
+Mednax,f1000_696
+TransDigm Group,f1000_697
+Landstar System,f1000_698
+Puget Energy,f1000_699
+Coca-Cola Bottling,f1000_700
+Kar Auction Services,f1000_701
+Equifax,f1000_702
+Groupon,f1000_703
+IAC/InterActiveCorp,f1000_704
+Weis Markets,f1000_705
+Allegheny Technologies,f1000_706
+Pinnacle Foods,f1000_707
+Tempur Sealy International,f1000_708
+SkyWest,f1000_709
+International Flavors & Fragrances,f1000_710
+BMC Stock Holdings,f1000_711
+Brown-Forman,f1000_712
+Alexion Pharmaceuticals,f1000_713
+KapStone Paper & Packaging,f1000_714
+Time,f1000_715
+TriNet Group,f1000_716
+Steelcase,f1000_717
+EchoStar,f1000_718
+Sentry Insurance Group,f1000_719
+Monster Beverage,f1000_720
+Gannett,f1000_721
+Fossil Group,f1000_722
+Univision Communications,f1000_723
+Meritage Homes,f1000_724
+MRC Global,f1000_725
+H&R Block,f1000_726
+Penn National Gaming,f1000_727
+Service Corp. International,f1000_728
+Brink's,f1000_729
+Old Dominion Freight Line,f1000_730
+Triple-S Management,f1000_731
+KLA-Tencor,f1000_732
+Edwards Lifesciences,f1000_733
+Rent-A-Center,f1000_734
+Comerica,f1000_735
+Paychex,f1000_736
+First Solar,f1000_737
+Insperity,f1000_738
+Scotts Miracle-Gro,f1000_739
+B/E Aerospace,f1000_740
+Westinghouse Air Brake Technologies,f1000_741
+Cooper Tire & Rubber,f1000_742
+Cinemark Holdings,f1000_743
+Keysight Technologies,f1000_744
+Convergys,f1000_745
+Cracker Barrel Old Country Store,f1000_746
+PriceSmart,f1000_747
+Broadridge Financial Solutions,f1000_748
+Scientific Games,f1000_749
+Genesco,f1000_750
+MSC Industrial Direct,f1000_751
+Ryerson Holding,f1000_752
+Acadia Healthcare,f1000_753
+Hologic,f1000_754
+Unisys,f1000_755
+Worthington Industries,f1000_756
+Sanderson Farms,f1000_757
+WABCO Holdings,f1000_758
+Panera Bread,f1000_759
+Metaldyne Performance Group,f1000_760
+Medical Mutual of Ohio,f1000_761
+AMC Networks,f1000_762
+Clean Harbors,f1000_763
+Hovnanian Enterprises,f1000_764
+TrueBlue,f1000_765
+Crane,f1000_766
+ServiceMaster Global Holdings,f1000_767
+Sinclair Broadcast Group,f1000_768
+Mutual of America Life Insurance,f1000_769
+BGC Partners,f1000_770
+DSW,f1000_771
+Intuitive Surgical,f1000_772
+ArcBest,f1000_773
+PC Connection,f1000_774
+A.O. Smith,f1000_775
+Greenbrier Cos.,f1000_776
+Great Plains Energy,f1000_777
+Bon-Ton Stores,f1000_778
+Dycom Industries,f1000_779
+Timken,f1000_780
+Aleris,f1000_781
+Legg Mason,f1000_782
+Hill-Rom Holdings,f1000_783
+Stifel Financial,f1000_784
+Verso,f1000_785
+Qorvo,f1000_786
+Ciena,f1000_787
+Tetra Tech,f1000_788
+Caleres,f1000_789
+Pool,f1000_790
+Hyster-Yale Materials Handling,f1000_791
+Westar Energy,f1000_792
+Public Storage,f1000_793
+Plexus,f1000_794
+Boston Properties,f1000_795
+GNC Holdings,f1000_796
+HCP,f1000_797
+Penn Mutual Life Insurance,f1000_798
+TTM Technologies,f1000_799
+Prologis,f1000_800
+Twitter,f1000_801
+Kemper,f1000_802
+Valmont Industries,f1000_803
+Crestwood Equity Partners,f1000_804
+Applied Industrial Technologies,f1000_805
+VCA,f1000_806
+Granite Construction,f1000_807
+Vornado Realty Trust,f1000_808
+Mettler-Toledo International,f1000_809
+A. Schulman,f1000_810
+Wolverine World Wide,f1000_811
+Graham Holdings,f1000_812
+Chico's FAS,f1000_813
+Domino's Pizza,f1000_814
+Zions Bancorp.,f1000_815
+Southwest Gas Holdings,f1000_816
+Tops Holding,f1000_817
+Hawaiian Holdings,f1000_818
+Vectren,f1000_819
+Gartner,f1000_820
+On Assignment,f1000_821
+Southwestern Energy,f1000_822
+Parexel International,f1000_823
+Equity Residential,f1000_824
+J.Crew Group,f1000_825
+Synopsys,f1000_826
+Moog,f1000_827
+Cabot,f1000_828
+ITT,f1000_829
+TRI Pointe Group,f1000_830
+Maximus,f1000_831
+Illumina,f1000_832
+Amica Mutual Insurance,f1000_833
+Alere,f1000_834
+Toro,f1000_835
+Sprague Resources,f1000_836
+G-III Apparel Group,f1000_837
+Hawaiian Electric Industries,f1000_838
+Pinnacle Entertainment,f1000_839
+Columbia Sportswear,f1000_840
+First Republic Bank,f1000_841
+Komatsu Mining,f1000_842
+Trimble,f1000_843
+Edgewell Personal Care,f1000_844
+Belden,f1000_845
+DST Systems,f1000_846
+WGL Holdings,f1000_847
+GGP,f1000_848
+Brocade Communications Systems,f1000_849
+Akamai Technologies,f1000_850
+Nationstar Mortgage Holdings,f1000_851
+Annaly Capital Management,f1000_852
+Kansas City Southern,f1000_853
+Revlon,f1000_854
+AptarGroup,f1000_855
+MDC Holdings,f1000_856
+Vishay Intertechnology,f1000_857
+Teradata,f1000_858
+Spirit Airlines,f1000_859
+EnerSys,f1000_860
+Snyder's-Lance,f1000_861
+Benchmark Electronics,f1000_862
+West,f1000_863
+Selective Insurance Group,f1000_864
+Party City Holdco,f1000_865
+Cheesecake Factory,f1000_866
+Lincoln Electric Holdings,f1000_867
+Carlyle Group,f1000_868
+Enable Midstream Partners,f1000_869
+Oceaneering International,f1000_870
+Vista Outdoor,f1000_871
+Middleby,f1000_872
+Herman Miller,f1000_873
+PerkinElmer,f1000_874
+OGE Energy,f1000_875
+PCM,f1000_876
+Louisiana-Pacific,f1000_877
+MPM Holdings,f1000_878
+Knights of Columbus,f1000_879
+Apollo Global Management,f1000_880
+Donaldson,f1000_881
+American Equity Investment Life Holding,f1000_882
+Super Micro Computer,f1000_883
+Xilinx,f1000_884
+Tupperware Brands,f1000_885
+Guess,f1000_886
+Nu Skin Enterprises,f1000_887
+Magellan Midstream Partners,f1000_888
+HNI,f1000_889
+Maxim Integrated Products,f1000_890
+Affiliated Managers Group,f1000_891
+Express,f1000_892
+Boyd Gaming,f1000_893
+GEO Group,f1000_894
+Tribune Media,f1000_895
+Microchip Technology,f1000_896
+Fitbit,f1000_897
+Waters,f1000_898
+Teledyne Technologies,f1000_899
+Digital Realty Trust,f1000_900
+RH,f1000_901
+Fred's,f1000_902
+Universal,f1000_903
+CDK Global,f1000_904
+IDEX,f1000_905
+Cliffs Natural Resources,f1000_906
+Curtiss-Wright,f1000_907
+Verisk Analytics,f1000_908
+NOW,f1000_909
+Apollo Education Group,f1000_910
+Kennametal,f1000_911
+H.B. Fuller,f1000_912
+PharMerica,f1000_913
+Engility Holdings,f1000_914
+Sears Hometown & Outlet Stores,f1000_915
+Bio-Rad Laboratories,f1000_916
+Federated Mutual Insurance,f1000_917
+Mueller Industries,f1000_918
+Red Hat,f1000_919
+NewMarket,f1000_920
+Hospitality Properties Trust,f1000_921
+AvalonBay Communities,f1000_922
+Renewable Energy Group,f1000_923
+Consol Energy,f1000_924
+Ferrellgas Partners,f1000_925
+Tower International,f1000_926
+Autodesk,f1000_927
+99 Cents Only Stores,f1000_928
+E*Trade Financial,f1000_929
+Woodward,f1000_930
+Esterline Technologies,f1000_931
+Itron,f1000_932
+Werner Enterprises,f1000_933
+Stewart Information Services,f1000_934
+Hexcel,f1000_935
+Genesee & Wyoming,f1000_936
+Primoris Services,f1000_937
+SPX FLOW,f1000_938
+F5 Networks,f1000_939
+VeriFone Systems,f1000_940
+Texas Roadhouse,f1000_941
+NLV Financial,f1000_942
+Buffalo Wild Wings,f1000_943
+Continental Resources,f1000_944
+Arch Coal,f1000_945
+Roadrunner Transportation Systems,f1000_946
+Cooper Cos.,f1000_947
+hhgregg,f1000_948
+Euronet Worldwide,f1000_949
+Griffon,f1000_950
+CoreLogic,f1000_951
+Nuance Communications,f1000_952
+Matson,f1000_953
+Popular,f1000_954
+Alliance Holdings,f1000_955
+REV Group,f1000_956
+Rexnord,f1000_957
+Cypress Semiconductor,f1000_958
+Portland General Electric,f1000_959
+Ply Gem Holdings,f1000_960
+Cal-Maine Foods,f1000_961
+Alliance One International,f1000_962
+AMN Healthcare Services,f1000_963
+American Greetings,f1000_964
+Blackhawk Network Holdings,f1000_965
+Pier 1 Imports,f1000_966
+Finish Line,f1000_967
+BlueLinx Holdings,f1000_968
+New Jersey Resources,f1000_969
+Deckers Outdoor,f1000_970
+Murphy Oil,f1000_971
+Teleflex,f1000_972
+Par Pacific Holdings,f1000_973
+SL Green Realty,f1000_974
+GMS,f1000_975
+CoreCivic,f1000_976
+Deluxe,f1000_977
+Catalent,f1000_978
+GoDaddy,f1000_979
+Wabash National,f1000_980
+Adtalem Global Education,f1000_981
+United Refining,f1000_982
+Allison Transmission Holdings,f1000_983
+Atlas Air Worldwide Holdings,f1000_984
+ResMed,f1000_985
+Delta Tucker Holdings,f1000_986
+FleetCor Technologies,f1000_987
+Central Garden & Pet,f1000_988
+Beazer Homes USA,f1000_989
+New York Community Bancorp,f1000_990
+Cadence Design Systems,f1000_991
+Carpenter Technology,f1000_992
+Marriott Vacations Worldwide,f1000_993
+FTI Consulting,f1000_994
+Nordson,f1000_995
+Briggs & Stratton,f1000_996
+Kaman,f1000_997
+Overstock.com,f1000_998
+Regis,f1000_999
+Berkshire Hathaway,f1000_01

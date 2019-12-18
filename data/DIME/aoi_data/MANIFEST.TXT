@@ -1,0 +1,3 @@
+aoi_codebook.pdf (application/pdf) 71593 bytes.
+bod_fortune_500_DIME.csv (text/csv) 979555 bytes.
+bod_fortune_500_DIME_cont_records.csv (text/csv)  skipped because the total size of the download bundle exceeded the limit of 10000000 bytes.
