@@ -17,7 +17,7 @@ def anti_join(df_A, df_B, key):
 
 #Load ISS Base Data
 iss_base = pd.read_csv("../data/ISS/ISS_Boards.csv", low_memory=False)
-iss_base['iss_row_id'] = iss_base.index
+iss_base['iss_row_id'] = iss_base.index.astype(str)
 
 #print(iss_base)
 
@@ -32,7 +32,9 @@ f400 = pd.read_csv("../data/F400/f400_linked_unique.csv")
 
 #Isolate Sub-DF's w/o NA Join Col
 c0 = 'ticker'
-f0A = f400.loc[f400[c0].notna()].drop_duplicates(subset=[c0])
+#f0A = f400.loc[f400[c0].notna()].drop_duplicates(subset=[c0])
+f0A = f400.loc[f400[c0].notna()]
+f0A = f400
 i0A = iss_base.loc[iss_base[c0].notna()]
 
 #f0A = f400
@@ -43,6 +45,7 @@ print(i0A.shape)
 #Companies With Ticker
 df0A = i0A.merge(f0A, how = "left", on = c0)
 df0A = df0A.loc[df0A['found_fec'] == True]
+df0A['rid'] = df0A['iss_row_id'] + '_' + df0A['cid_master']
 print(df0A.shape)
 
 
@@ -53,6 +56,7 @@ f1A = f400.drop(['ticker'], axis = 1)
 i1A = iss_base.loc[iss_base[c0].notna()]
 df1A = i1A.merge(f1A, how = "left", left_on = c0, right_on = c1)
 df1A = df1A.loc[df1A['found_fec'] == True]
+df1A['rid'] = df1A['iss_row_id'] + '_' + df1A['cid_master']
 print(df1A.shape)
 
 #print(i1A.shape)
@@ -62,7 +66,9 @@ print(df1A.shape)
 df = pd.concat([df0A, df1A], axis = 0)
 print(df.shape)
 
-df = df.drop_duplicates(subset=['iss_row_id'], keep='first')
+#But duplicates are okay by cid_master
+
+df = df.drop_duplicates(subset=['rid'], keep='first')
 df.to_csv("test_iss_joined.csv", index=False)
 
 
@@ -73,6 +79,10 @@ print("Found a total of {} companies using ISS company_id...".format(cc.shape[0]
 
 cc = df.drop_duplicates(subset=['cid_master'])
 print("Found a total of {} companies using fec cid_master...".format(cc.shape[0]))
+
+cc = df.drop_duplicates(subset=['list_id'])
+print("Found a total of {} companies using fec list_id...".format(cc.shape[0]))
+
 
 
 print(f400.notna().sum())

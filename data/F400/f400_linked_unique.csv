@@ -82,13 +82,13 @@ f1000_18,Chevron,Chevron,529503.0,CVX,,166764100,True,False
 f1000_180,DaVita,DaVita,524945.0,DVA,,23918K108,True,False
 f1000_181,Colgate-Palmolive,Colgate-Palmolive,32396.0,CL,,194162103,True,False
 f1000_182,PPG Industries,PPG Industries,116729.0,PPG,,693506107,True,False
-f1000_183,Goodyear Tire & Rubber,Goodyear Tire & Rubber,,G,,,True,False
+f1000_183,Goodyear Tire & Rubber,Goodyear Tire & Rubber,64157.0,GT,,382550101,True,False
 f1000_185,DISH Network,DISH Network,46791.0,DISH,,25470M109,True,False
 f1000_186,Visa,Visa,584479.0,V,,92826C839,True,False
 f1000_187,Nordstrom,Nordstrom,109672.0,JWN,,655664100,True,False
 f1000_188,INTL FCStone,INTL FCStone,518088.0,INTL,,46116V105,True,False
 f1000_189,WestRock,WestRock,131867.0,WRK,,96145D105,True,False
-f1000_19,Fannie Mae,Fannie Mae,,FNMA,,,True,False
+f1000_19,Fannie Mae,Fannie Mae,52678.0,FNM,,313586109,True,False
 f1000_190,XPO Logistics,XPO Logistics,,XPO,,,True,False
 f1000_191,Aramark,Aramark,,ARMK,,,True,False
 f1000_192,CBS,CBS,160556.0,CBS,,124857202,True,False
@@ -98,7 +98,7 @@ f1000_195,FirstEnergy,FirstEnergy,56674.0,FE,,337932107,True,False
 f1000_197,Synnex,Synnex,551810.0,SNX,,87162W100,True,False
 f1000_198,CDW,CDW,,CDW,,,True,False
 f1000_199,Textron,Textron,152031.0,TXT,,883203101,True,False
-f1000_2,Apple,Apple,,APPL,,,True,False
+f1000_2,Apple,Apple,7614.0,AAPL,,037833100,True,False
 f1000_20,J.P. Morgan Chase,J.P. Morgan Chase,525302.0,JPM,,16161LAA2,True,False
 f1000_200,Waste Management,Waste Management,163042.0,WM,,040420AA9,True,False
 f1000_201,Illinois Tool Works,Illinois Tool Works,75161.0,ITW,,452308109,True,False
@@ -265,13 +265,13 @@ f1000_37,Target,Target,520620.0,TGT,,,True,False
 f1000_370,Ralph Lauren,Ralph Lauren,123490.0,RL,,731572103,True,False
 f1000_371,Masco,Masco,95484.0,MAS,,574599106,True,False
 f1000_373,LifePoint Health,LifePoint Health,515404.0,LPNT,,53219L109,True,False
-f1000_374,National Oilwell Varco,National Oilwell Varco,,NO8,,,True,False
+f1000_374,National Oilwell Varco,National Oilwell Varco,106370.0,NOV,,637071101,True,False
 f1000_375,Kindred Healthcare,Kindred Healthcare,527659.0,KND,,494580103,True,False
 f1000_376,Mosaic,Mosaic,557519.0,MOS,,61945C103,True,False
 f1000_377,Alliance Data Systems,Alliance Data Systems,530546.0,ADS,,018581108,True,False
 f1000_378,Computer Sciences,Computer Sciences,34598.0,CSC,,205363104,True,False
 f1000_379,Huntington Ingalls Industries,Huntington Ingalls Industries,604917.0,HII,,446413106,True,False
-f1000_38,Freddie Mac,Freddie Mac,,FMCC,,,True,False
+f1000_38,Freddie Mac,Freddie Mac,52650.0,FRE,,313400301,True,False
 f1000_381,Erie Insurance Group,Erie Insurance Group,,ERIE,,,True,False
 f1000_384,Darden Restaurants,Darden Restaurants,40166.0,DRI,,237194105,True,False
 f1000_387,R.R. Donnelley & Sons,R.R. Donnelley & Sons,43807.0,RRD,,257867101,True,False
