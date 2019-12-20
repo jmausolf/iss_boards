@@ -26,34 +26,28 @@ def clean_col(col):
 
 
 
-#Load Data
-df = pd.read_csv("iss_fec_tmp.csv")
+df = pd.read_csv("../data/DIME/aoi_data/bod_fortune_500_DIME.csv")
+print(df)
+print(df.columns)
 
-gb = ['cid_master', 'year']
-tmp = df.groupby(gb)['fullname'].count()
-print(tmp)
 
-#df = pd.DataFrame(tmp.unstack('year').to_records())
-#df = pd.DataFrame(tmp.unstack('cid_master').to_records())
-
-#Use this to get stats for various things
-tmp = df.groupby(gb).agg({'age': ['mean', 'std', 'max'],
-                          'fullname': ['count']
+#Get Overall DIME Stats For Company (In All Years)
+gb = ['ticker']
+tmp = df.groupby(gb).agg({'dime.cfscore': ['mean', 'std', 'min', 'max'],
+                          'total.dem': ['sum', 'mean', 'min', 'max'],
+                          'total.rep': ['sum', 'mean', 'min', 'max']
     
 })
 
 df = tmp.reset_index()
-df = pd.DataFrame(df.to_records())
+#df = pd.DataFrame(df.to_records())
 
 #Clean Column Names
 cols = df.columns
 clean_cols = [clean_col(c) for c in cols]
 df.columns = clean_cols
-
-
-#Need to Also Get Stats for If Set Composition is the Same or Not
-
-
-
-#print(df)
+print(df)
 print(df.columns)
+
+
+
