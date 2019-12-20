@@ -14,44 +14,43 @@ def anti_join(df_A, df_B, key):
 	return df_diff
 
 
+def clean_col(col):
+    c1 = str(col).replace('(', '').replace(')', '')
+    c2 = c1.replace("'", "").replace(' ', '')
+    c3 = c2.replace(',', '_').lower()
+    c4 = c3.replace('\n', '').strip()
+    return c4
+
 
 #Load ISS Base Data
 iss_base = pd.read_csv("../data/ISS/ISS_Boards.csv", low_memory=False)
+iss_base['cusip_iss'] = iss_base['cusip']
+iss_base.drop(['cusip'], axis=1, inplace=True)
 iss_base['iss_row_id'] = iss_base.index.astype(str)
-
-#print(iss_base)
-
-
-#print(iss_base.columns)
 print(iss_base.shape)
-#print(iss_base.notna().sum())
+print(iss_base.columns)
 
 #Load F400 Data (FEC Subset)
 f400 = pd.read_csv("../data/F400/f400_linked_unique.csv")
+f400['cusip_fec'] = f400['cusip']
+f400.drop(['cusip'], axis=1, inplace=True)
 
 
-#Isolate Sub-DF's w/o NA Join Col
+#Companies With Ticker
 c0 = 'ticker'
-#f0A = f400.loc[f400[c0].notna()].drop_duplicates(subset=[c0])
 f0A = f400.loc[f400[c0].notna()]
 f0A = f400
 i0A = iss_base.loc[iss_base[c0].notna()]
-
-#f0A = f400
-#i0A = iss_base
-
-print(i0A.shape)
-
-#Companies With Ticker
 df0A = i0A.merge(f0A, how = "left", on = c0)
 df0A = df0A.loc[df0A['found_fec'] == True]
 df0A['rid'] = df0A['iss_row_id'] + '_' + df0A['cid_master']
 print(df0A.shape)
+print(df0A.columns)
 
 
 #Companies With Alt Ticker
 c1 = 'ticker_alt'
-f1A = f400.loc[f400[c1].notna()].drop_duplicates(subset=[c1])
+f1A = f400.loc[f400[c1].notna()]
 f1A = f400.drop(['ticker'], axis = 1)
 i1A = iss_base.loc[iss_base[c0].notna()]
 df1A = i1A.merge(f1A, how = "left", left_on = c0, right_on = c1)
@@ -59,17 +58,40 @@ df1A = df1A.loc[df1A['found_fec'] == True]
 df1A['rid'] = df1A['iss_row_id'] + '_' + df1A['cid_master']
 print(df1A.shape)
 
-#print(i1A.shape)
+
+#Companies With CUSIP
+
+print(f400.columns)
+print(iss_base.columns)
+c2l = 'cusip_iss'
+c2r = 'cusip_fec'
+f2A = f400.loc[f400[c2r].notna()]
+i2A = iss_base.loc[iss_base[c2l].notna()]
+df2A = i2A.merge(f2A, how = "left", 
+					  left_on = [c2l, c0],
+					  right_on = [c2r, c0])
+df2A = df2A.loc[df2A['found_fec'] == True]
+df2A['rid'] = df2A['iss_row_id'] + '_' + df2A['cid_master']
+print(df2A.shape)
+
 
 
 #Concat Data and Drop Duplicates
-df = pd.concat([df0A, df1A], axis = 0)
+df = pd.concat([df0A, df1A, df2A], axis = 0)
+#df = pd.concat([df0A, df1A], axis = 0)
+
+#Clean Column Names
+cols = df.columns
+clean_cols = [clean_col(c) for c in cols]
+df.columns = clean_cols
+
 print(df.shape)
+print(df.columns)
 
-#But duplicates are okay by cid_master
-
+#Only Keep ISS Row ID X cid_master Unique Obs
 df = df.drop_duplicates(subset=['rid'], keep='first')
-df.to_csv("test_iss_joined.csv", index=False)
+df.to_csv("iss_fec_tmp.csv", index=False)
+
 
 
 
@@ -85,33 +107,10 @@ print("Found a total of {} companies using fec list_id...".format(cc.shape[0]))
 
 
 
-print(f400.notna().sum())
-
-
 #What Companies Are Not Being Found
-#f4cc = f400[['cid_master']].merge(cc['cid_master'])
-f4 = f400[['cid_master', 'ticker', 'ticker_alt', 'cusip', 'found_fec']]
-
-
+f4 = f400[['cid_master', 'ticker', 'ticker_alt', 'found_fec']]
 f4cc = anti_join(f4, cc, key='cid_master')
-
 print(f4cc)
 f4cc.to_csv('test_f4cc.csv', index=False)
 
-#f0A = f400.loc[f400[c0].notna()].drop_duplicates(subset=[c0])
-#print(f0A[['cid_master', 'ticker']])
 
-#
-
-
-
-
-#Companies with Ticker Alt
-
-#Companies with CUSIP
-
-
-
-#print(iss_base)
-
-#Left Join ISS Data with FEC by Ticker
