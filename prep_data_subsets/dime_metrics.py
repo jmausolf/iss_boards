@@ -33,9 +33,9 @@ print(df.columns)
 
 #Get Overall DIME Stats For Company (In All Years)
 gb = ['ticker']
-tmp = df.groupby(gb).agg({'dime.cfscore': ['mean', 'std', 'min', 'max'],
-                          'total.dem': ['sum', 'mean', 'min', 'max'],
-                          'total.rep': ['sum', 'mean', 'min', 'max']
+tmp = df.groupby(gb).agg({'dime.cfscore': ['mean', 'median', 'min', 'max'],
+                          'total.dem': ['sum', 'mean', 'median', 'min', 'max'],
+                          'total.rep': ['sum', 'mean', 'median',  'min', 'max']
     
 })
 
@@ -50,4 +50,6 @@ print(df)
 print(df.columns)
 
 
+#Save DIME Data
+df.to_csv("../data/DIME/aoi_data/dime_aoi_metrics.csv", index=False)
 

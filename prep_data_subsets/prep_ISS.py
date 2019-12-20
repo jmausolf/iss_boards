@@ -28,7 +28,6 @@ iss_base['cusip_iss'] = iss_base['cusip']
 iss_base.drop(['cusip'], axis=1, inplace=True)
 iss_base['iss_row_id'] = iss_base.index.astype(str)
 print(iss_base.shape)
-print(iss_base.columns)
 
 #Load F400 Data (FEC Subset)
 f400 = pd.read_csv("../data/F400/f400_linked_unique.csv")
@@ -45,7 +44,6 @@ df0A = i0A.merge(f0A, how = "left", on = c0)
 df0A = df0A.loc[df0A['found_fec'] == True]
 df0A['rid'] = df0A['iss_row_id'] + '_' + df0A['cid_master']
 print(df0A.shape)
-print(df0A.columns)
 
 
 #Companies With Alt Ticker
@@ -60,9 +58,6 @@ print(df1A.shape)
 
 
 #Companies With CUSIP
-
-print(f400.columns)
-print(iss_base.columns)
 c2l = 'cusip_iss'
 c2r = 'cusip_fec'
 f2A = f400.loc[f400[c2r].notna()]
@@ -85,13 +80,18 @@ cols = df.columns
 clean_cols = [clean_col(c) for c in cols]
 df.columns = clean_cols
 
-print(df.shape)
-print(df.columns)
-
 #Only Keep ISS Row ID X cid_master Unique Obs
 df = df.drop_duplicates(subset=['rid'], keep='first')
-df.to_csv("iss_fec_tmp.csv", index=False)
 
+
+#ADD DIME AOI Company Metrics
+dm = pd.read_csv("../data/DIME/aoi_data/dime_aoi_metrics.csv")
+df = df.merge(dm, how = 'left', on = 'ticker')
+
+#Save Result
+df.to_csv("iss_fec_tmp.csv", index=False)
+print(df.columns)
+print(df)
 
 
 
@@ -111,6 +111,6 @@ print("Found a total of {} companies using fec list_id...".format(cc.shape[0]))
 f4 = f400[['cid_master', 'ticker', 'ticker_alt', 'found_fec']]
 f4cc = anti_join(f4, cc, key='cid_master')
 print(f4cc)
-f4cc.to_csv('test_f4cc.csv', index=False)
+f4cc.to_csv('not_found_iss_fec.csv', index=False)
 
 
