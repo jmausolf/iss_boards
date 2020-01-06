@@ -88,6 +88,29 @@ df = df.drop_duplicates(subset=['rid'], keep='first')
 dm = pd.read_csv("../data/DIME/aoi_data/dime_aoi_metrics.csv")
 df = df.merge(dm, how = 'left', on = 'ticker')
 
+#TODO
+#add my FEC company measures
+
+###################################
+#TODO: Join ISS names by company
+###################################
+
+#NEED a seperate py file
+#steps, clean iss / fec names using same method
+#try direct match by ticker/company and name
+
+#if not enough found, could try partial matches or fuzzy match
+#on the rest
+
+#iss file cols:
+# 	
+
+#fec files 
+#
+
+
+
+
 #Save Result
 df.to_csv("iss_fec_tmp.csv", index=False)
 print(df.columns)

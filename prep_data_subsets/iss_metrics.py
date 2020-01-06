@@ -55,5 +55,5 @@ df.columns = clean_cols
 
 
 
-#print(df)
+print(df)
 print(df.columns)
