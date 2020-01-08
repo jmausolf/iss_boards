@@ -102,9 +102,13 @@ df = df.merge(dm, how = 'left', on = 'ticker')
 #Add Election Cycle Column
 df['cycle'] = df['year'].apply(convert_cycle)
 
-#TODO Clean ISS Names
+#Clean ISS Names
+df = clean_firstname_col("first_name", df)
+df = clean_lastname_col("last_name", df)
+df = clean_suffix_col("fullname", df)
+df = clean_fullname_col("fullname", df)
+df = make_alt_fullnames(df)
 
-df = test_names(df, 'fullname')
 print(df)
 
 #year
@@ -132,7 +136,7 @@ print(df)
 
 
 
-'''
+
 #Save Result
 df.to_csv("iss_fec_tmp.csv", index=False)
 print(df.columns)
@@ -158,5 +162,5 @@ f4 = f400[['cid_master', 'ticker', 'ticker_alt', 'found_fec']]
 f4cc = anti_join(f4, cc, key='cid_master')
 print(f4cc)
 f4cc.to_csv('not_found_iss_fec.csv', index=False)
-'''
+
 
