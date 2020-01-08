@@ -342,6 +342,13 @@ def rm_punct_except_period_dash_comma(var, df):
 	df = pd.concat([df, s], axis=1)
 	return(df)
 
+def rm_punct_except_period_dash(var, df):
+	s = df[var].str.lower()
+	s = s.str.replace(r'[]\\?!\"\'#$%&(){}+*/:;,_`|~\\[<=>@\\^]', '')
+	df = df.drop(var, axis=1)
+	df = pd.concat([df, s], axis=1)
+	return(df)
+
 def rm_punct_col(var, df):
     s = df[var].str.lower()
     s = s.str.replace(r'[]\\?!\"\'#$%&(){}+*/:;,._`|~\\[<=>@\\^-]', '')
@@ -404,7 +411,7 @@ def extract_suffixes(var, df):
 	return(df)
 
 
-def extract_fullname(var, df):
+def extract_fullname(var, df, outcol='fullname'):
 	s = df[var]
 
 	#suffix patterns 
@@ -413,9 +420,61 @@ def extract_fullname(var, df):
 	s = s.str.replace(pat1, '').str.replace(pat2, '')
 	s = s.str.replace(r"\s{2,}", ' ')
 	s = s.str.strip()
-	s.name = 'fullname'
+	s.name = outcol
 
 	df = pd.concat([df, s], axis=1)
+	return(df)
+
+def rm_titles_suffixes(var, df, outcol=None):
+	s = df[var]
+
+	#suffix patterns 
+	pat1 = r'(,\s*.+)|(\s[Jj][Rr].)|(\s[Ii]{2,}$)'
+	s = s.str.replace(pat1, '')
+	s = s.str.replace(r"\s{2,}", ' ')
+	s = s.str.strip()
+
+	if outcol is None:
+		df = df.drop(var, axis=1).join(s)
+	else:
+		s.name = outcol
+		df = pd.concat([df, s], axis=1)
+	
+	return(df)
+
+
+def extract_titles_suffixes(var, df):
+	s = df[var]
+	pat = r'(,\s*.+)|(\s[Jj][Rr].)|(\s[Ii]{2,}$)'
+	s = s.str.extract(pat)
+	s = s.apply(lambda x: ','.join(x.dropna()), axis=1)
+	s = s.str.replace(r'(^,\s+)|(^\s)|(\s$)', '')
+	s.name = 'suffix'
+	df = df.drop(var, axis=1).join(s)
+	return(df)
+
+
+def extract_nickname(var, df):
+
+	s = df[var]
+	pat = r'\(.+\)'
+
+	#Remove Nickname From Fullname
+	s1 = s.str.replace(r'\(.+\)', '')
+	s1 = s1.str.replace(r"\s{2,}", ' ')
+	s1 = s1.str.strip()
+
+	#Make Nickname Column
+	punct = r'[]\\?!\"\'#$%&(){}+*/:;,._`|~\\[<=>@\\^-]'
+	s2 = s.str.extract(r'(\(.+\))')
+	s2.columns = ['nickname']
+	s2 = s2['nickname'].str.replace(punct, '')
+	s2.name = 'nickname'
+
+	#Join and Return
+	df = df.drop(var, axis=1)
+	df = pd.concat([df, s1, s2], axis=1)
+	print(df)
 	return(df)
 
 

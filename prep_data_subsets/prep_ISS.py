@@ -1,6 +1,8 @@
 import pandas as pd 
 import numpy as np 
 
+from prep_ISS_names import *
+
 #################################################################
 # Utility Functions
 #################################################################
@@ -20,6 +22,14 @@ def clean_col(col):
     c3 = c2.replace(',', '_').lower()
     c4 = c3.replace('\n', '').strip()
     return c4
+
+
+def convert_cycle(year):
+	if int(year) % 2 == 0:
+		cycle = str(year)
+	else:
+		cycle = str(int(year)+1)
+	return cycle
 
 
 #Load ISS Base Data
@@ -88,6 +98,18 @@ df = df.drop_duplicates(subset=['rid'], keep='first')
 dm = pd.read_csv("../data/DIME/aoi_data/dime_aoi_metrics.csv")
 df = df.merge(dm, how = 'left', on = 'ticker')
 
+
+#Add Election Cycle Column
+df['cycle'] = df['year'].apply(convert_cycle)
+
+#TODO Clean ISS Names
+
+df = test_names(df, 'fullname')
+print(df)
+
+#year
+
+
 #TODO
 #add my FEC company measures
 
@@ -110,13 +132,14 @@ df = df.merge(dm, how = 'left', on = 'ticker')
 
 
 
-
+'''
 #Save Result
 df.to_csv("iss_fec_tmp.csv", index=False)
 print(df.columns)
 print(df)
 
 
+##QC
 
 #Company Counts 
 cc = df.drop_duplicates(subset=['company_id'])
@@ -135,5 +158,5 @@ f4 = f400[['cid_master', 'ticker', 'ticker_alt', 'found_fec']]
 f4cc = anti_join(f4, cc, key='cid_master')
 print(f4cc)
 f4cc.to_csv('not_found_iss_fec.csv', index=False)
-
+'''
 
