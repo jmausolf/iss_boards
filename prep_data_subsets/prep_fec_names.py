@@ -43,7 +43,15 @@ df = reclean_fec_name_col("contributor_name_clean", fc)
 print(df)
 print(df.columns)	
 
+#TODO need to make summary stats of FEC by cycle, person
+#so the file is theoretically already in that format,
+#but post-recleaned names, there are now some duplicates
+#e.g. edsel ford
+#redo stats for 1-1 name, company, year
+#stats are messed up, so either drop
+#or recreate avg/mode to add new data points...
+
 
 #Save Cleaned FEC Names
-df.to_csv("../data/FEC/cleaned_names_fec_df_analysis.csv")
+df.to_csv("../data/FEC/cleaned_names_fec_df_analysis.csv", index=False)
 

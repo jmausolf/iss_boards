@@ -1,51 +1,47 @@
 import pandas as pd 
 import numpy as np 
 
-from name_utils import *
+
+def clean_col(col):
+    c0 = str(col).replace(", '')", ")")
+    c1 = c0.replace('(', '').replace(')', '')
+    c2 = c1.replace("'", "").replace(' ', '')
+    c3 = c2.replace(',', '_').lower()
+    c4 = c3.replace('.', '_').lower()
+    c5 = c4.replace('\n', '').strip()
+    return c5
 
 
 
-#Load FEC Base Data
-fec_base = pd.read_csv("../data/FEC/fec_df_analysis.csv", low_memory=False)
+
+#Load Cleaned Names
+df = pd.read_csv("../data/FEC/cleaned_names_fec_df_analysis.csv")
+
+#TODO see if metrics can be combined and recalculated
+#Remove Extra Rows from Duplicate Names
+gb = ['cid_master', 'cycle', 'fullname']
+tmp = df.groupby(gb).agg({'fullname': ['count'],
+                          'sub_id_count': ['max']})
+tmp = pd.DataFrame(tmp.to_records())
+
+#Clean Column Names and Join
+cols = tmp.columns
+clean_cols = [clean_col(c) for c in cols]
+tmp.columns = clean_cols
+df = df.merge(tmp)
 
 
-#Keep Relevant Data to Load Faster
-fc = fec_base.copy()
-keep_cols = ['contributor_name_clean', 'cid_master', 'sub_id_count',
-		'contributor_city_clean_mode', 'contributor_state_clean_mode',
-		'contributor_zip_code_mode', 
-		'contributor_employer_clean_mode',
-		'contributor_occupation_clean_mode',
-       	'pid3', 'pid2', 'partisan_score', 'cycle', 'occ3']
+#Keep Criteria
+keep_crit = (
+				(df['fullname_count'] == 1) |
 
-fc = fc[keep_cols]
-fc = fc.loc[fc['cycle'] >= 2008]
-print(fc) 
+				( (df['fullname_count'] > 1 ) &
+				  (df['sub_id_count'] == df['sub_id_count_max'])			
 
+				)
 
-#Reclean and Split FEC Names
+			 )
 
-def reclean_fec_name_col(name_col, df):
-
-	#Extract Fullname (w/o Suffixes)
-	df = extract_fullname(name_col, df)
-
-	#Get First (Full), First Simple, Middle, Last
-	df = split_first_last("fullname", df)
-
-	#Make Suffixes Columnn
-	df = extract_suffixes(name_col, df)
-	
-	return df
-
-
-df = reclean_fec_name_col("contributor_name_clean", fc)
+df = df.loc[keep_crit]
 print(df)
-print(df.columns)	
-
-#TODO need to make summary stats of FEC by cycle, person
-
-
-#Save Cleaned FEC Names
-df.to_csv("../data/FEC/cleaned_names_fec_df_analysis.csv")
-
+df.to_csv("../data/FEC/clean_fec_df_analysis.csv", index=False)
