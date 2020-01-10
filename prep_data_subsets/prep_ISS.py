@@ -138,7 +138,7 @@ print(df)
 
 
 #Save Result
-df.to_csv("iss_fec_tmp.csv", index=False)
+df.to_csv("../data/ISS/cleaned_iss_data.csv", index=False)
 print(df.columns)
 print(df)
 
