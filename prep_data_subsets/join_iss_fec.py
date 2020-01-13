@@ -1,6 +1,11 @@
 import pandas as pd 
 import numpy as np 
 
+#################################################################
+# Set Board Completeness Threshold
+#################################################################
+
+p_keep = 0.30
 
 #################################################################
 # Utility Functions
@@ -47,53 +52,14 @@ fec['party_flag'] = True
 dm1['party_flag'] = True
 dm2['party_flag'] = True
 
-print(iss.columns)
-print(iss.isna().sum())
-print(fec.columns)
-print(dm1.columns)
-print(dm2.columns)
-
-
-
-print(dm1.shape)
-print(dm2.shape)
 
 
 
 
-
-print(iss.shape)
-
-#iss = iss[['cid_master','fullname_clean_pure']].drop_duplicates()
-#fec = fec[['cid_master', 'fullname']].drop_duplicates()
-
-#iss = iss[['ticker', 'last_name_clean', 'first_name_clean']].drop_duplicates()
-
-#iss = iss[['cid_master','last_name_clean']].drop_duplicates()
-#fec = fec[['cid_master', 'last']].drop_duplicates()
-
-#calc dime stats like fec by company, name, cycle, and supplement with iss
-
-#before calc stats and doing that though, just try to join names from the summary file
-
-#print(iss.shape)
-#print(fec.shape)
 
 #################################################################
 #Joins Using Multiple Methods
 #################################################################
-
-#M1 - Fullname Join
-#print(iss.columns)
-#print(fec.columns)
-
-#TODO add other name match efforts
-#redo by cycle
-#forward, backward impute party
-
-#Simple method first
-#join as is, just constant partisanship summary
-
 
 ###############################
 #FEC & ISS
@@ -146,6 +112,11 @@ iss_rem = anti_join(iss_rem, df1E, key='iss_row_id')
 print("ISS 1E: remaining:", iss_rem.shape, df1E.shape)
 
 
+
+###############################
+#DIME 2 and ISS
+###############################
+
 df2A = iss_rem.merge(dm2, how = "left",
 				left_on=['ticker', 'last_name_clean', 'first_name_clean'],
 			  	right_on=['ticker', 'contributor.lname', 'contributor.fname'])
@@ -165,6 +136,11 @@ df2B = df2B.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2B, key='iss_row_id')
 print("ISS 2B: remaining:", iss_rem.shape, df2B.shape)
 
+
+
+###############################
+#DIME 1 and ISS
+###############################
 
 df3A = iss_rem.merge(dm1, how = "left",
 				left_on=['ticker', 'last_name_clean', 'first_name_clean'],
@@ -191,50 +167,69 @@ df = pd.concat([df1A, df1B, df1C, df1D, df1E, df2A, df2B, df3A, df3B],
 
 #Drop Pure Duplicates
 df = df.drop_duplicates(subset='iss_row_id')
-print(df.shape)
-print(df.columns)
 
-df2 = pd.concat([df, iss_rem], axis=0, sort=True).reset_index(drop=True)
-df2 = df2[['company_id', 'ticker', 'cid_master', 'iss_row_id', 'fullname_clean_pure', 'cycle', 'year', 'party_flag', 'merge_match_type']]
-df2 = df2.sort_values(by=['iss_row_id'])
-
-df2.to_csv("test_iss_join.csv", index=False)
+dfd = pd.concat([df, iss_rem], axis=0, sort=True).reset_index(drop=True)
+dfd.to_csv('test_full_iss.csv')
 
 
+#Keep Only ISS ID, Merge Variables
+df = df[['iss_row_id', 'cid_master', 'party_flag', 'merge_match_type']]
 
-#print(df)
-print(df.isna().sum())
-print(df2.isna().sum())
-
-
-#Get NA By Group
-df3 = df2.drop('cid_master', 1).isna().groupby(df.cid_master, sort=False).sum().reset_index()
-df3 = df3.sort_values(by='party_flag')
-print(df3)
-df3.to_csv("test_missing_iss_join.csv", index=False)
-
-
-#TODO Drop Those With >X% of NA board, >200 companies with no NA
-
-
-#df1A = iss.merge(fec, how = "left",
-#				left_on=['cid_master', 'last_name_clean'],
-#			  	right_on=['cid_master', 'last'])
-
-
-#print(df1A)
-#print(df1A.isna().sum())
-
-#df1A.to_csv("testjoin1.csv", index=False)
+#Rejoin With Master ISS
+issf = pd.read_csv("../data/ISS/cleaned_iss_data.csv", low_memory=False)
+issf = issf.merge(df, how = 'left', on = ['iss_row_id', 'cid_master'])
 
 
 
-#test idea
-#keep unique set of data by company and fullname each ds
-#try to see final name
+
+#################################################################
+#Drop Companies w/ High Board NAN 
+#################################################################
+
+#Keep Rel. Columns
+dfd = issf[['cid_master', 'iss_row_id', 'fullname_clean_pure', 'party_flag']]
+
+#NA Sum
+dfd1 = dfd.drop('cid_master', 1).isna().groupby(dfd.cid_master, sort=False).sum().reset_index()
+dfd1 = dfd1[['cid_master', 'party_flag']]
+dfd1.columns = ['cid_master', 'n_missing']
 
 
-#
-#dm1 4872 NA
-#dm2 5027 NA
+#Overall Sum
+dfd2 = dfd.groupby(['cid_master']).count().reset_index()
+dfd2 = dfd2[['cid_master', 'iss_row_id']]
+dfd2.columns = ['cid_master', 'n_iss']
+
+#Get Prop Missing
+dfd = dfd2.merge(dfd1)
+dfd['p_missing'] = dfd['n_missing'] / dfd['n_iss']
+
+#Drop Criteria
+dfd['drop_cid'] = np.where(dfd['p_missing'] <= p_keep, "KEEP", "DROP")
+dfd = dfd.sort_values(by='p_missing').reset_index(drop=True)
+print(dfd.drop_cid.value_counts())
+
+#Implement Keep Criteria
+dfd = dfd.loc[dfd['drop_cid'] == 'KEEP']
+c = dfd.shape[0]
+print(dfd.drop_cid.value_counts())
+
+
+#Merge with ISSF (Inner Join)
+dfi = issf.merge(dfd, how = 'inner', on = 'cid_master')
+print(dfi.shape)
+bnm = dfi.party_flag.notna().sum()
+bm = dfi.party_flag.isna().sum()
+
+print('[*] board missingness threshold: {}'.format(p_keep))
+print('[*] resulting companies at threshold: {}'.format(c))
+print('[*] found board member observations: {}'.format(bnm))
+print('[*] missing board member observations: {}'.format(bm))
+
+#Implications, Might Not Have Particanship for New Boardmembers
+
+#Save Results
+dfi.to_csv('../data/ISS/post_join_drop_ISS_select.csv', index=False)
+issf.to_csv('../data/ISS/post_join_drop_ISS_all.csv', index=False)
+
 
