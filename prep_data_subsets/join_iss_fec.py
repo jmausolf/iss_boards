@@ -1,6 +1,11 @@
 import pandas as pd 
 import numpy as np 
 
+#import alt_join_iss_fec
+#from alt_join_iss_fec import *
+
+from name_utils import *
+
 #################################################################
 # Set Board Completeness Threshold
 #################################################################
@@ -53,8 +58,44 @@ dm1['party_flag'] = True
 dm2['party_flag'] = True
 
 
+#################################################################
+#Make Alt Join Company Cols and Join with ISSN
+#################################################################
+
+dfa = iss[['name', 'ticker', 'cid_master']]
+dfb = iss[['primary_employer']]
+
+#Make Cleaned Columns
+dfa['clean_name'] = dfa['name']
+dfa = rm_punct_col('clean_name', dfa)
+
+dfb['clean_primary_employer'] = dfb['primary_employer']
+dfb = rm_punct_col('clean_primary_employer', dfb)
+print(dfa)
+
+#import pdb; pdb.set_trace()
 
 
+df_alt = dfb.merge(dfa,
+					how = 'inner',
+					left_on = ['clean_primary_employer'],
+					right_on = ['clean_name'] )
+df_alt = df_alt.drop_duplicates(subset='primary_employer')
+df_alt = df_alt[['primary_employer', 'clean_primary_employer', 'clean_name', 'ticker',
+       'cid_master']]
+
+print(df_alt.columns)
+df_alt.columns = ['primary_employer', 'clean_primary_employer',
+				  'alt_name', 'alt_ticker', 'alt_cid_master']
+
+
+
+
+#################################################################
+#Join Alt Companies Cols with ISS
+#################################################################	  
+
+issn = iss.merge(df_alt, how = 'left', on = 'primary_employer')
 
 
 #################################################################
@@ -66,12 +107,12 @@ dm2['party_flag'] = True
 ###############################
 
 #Method A
-df1A = iss.merge(fec, how = "left",
+df1A = issn.merge(fec, how = "left",
 				left_on=['cid_master', 'fullname_clean_pure'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1A['merge_match_type'] = '1A'
 df1A = df1A.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss, df1A, key='iss_row_id')
+iss_rem = anti_join(issn, df1A, key='rid')
 print("ISS 1A: remaining:", iss_rem.shape, df1A.shape)
 
 #Method B
@@ -80,7 +121,7 @@ df1B = iss_rem.merge(fec, how = "left",
 			  	right_on=['cid_master', 'fullname_fec'])
 df1B['merge_match_type'] = '1B'
 df1B = df1B.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df1B, key='iss_row_id')
+iss_rem = anti_join(iss_rem, df1B, key='rid')
 print("ISS 1B: remaining:", iss_rem.shape, df1B.shape)
 
 #Method C
@@ -89,7 +130,7 @@ df1C = iss_rem.merge(fec, how = "left",
 			  	right_on=['cid_master', 'fullname_fec'])
 df1C['merge_match_type'] = '1C'
 df1C = df1C.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df1C, key='iss_row_id')
+iss_rem = anti_join(iss_rem, df1C, key='rid')
 print("ISS 1C: remaining:", iss_rem.shape, df1C.shape)
 
 #Method D
@@ -98,7 +139,7 @@ df1D = iss_rem.merge(fec, how = "left",
 			  	right_on=['cid_master', 'fullname_fec'])
 df1D['merge_match_type'] = '1D'
 df1D = df1D.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df1D, key='iss_row_id')
+iss_rem = anti_join(iss_rem, df1D, key='rid')
 print("ISS 1D: remaining:", iss_rem.shape, df1D.shape)
 
 
@@ -108,7 +149,7 @@ df1E = iss_rem.merge(fec, how = "left",
 			  	right_on=['cid_master', 'full_first', 'last'])
 df1E['merge_match_type'] = '1E'
 df1E = df1E.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df1E, key='iss_row_id')
+iss_rem = anti_join(iss_rem, df1E, key='rid')
 print("ISS 1E: remaining:", iss_rem.shape, df1E.shape)
 
 
@@ -122,7 +163,7 @@ df2A = iss_rem.merge(dm2, how = "left",
 			  	right_on=['ticker', 'contributor.lname', 'contributor.fname'])
 df2A['merge_match_type'] = '2A'
 df2A = df2A.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df2A, key='iss_row_id')
+iss_rem = anti_join(iss_rem, df2A, key='rid')
 print("ISS 2A: remaining:", iss_rem.shape, df2A.shape)
 
 
@@ -133,7 +174,7 @@ df2B = iss_rem.merge(dm2, how = "left",
 			  	right_on=['ticker', 'contributor.lname'])
 df2B['merge_match_type'] = '2B'
 df2B = df2B.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df2B, key='iss_row_id')
+iss_rem = anti_join(iss_rem, df2B, key='rid')
 print("ISS 2B: remaining:", iss_rem.shape, df2B.shape)
 
 
@@ -147,7 +188,7 @@ df3A = iss_rem.merge(dm1, how = "left",
 			  	right_on=['ticker', 'last.name', 'first.name'])
 df3A['merge_match_type'] = '3A'
 df3A = df3A.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df3A, key='iss_row_id')
+iss_rem = anti_join(iss_rem, df3A, key='rid')
 print("ISS 3A: remaining:", iss_rem.shape, df3A.shape)
 
 
@@ -156,30 +197,198 @@ df3B = iss_rem.merge(dm1, how = "left",
 			  	right_on=['ticker', 'last.name'])
 df3B['merge_match_type'] = '3B'
 df3B = df3B.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df3B, key='iss_row_id')
+iss_rem = anti_join(iss_rem, df3B, key='rid')
 print("ISS 3B: remaining:", iss_rem.shape, df3B.shape)
 
 
 
+
+
+#################################################################
+#(ALT) Joins Using Multiple Methods
+#################################################################
+
+###############################
+#FEC & ISS
+###############################
+
+#Method A
+df1A_a = iss_rem.merge(fec, how = "left",
+				left_on=['alt_cid_master', 'fullname_clean_pure'],
+			  	right_on=['cid_master', 'fullname_fec'])
+df1A_a['merge_match_type'] = '1A_alt'
+df1A_a = df1A_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df1A_a, key='rid')
+print("ISS 1A_alt: remaining:", iss_rem.shape, df1A_a.shape)
+
+#Method B
+df1B_a = iss_rem.merge(fec, how = "left",
+				left_on=['alt_cid_master', 'fullname_clean_simple'],
+			  	right_on=['cid_master', 'fullname_fec'])
+df1B_a['merge_match_type'] = '1B_alt'
+df1B_a = df1B_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df1B_a, key='rid')
+print("ISS 1B_alt: remaining:", iss_rem.shape, df1B_a.shape)
+
+#Method C
+df1C_a = iss_rem.merge(fec, how = "left",
+				left_on=['alt_cid_master', 'fullname_clean_nickname'],
+			  	right_on=['cid_master', 'fullname_fec'])
+df1C_a['merge_match_type'] = '1C_alt'
+df1C_a = df1C_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df1C_a, key='rid')
+print("ISS 1C_alt: remaining:", iss_rem.shape, df1C_a.shape)
+
+#Method D
+df1D_a = iss_rem.merge(fec, how = "left",
+				left_on=['alt_cid_master', 'fullname_clean'],
+			  	right_on=['cid_master', 'fullname_fec'])
+df1D_a['merge_match_type'] = '1D_alt'
+df1D_a = df1D_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df1D_a, key='rid')
+print("ISS 1D_alt: remaining:", iss_rem.shape, df1D_a.shape)
+
+
+#Method E
+df1E_a = iss_rem.merge(fec, how = "left",
+				left_on=['alt_cid_master', 'first_name_clean', 'last_name_clean'],
+			  	right_on=['cid_master', 'full_first', 'last'])
+df1E_a['merge_match_type'] = '1E_alt'
+df1E_a = df1E_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df1E_a, key='rid')
+print("ISS 1E_alt: remaining:", iss_rem.shape, df1E_a.shape)
+
+
+
+###############################
+#DIME 2 and ISS
+###############################
+
+df2A_a = iss_rem.merge(dm2, how = "left",
+				left_on=['alt_ticker', 'last_name_clean', 'first_name_clean'],
+			  	right_on=['ticker', 'contributor.lname', 'contributor.fname'])
+df2A_a['merge_match_type'] = '2A_alt'
+df2A_a = df2A_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df2A_a, key='rid')
+print("ISS 2A_alt: remaining:", iss_rem.shape, df2A_a.shape)
+
+
+
+
+df2B_a = iss_rem.merge(dm2, how = "left",
+				left_on=['alt_ticker', 'last_name_clean'],
+			  	right_on=['ticker', 'contributor.lname'])
+df2B_a['merge_match_type'] = '2B_alt'
+df2B_a = df2B_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df2B_a, key='rid')
+print("ISS 2B_alt: remaining:", iss_rem.shape, df2B_a.shape)
+
+
+
+###############################
+#DIME 1 and ISS
+###############################
+
+df3A_a = iss_rem.merge(dm1, how = "left",
+				left_on=['alt_ticker', 'last_name_clean', 'first_name_clean'],
+			  	right_on=['ticker', 'last.name', 'first.name'])
+df3A_a['merge_match_type'] = '3A_alt'
+df3A_a = df3A_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df3A_a, key='rid')
+print("ISS 3A_alt: remaining:", iss_rem.shape, df3A_a.shape)
+
+
+df3B_a = iss_rem.merge(dm1, how = "left",
+				left_on=['alt_ticker', 'last_name_clean'],
+			  	right_on=['ticker', 'last.name'])
+df3B_a['merge_match_type'] = '3B_alt'
+df3B_a = df3B_a.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df3B_a, key='rid')
+print("ISS 3B_alt: remaining:", iss_rem.shape, df3B_a.shape)
+
+
+
+#################################################################
+#(ALT) - General Search (Only DIME Boards)
+#################################################################
+
+
+###############################
+#Alt General
+###############################
+
+df2A_g = iss_rem.merge(dm2, how = "left",
+				left_on=['last_name_clean', 'first_name_clean'],
+			  	right_on=['contributor.lname', 'contributor.fname'])
+df2A_g['merge_match_type'] = '2A_g'
+df2A_g = df2A_g.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df2A_g, key='rid')
+print("ISS 2A_g: remaining:", iss_rem.shape, df2A_g.shape)
+
+
+
+'''
+df2B_g = iss_rem.merge(dm2, how = "left",
+				left_on=['last_name_clean'],
+			  	right_on=['contributor.lname'])
+df2B_g['merge_match_type'] = '2B_g'
+df2B_g = df2B_g.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df2B_g, key='rid')
+print("ISS 2B_g: remaining:", iss_rem.shape, df2B_g.shape)
+'''
+
+
+###############################
+#DIME 1 and ISS
+###############################
+
+df3A_g = iss_rem.merge(dm1, how = "left",
+				left_on=['last_name_clean', 'first_name_clean'],
+			  	right_on=['last.name', 'first.name'])
+df3A_g['merge_match_type'] = '3A_g'
+df3A_g = df3A_g.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df3A_g, key='rid')
+print("ISS 3A_g: remaining:", iss_rem.shape, df3A_g.shape)
+
+'''
+df3B_g = iss_rem.merge(dm1, how = "left",
+				left_on=['last_name_clean'],
+			  	right_on=['last.name'])
+df3B_g['merge_match_type'] = '3B_g'
+df3B_g = df3B_g.dropna(subset=['party_flag'])
+iss_rem = anti_join(iss_rem, df3B_g, key='rid')
+print("ISS 3B_g: remaining:", iss_rem.shape, df3B_g.shape)
+'''
+
+
+
+
 ##Append the Results and Dedupe
-df = pd.concat([df1A, df1B, df1C, df1D, df1E, df2A, df2B, df3A, df3B], 
+df = pd.concat([df1A, df1B, df1C, df1D, df1E, df2A, df2B, df3A, df3B,
+				df1A_a, df1B_a, df1C_a, df1D_a, df1E_a,
+				df2A_a, df2B_a, df3A_a, df3B_a,
+				df2A_g, df3A_g], 
 				axis=0, sort=True).reset_index(drop=True)
+#df['search'] = "STD"
 
 #Drop Pure Duplicates
-df = df.drop_duplicates(subset='iss_row_id')
+df = df.drop_duplicates(subset='rid')
+print(df.columns.tolist())
 
-dfd = pd.concat([df, iss_rem], axis=0, sort=True).reset_index(drop=True)
-dfd.to_csv('test_full_iss.csv')
 
 
 #Keep Only ISS ID, Merge Variables
-df = df[['iss_row_id', 'cid_master', 'party_flag', 'merge_match_type']]
+df = df[['rid',
+		 'party_flag', 'merge_match_type',
+		 'alt_name', 'alt_ticker', 'alt_cid_master']]
 
 #Rejoin With Master ISS
 issf = pd.read_csv("../data/ISS/cleaned_iss_data.csv", low_memory=False)
-issf = issf.merge(df, how = 'left', on = ['iss_row_id', 'cid_master'])
+issf = issf.merge(df, how = 'left', on = ['rid'])
 
+#import pdb; pdb.set_trace()
 
+#issfB = issf.merge(df, how = 'left', on = ['rid', 'cid_master'])
 
 
 #################################################################
@@ -187,7 +396,7 @@ issf = issf.merge(df, how = 'left', on = ['iss_row_id', 'cid_master'])
 #################################################################
 
 #Keep Rel. Columns
-dfd = issf[['cid_master', 'iss_row_id', 'fullname_clean_pure', 'party_flag']]
+dfd = issf[['cid_master', 'rid', 'fullname_clean_pure', 'party_flag']]
 
 #NA Sum
 dfd1 = dfd.drop('cid_master', 1).isna().groupby(dfd.cid_master, sort=False).sum().reset_index()
@@ -197,7 +406,7 @@ dfd1.columns = ['cid_master', 'n_missing']
 
 #Overall Sum
 dfd2 = dfd.groupby(['cid_master']).count().reset_index()
-dfd2 = dfd2[['cid_master', 'iss_row_id']]
+dfd2 = dfd2[['cid_master', 'rid']]
 dfd2.columns = ['cid_master', 'n_iss']
 
 #Get Prop Missing
@@ -208,6 +417,7 @@ dfd['p_missing'] = dfd['n_missing'] / dfd['n_iss']
 dfd['drop_cid'] = np.where(dfd['p_missing'] <= p_keep, "KEEP", "DROP")
 dfd = dfd.sort_values(by='p_missing').reset_index(drop=True)
 print(dfd.drop_cid.value_counts())
+dfd.to_csv('test_missing_iss_join2.csv', index=False)
 
 #Implement Keep Criteria
 dfd = dfd.loc[dfd['drop_cid'] == 'KEEP']
