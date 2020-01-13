@@ -19,7 +19,7 @@ keep_cols = ['contributor_name_clean', 'cid_master', 'sub_id_count',
        	'pid3', 'pid2', 'partisan_score', 'cycle', 'occ3']
 
 fc = fc[keep_cols]
-fc = fc.loc[fc['cycle'] >= 2008]
+#fc = fc.loc[fc['cycle'] >= 2008]
 print(fc) 
 
 
@@ -28,10 +28,10 @@ print(fc)
 def reclean_fec_name_col(name_col, df):
 
 	#Extract Fullname (w/o Suffixes)
-	df = extract_fullname(name_col, df)
+	df = extract_fullname(name_col, df, outcol="fullname_fec")
 
 	#Get First (Full), First Simple, Middle, Last
-	df = split_first_last("fullname", df)
+	df = split_first_last("fullname_fec", df)
 
 	#Make Suffixes Columnn
 	df = extract_suffixes(name_col, df)
@@ -41,7 +41,7 @@ def reclean_fec_name_col(name_col, df):
 
 df = reclean_fec_name_col("contributor_name_clean", fc)
 print(df)
-print(df.columns)	
+print(df.columns)
 
 #TODO need to make summary stats of FEC by cycle, person
 #so the file is theoretically already in that format,

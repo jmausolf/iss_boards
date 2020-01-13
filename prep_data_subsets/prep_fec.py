@@ -19,8 +19,8 @@ df = pd.read_csv("../data/FEC/cleaned_names_fec_df_analysis.csv")
 
 #TODO see if metrics can be combined and recalculated
 #Remove Extra Rows from Duplicate Names
-gb = ['cid_master', 'cycle', 'fullname']
-tmp = df.groupby(gb).agg({'fullname': ['count'],
+gb = ['cid_master', 'cycle', 'fullname_fec']
+tmp = df.groupby(gb).agg({'fullname_fec': ['count'],
                           'sub_id_count': ['max']})
 tmp = pd.DataFrame(tmp.to_records())
 
@@ -33,9 +33,9 @@ df = df.merge(tmp)
 
 #Keep Criteria
 keep_crit = (
-				(df['fullname_count'] == 1) |
+				(df['fullname_fec_count'] == 1) |
 
-				( (df['fullname_count'] > 1 ) &
+				( (df['fullname_fec_count'] > 1 ) &
 				  (df['sub_id_count'] == df['sub_id_count_max'])			
 
 				)
