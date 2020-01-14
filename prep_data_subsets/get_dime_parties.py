@@ -23,8 +23,8 @@ def clean_col(col):
     c5 = c4.replace('\n', '').strip()
     return c5
 
-"""
-#make edited dm2 with party
+
+
 #################################################################
 # Core Data
 #################################################################
@@ -126,69 +126,106 @@ df['pid2n'] = pd.to_numeric(df['pid2n'])
 
 df.to_csv('dm2_party.csv', index=False)
 
-"""
+
 
 
 #################################################################
 #Joins Using Multiple Methods - Combine Party Data
 #################################################################
 
+
+def make_party_metrics(df, gb, pid2_col, pid2_num_col):
+
+	'''
+	:: pid2_col == str, binary party col
+	:: pid2_num_col == num, binary party col
+	'''
+	p2 = pid2_col
+	p2n = pid2_num_col
+
+	df['idx'] = df.groupby(gb).ngroup()
+	gb = ['idx']+gb
+
+	#Add PID2 Numeric Mean and Median
+	tmp1 = dm2.groupby(gb).agg({p2n : ['mean', 'median', 'count']})
+	df1 = tmp1.reset_index()
+
+	#Clean Column Names
+	cols = df1.columns
+	clean_cols = [clean_col(c) for c in cols]
+	df1.columns = clean_cols
+
+
+	#Get Party Value Counts
+	tmp2 = dm2.groupby(gb).agg({p2: ['value_counts']})
+	df2 = tmp2.reset_index()
+
+
+	#Clean Column Names
+	cols = df2.columns
+	clean_cols = [clean_col(c) for c in cols]
+	df2.columns = clean_cols
+
+
+	#Convert Pivot Table
+	piv_col = p2
+	piv_val = p2+'_value_counts'
+
+	df2 = df2.pivot(index='idx',
+					columns=piv_col,
+					values=piv_val).fillna(0).reset_index()
+
+	df2.columns = ['idx', 'dem_n', 'ind_oth_n', 'rep_n']
+
+
+
+	#Add Columns
+	df = df1.merge(df2, how = 'left', on = ['idx'])
+
+
+	#TODO
+	#Make Overall Party Column
+
+	return df
+
+
 dm2 = pd.read_csv("dm2_party.csv")
 
-print(dm2.party.value_counts())
 
 
+#Get Overall Party Metrics
+gbi = ['ticker', 'contributor.lname_clean', 'contributor.fname_clean']
+dfA = make_party_metrics(dm2, gbi, pid2_col='pid2', pid2_num_col='pid2n')
+
+p = 'pid2n_mean'
+dfA['party'] = np.where(dfA[p] < 0, "DEM",
+					np.where(dfA[p] >= 0, "REP",
+					np.where(dfA[p].notna(), "IND/OTH", None)))
+
+dfA = dfA.drop(['idx'], axis=1)
+dfA.columns = ['ticker', 'contributor_lname_clean', 'contributor_fname_clean',
+       'pid2n_mean_sum', 'pid2n_median_sum', 'pid2n_count_sum', 'dem_n_sum', 'ind_oth_n_sum',
+       'rep_n_sum', 'party']
+
+
+
+
+#Get Yearly Party Metrics
 gbi = ['ticker', 'contributor.lname_clean', 'contributor.fname_clean', 'cycle']
-dm2['idx'] = dm2.groupby(gbi).ngroup()
+dfB = make_party_metrics(dm2, gbi, pid2_col='pid2', pid2_num_col='pid2n')
 
-gb = ['idx', 'ticker', 'contributor.lname_clean', 'contributor.fname_clean', 'cycle']
-
-
-
-print(dm2.dtypes)
-
-#Add PID2 Numeric Mean and Median
-tmp1 = dm2.groupby(gb).agg({'pid2n' : ['mean', 'median', 'count']})
-df1 = tmp1.reset_index()
-
-#Clean Column Names
-cols = df1.columns
-clean_cols = [clean_col(c) for c in cols]
-df1.columns = clean_cols
+dfB['cycle_party'] = np.where(dfB[p] < 0, "DEM",
+					np.where(dfB[p] >= 0, "REP",
+					np.where(dfB[p].notna(), "IND/OTH", None)))
+dfB = dfB.drop(['idx'], axis=1)
 
 
-#Get Party Value Counts
-tmp2 = dm2.groupby(gb).agg({'pid2': ['value_counts']})
-#print(tmp2)
-df2 = tmp2.reset_index()
-
-
-
-#Clean Column Names
-cols = df2.columns
-clean_cols = [clean_col(c) for c in cols]
-df2.columns = clean_cols
-
-
-
-
-
-df2 = df2.pivot(index='idx',
-				columns='pid2',
-				values='pid2_value_counts').fillna(0).reset_index()
-
-df2.columns = ['idx', 'dem_n', 'ind_oth_n', 'rep_n']
-
-print(df2)
-print(df2.columns)
-
-
-
-df = df1.merge(df2, how = 'left', on = ['idx'])
+#Combine Datasets
+df = dfB.merge(dfA,
+	how = 'left',
+	on = ['ticker', 'contributor_lname_clean', 'contributor_fname_clean'])
 print(df)
 print(df.columns)
-
 print(df.isna().sum())
 
-
-df.to_csv("test_dm2_parties.csv", index=False)
+df.to_csv("dm2_parties.csv", index=False)
