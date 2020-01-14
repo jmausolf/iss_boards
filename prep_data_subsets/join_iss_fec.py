@@ -41,15 +41,13 @@ iss = pd.read_csv("../data/ISS/cleaned_iss_data.csv", low_memory=False)
 
 
 fec = pd.read_csv("../data/FEC/clean_fec_df_analysis.csv", low_memory=False)
-dm1 = pd.read_csv("../data/DIME/aoi_data/bod_fortune_500_DIME.csv")
-dm2 = pd.read_csv("../data/DIME/aoi_data/bod_fortune_500_DIME_cont_records.csv")
+dm1 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME.csv")
+dm2 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME_cont_records.csv")
 
 #Simulate Creating Neat Party Metrics By Name for DS
 fec = fec[['cid_master', 'fullname_fec', 'full_first', 'first_simple', 'middle', 'last']].drop_duplicates()
-dm1 = dm1[['ticker', 'last.name', 'first.name']].drop_duplicates()
-dm2 = dm2[['ticker', 'contributor.lname', 'contributor.fname']].drop_duplicates()
-
-
+dm1 = dm1[['ticker', 'last.name_clean', 'first.name_clean']].drop_duplicates()
+dm2 = dm2[['ticker', 'contributor.lname_clean', 'contributor.fname_clean']].drop_duplicates()
 
 #Add Party Flags
 #iss['party_flag'] = None
@@ -160,7 +158,7 @@ print("ISS 1E: remaining:", iss_rem.shape, df1E.shape)
 
 df2A = iss_rem.merge(dm2, how = "left",
 				left_on=['ticker', 'last_name_clean', 'first_name_clean'],
-			  	right_on=['ticker', 'contributor.lname', 'contributor.fname'])
+			  	right_on=['ticker', 'contributor.lname_clean', 'contributor.fname_clean'])
 df2A['merge_match_type'] = '2A'
 df2A = df2A.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2A, key='rid')
@@ -171,7 +169,7 @@ print("ISS 2A: remaining:", iss_rem.shape, df2A.shape)
 
 df2B = iss_rem.merge(dm2, how = "left",
 				left_on=['ticker', 'last_name_clean'],
-			  	right_on=['ticker', 'contributor.lname'])
+			  	right_on=['ticker', 'contributor.lname_clean'])
 df2B['merge_match_type'] = '2B'
 df2B = df2B.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2B, key='rid')
@@ -185,7 +183,7 @@ print("ISS 2B: remaining:", iss_rem.shape, df2B.shape)
 
 df3A = iss_rem.merge(dm1, how = "left",
 				left_on=['ticker', 'last_name_clean', 'first_name_clean'],
-			  	right_on=['ticker', 'last.name', 'first.name'])
+			  	right_on=['ticker', 'last.name_clean', 'first.name_clean'])
 df3A['merge_match_type'] = '3A'
 df3A = df3A.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3A, key='rid')
@@ -194,7 +192,7 @@ print("ISS 3A: remaining:", iss_rem.shape, df3A.shape)
 
 df3B = iss_rem.merge(dm1, how = "left",
 				left_on=['ticker', 'last_name_clean'],
-			  	right_on=['ticker', 'last.name'])
+			  	right_on=['ticker', 'last.name_clean'])
 df3B['merge_match_type'] = '3B'
 df3B = df3B.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3B, key='rid')
@@ -266,7 +264,7 @@ print("ISS 1E_alt: remaining:", iss_rem.shape, df1E_a.shape)
 
 df2A_a = iss_rem.merge(dm2, how = "left",
 				left_on=['alt_ticker', 'last_name_clean', 'first_name_clean'],
-			  	right_on=['ticker', 'contributor.lname', 'contributor.fname'])
+			  	right_on=['ticker', 'contributor.lname_clean', 'contributor.fname_clean'])
 df2A_a['merge_match_type'] = '2A_alt'
 df2A_a = df2A_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2A_a, key='rid')
@@ -277,7 +275,7 @@ print("ISS 2A_alt: remaining:", iss_rem.shape, df2A_a.shape)
 
 df2B_a = iss_rem.merge(dm2, how = "left",
 				left_on=['alt_ticker', 'last_name_clean'],
-			  	right_on=['ticker', 'contributor.lname'])
+			  	right_on=['ticker', 'contributor.lname_clean'])
 df2B_a['merge_match_type'] = '2B_alt'
 df2B_a = df2B_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2B_a, key='rid')
@@ -291,7 +289,7 @@ print("ISS 2B_alt: remaining:", iss_rem.shape, df2B_a.shape)
 
 df3A_a = iss_rem.merge(dm1, how = "left",
 				left_on=['alt_ticker', 'last_name_clean', 'first_name_clean'],
-			  	right_on=['ticker', 'last.name', 'first.name'])
+			  	right_on=['ticker', 'last.name_clean', 'first.name_clean'])
 df3A_a['merge_match_type'] = '3A_alt'
 df3A_a = df3A_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3A_a, key='rid')
@@ -300,7 +298,7 @@ print("ISS 3A_alt: remaining:", iss_rem.shape, df3A_a.shape)
 
 df3B_a = iss_rem.merge(dm1, how = "left",
 				left_on=['alt_ticker', 'last_name_clean'],
-			  	right_on=['ticker', 'last.name'])
+			  	right_on=['ticker', 'last.name_clean'])
 df3B_a['merge_match_type'] = '3B_alt'
 df3B_a = df3B_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3B_a, key='rid')
@@ -319,7 +317,7 @@ print("ISS 3B_alt: remaining:", iss_rem.shape, df3B_a.shape)
 
 df2A_g = iss_rem.merge(dm2, how = "left",
 				left_on=['last_name_clean', 'first_name_clean'],
-			  	right_on=['contributor.lname', 'contributor.fname'])
+			  	right_on=['contributor.lname_clean', 'contributor.fname_clean'])
 df2A_g['merge_match_type'] = '2A_g'
 df2A_g = df2A_g.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2A_g, key='rid')
@@ -330,7 +328,7 @@ print("ISS 2A_g: remaining:", iss_rem.shape, df2A_g.shape)
 '''
 df2B_g = iss_rem.merge(dm2, how = "left",
 				left_on=['last_name_clean'],
-			  	right_on=['contributor.lname'])
+			  	right_on=['contributor.lname_clean'])
 df2B_g['merge_match_type'] = '2B_g'
 df2B_g = df2B_g.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2B_g, key='rid')
@@ -344,7 +342,7 @@ print("ISS 2B_g: remaining:", iss_rem.shape, df2B_g.shape)
 
 df3A_g = iss_rem.merge(dm1, how = "left",
 				left_on=['last_name_clean', 'first_name_clean'],
-			  	right_on=['last.name', 'first.name'])
+			  	right_on=['last.name_clean', 'first.name_clean'])
 df3A_g['merge_match_type'] = '3A_g'
 df3A_g = df3A_g.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3A_g, key='rid')
@@ -353,7 +351,7 @@ print("ISS 3A_g: remaining:", iss_rem.shape, df3A_g.shape)
 '''
 df3B_g = iss_rem.merge(dm1, how = "left",
 				left_on=['last_name_clean'],
-			  	right_on=['last.name'])
+			  	right_on=['last.name_clean'])
 df3B_g['merge_match_type'] = '3B_g'
 df3B_g = df3B_g.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3B_g, key='rid')
