@@ -43,7 +43,7 @@ fecB = fecB.dropna(subset=['cand_name'])
 fecB = fecB[['cand_name', 'cmte_cycle', 'party_id', 'partisan_score']]
 
 #Load DIME Data
-dm2 = pd.read_csv("../data/DIME/aoi_data/bod_fortune_500_DIME_cont_records.csv")
+dm2 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME_cont_records.csv")
 
 #Make Rec Party Column
 rp = 'recipient.party'
@@ -71,7 +71,7 @@ print(dm2.notna().sum())
 
 
 #################################################################
-#Joins Using Multiple Methods
+#Joins Using Multiple Methods - Combine Party Data
 #################################################################
 
 #Add Using CMTE Name
@@ -108,58 +108,42 @@ df['party'] = np.where(df['party_id'].notna(), df['party_id'],
 					np.where(df['rec_party_bin'].notna(), df['rec_party_bin'],
 						df['cf_party']))
 
-'''
-gb = ['ticker']
-tmp = df.groupby(gb).agg({'dime.cfscore': ['mean', 'median', 'min', 'max'],
-                          'total.dem': ['sum', 'mean', 'median', 'min', 'max'],
-                          'total.rep': ['sum', 'mean', 'median',  'min', 'max']
-    
-})
-
-df = tmp.reset_index()
-'''
 
 
-print(df.isna().sum())
-print(df.columns)
-print(df.shape)
-print(dm2.shape)
+p = 'party'
+df['pid2'] = np.where(df[p] == "DEM", "DEM",
+					np.where(df[p] == "REP", "REP",
+					np.where(df[p].notna(), "IND/OTH", None)))
+
+df['pid2n'] = np.where(df[p] == "DEM", -1,
+					np.where(df[p] == "REP", 1,
+					np.where(df[p].notna(), 0, None)))
+df['pid2n'] = pd.to_numeric(df['pid2n'])
+
+
+
 
 
 df.to_csv('dm2_party.csv', index=False)
+
 """
 
+
+#################################################################
+#Joins Using Multiple Methods - Combine Party Data
+#################################################################
 
 dm2 = pd.read_csv("dm2_party.csv")
 
 print(dm2.party.value_counts())
 
-p = 'party'
-dm2['pid2'] = np.where(dm2[p] == "DEM", "DEM",
-					np.where(dm2[p] == "REP", "REP",
-					np.where(dm2[p].notna(), "IND/OTH", None)))
 
-dm2['pid2n'] = np.where(dm2[p] == "DEM", -1,
-					np.where(dm2[p] == "REP", 1,
-					np.where(dm2[p].notna(), 0, None)))
-dm2['pid2n'] = pd.to_numeric(dm2['pid2n'])
-
-
-#print(dm2.party_bin_num.value_counts())
-#print(dm2.party_bin_num.mean())
-
-#dm2 = dm2.apply(pd.to_numeric)
-#dm2 = pd.to_numeric(dm2)
-
-
-
-gbi = ['ticker', 'contributor.lname', 'contributor.fname']
+gbi = ['ticker', 'contributor.lname_clean', 'contributor.fname_clean', 'cycle']
 dm2['idx'] = dm2.groupby(gbi).ngroup()
 
-gb = ['idx', 'ticker', 'contributor.lname', 'contributor.fname']
+gb = ['idx', 'ticker', 'contributor.lname_clean', 'contributor.fname_clean', 'cycle']
 
-#tmp = dm2.groupby(gb).agg({'party': ['mode'] 
-#})
+
 
 print(dm2.dtypes)
 
@@ -172,16 +156,13 @@ cols = df1.columns
 clean_cols = [clean_col(c) for c in cols]
 df1.columns = clean_cols
 
-print(df1)
-
 
 #Get Party Value Counts
 tmp2 = dm2.groupby(gb).agg({'pid2': ['value_counts']})
-print(tmp2)
+#print(tmp2)
 df2 = tmp2.reset_index()
 
 
-#df = pd.DataFrame(df.to_records())
 
 #Clean Column Names
 cols = df2.columns
@@ -190,12 +171,7 @@ df2.columns = clean_cols
 
 
 
-#df2 = df2.pivot(index='index', columns='pid2', values='pid2_value_counts')
 
-
-
-#gb = ['ticker', 'contributor_lname', 'contributor_fname']
-#df2['idx'] = df2.groupby(gb).ngroup()
 
 df2 = df2.pivot(index='idx',
 				columns='pid2',
