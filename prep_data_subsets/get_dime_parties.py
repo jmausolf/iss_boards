@@ -19,7 +19,6 @@ def clean_col(col):
     c1 = c0.replace('(', '').replace(')', '')
     c2 = c1.replace("'", "").replace(' ', '')
     c3 = c2.replace(',', '_').lower()
-    #c4 = c3.replace('.', '_').lower()
     c4 = c3.replace('\n', '').strip()
     return c4
 
@@ -196,7 +195,7 @@ def make_party_metrics(df, gb, pid2_col, pid2_num_col):
 	gb = ['idx']+gb
 
 	#Add PID2 Numeric Mean and Median
-	tmp1 = dm2.groupby(gb).agg({p2n : ['mean', 'median', 'count']})
+	tmp1 = df.groupby(gb).agg({p2n : ['mean', 'median', 'count']})
 	df1 = tmp1.reset_index()
 
 	#Clean Column Names
@@ -206,7 +205,7 @@ def make_party_metrics(df, gb, pid2_col, pid2_num_col):
 
 
 	#Get Party Value Counts
-	tmp2 = dm2.groupby(gb).agg({p2: ['value_counts']})
+	tmp2 = df.groupby(gb).agg({p2: ['value_counts']})
 	df2 = tmp2.reset_index()
 
 
@@ -244,8 +243,7 @@ dfA = make_party_metrics(dm2, gbi, pid2_col='pid2', pid2_num_col='pid2n')
 
 p = 'pid2n_mean'
 dfA['party'] = np.where(dfA[p] < 0, "DEM",
-					np.where(dfA[p] >= 0, "REP",
-					np.where(dfA[p].notna(), "IND/OTH", None)))
+					np.where(dfA[p] >= 0, "REP", None))
 
 dfA = dfA.drop(['idx'], axis=1)
 dfA.columns = ['ticker', 'contributor.lname_clean', 'contributor.fname_clean',
@@ -260,8 +258,7 @@ gbi = ['ticker', 'contributor.lname_clean', 'contributor.fname_clean', 'cycle']
 dfB = make_party_metrics(dm2, gbi, pid2_col='pid2', pid2_num_col='pid2n')
 
 dfB['cycle_party'] = np.where(dfB[p] < 0, "DEM",
-					np.where(dfB[p] >= 0, "REP",
-					np.where(dfB[p].notna(), "IND/OTH", None)))
+					np.where(dfB[p] >= 0, "REP", None))
 dfB = dfB.drop(['idx'], axis=1)
 
 
