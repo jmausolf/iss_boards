@@ -25,11 +25,11 @@ def clean_col(col):
     return c5
 
 
-
+#Read Data
 df = pd.read_csv("../data/DIME/aoi_data/bod_fortune_500_DIME.csv")
-print(df)
-print(df.columns)
 
+#Extract Category Columns
+df_cat = df[['ticker', 'privatefirm', 'sector', 'industry']].drop_duplicates()
 
 #Get Overall DIME Stats For Company (In All Years)
 gb = ['ticker']
@@ -40,15 +40,14 @@ tmp = df.groupby(gb).agg({'dime.cfscore': ['mean', 'median', 'min', 'max'],
 })
 
 df = tmp.reset_index()
-#df = pd.DataFrame(df.to_records())
 
 #Clean Column Names
 cols = df.columns
 clean_cols = [clean_col(c) for c in cols]
 df.columns = clean_cols
-print(df)
-print(df.columns)
 
+#Join Category Columns
+df = df_cat.merge(df)
 
 #Save DIME Data
 df.to_csv("../data/DIME/aoi_data/dime_aoi_metrics.csv", index=False)

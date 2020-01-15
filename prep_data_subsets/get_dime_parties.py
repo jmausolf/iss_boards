@@ -26,24 +26,125 @@ def clean_col(col):
 
 
 #################################################################
-# Core Data
+# Core Supplement Data
 #################################################################
 
 
 #Load FEC CMTE Data
-fecA = pd.read_csv("../data/FEC/committee_master_pids.csv")
+fecA = pd.read_csv("../data/FEC/committee_master_pids.csv", low_memory=False)
 
 #Drop NA by CMTE NAME
 fecA = fecA.dropna(subset=['cmte_nm'])
 fecA = fecA[['cmte_nm', 'cycle', 'party_id', 'partisan_score']]
 
 #Load FEC Cand Data and
-fecB = pd.read_csv("../data/FEC/schedule_a_cand_pids.csv")
+fecB = pd.read_csv("../data/FEC/schedule_a_cand_pids.csv", low_memory=False)
 fecB = fecB.dropna(subset=['cand_name'])
 fecB = fecB[['cand_name', 'cmte_cycle', 'party_id', 'partisan_score']]
 
+
+
+#################################################################
+# Core DIME Data
+#################################################################
+
 #Load DIME Data
+dm1 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME.csv")
 dm2 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME_cont_records.csv")
+
+
+
+
+#print(dm2[rp].value_counts())
+#print(dm2.rec_party.value_counts())
+#print(dm2.notna().sum())
+
+#################################################################
+#Dime 1 Party Cleans and Supplemental Joins
+#################################################################
+
+print(dm1.columns)
+print(dm1.isna().sum())
+
+"""
+#Make Rec Party Column
+rp = 'recipient.party'
+dm1['rec_party'] = np.where(dm1[rp] == '100', "DEM",
+					np.where(dm1[rp] == '200', "REP",
+					np.where(dm1[rp].notna(), "IND/OTH", None)))
+
+dm1['rec_party_bin'] = np.where(dm1[rp] == '100', "DEM",
+					np.where(dm1[rp] == '200', "REP", None))
+
+
+
+#Make CF Party Column
+cf = 'cfscore'
+dm1['cf_party'] = np.where(dm1[cf] < 0, "DEM",
+					np.where(dm1[cf] >= 0, "REP", None))
+
+print(dm1.cf_party.value_counts())
+print(dm1.notna().sum())
+
+
+#Add Using CMTE Name
+df1A = 	dm1.merge(fecA, how = "left",
+				left_on=['recipient.name', 'cycle'],
+			  	right_on=['cmte_nm', 'cycle'])
+df1A['merge_match_type'] = '1A'
+df1A = df1A.dropna(subset=['party_id'])
+dm1_rem = anti_join(dm1, df1A, key='transaction.id')
+print("dm1 1A: remaining:", dm1_rem.shape, df1A.shape)
+
+
+#Add Using Cand Name
+df1B = 	dm1.merge(fecB, how = "left",
+				left_on=['recipient.name', 'cycle'],
+			  	right_on=['cand_name', 'cmte_cycle'])
+df1B['merge_match_type'] = '1B'
+df1B = df1B.dropna(subset=['party_id'])
+dm1_rem = anti_join(dm1_rem, df1B, key='transaction.id')
+print("dm1 1B: remaining:", dm1_rem.shape, df1B.shape)
+
+
+##Append the Results and Dedupe
+df = pd.concat([df1A, df1B, dm1_rem], 
+				axis=0, sort=True).reset_index(drop=True)
+#df['search'] = "STD"
+
+#Drop Pure Duplicates
+df = df.drop_duplicates(subset='transaction.id')
+
+
+#Consolidate Party Columns
+df['party'] = np.where(df['party_id'].notna(), df['party_id'],
+					np.where(df['rec_party_bin'].notna(), df['rec_party_bin'],
+						df['cf_party']))
+
+
+
+p = 'party'
+df['pid2'] = np.where(df[p] == "DEM", "DEM",
+					np.where(df[p] == "REP", "REP",
+					np.where(df[p].notna(), "IND/OTH", None)))
+
+df['pid2n'] = np.where(df[p] == "DEM", -1,
+					np.where(df[p] == "REP", 1,
+					np.where(df[p].notna(), 0, None)))
+df['pid2n'] = pd.to_numeric(df['pid2n'])
+
+
+
+
+
+df.to_csv('dm1_party.csv', index=False)
+
+"""
+
+"""
+#################################################################
+#Dime 2 Party Cleans and Supplemental Joins
+#################################################################
 
 #Make Rec Party Column
 rp = 'recipient.party'
@@ -64,15 +165,6 @@ dm2['cf_party'] = np.where(dm2[cf] < 0, "DEM",
 print(dm2.cf_party.value_counts())
 print(dm2.notna().sum())
 
-
-#print(dm2[rp].value_counts())
-#print(dm2.rec_party.value_counts())
-#print(dm2.notna().sum())
-
-
-#################################################################
-#Joins Using Multiple Methods - Combine Party Data
-#################################################################
 
 #Add Using CMTE Name
 df1A = 	dm2.merge(fecA, how = "left",
@@ -229,3 +321,4 @@ print(df.columns)
 print(df.isna().sum())
 
 df.to_csv("dm2_parties.csv", index=False)
+"""

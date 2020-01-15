@@ -109,34 +109,6 @@ df = clean_suffix_col("fullname", df)
 df = clean_fullname_col("fullname", df)
 df = make_alt_fullnames(df)
 
-print(df)
-
-#year
-
-
-#TODO
-#add my FEC company measures
-
-###################################
-#TODO: Join ISS names by company
-###################################
-
-#NEED a seperate py file
-#steps, clean iss / fec names using same method
-#try direct match by ticker/company and name
-
-#if not enough found, could try partial matches or fuzzy match
-#on the rest
-
-#iss file cols:
-# 	
-
-#fec files 
-#
-
-
-
-
 #Save Result
 df.to_csv("../data/ISS/cleaned_iss_data.csv", index=False)
 print(df.columns)

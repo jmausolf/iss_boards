@@ -324,18 +324,6 @@ iss_rem = anti_join(iss_rem, df2A_g, key='rid')
 print("ISS 2A_g: remaining:", iss_rem.shape, df2A_g.shape)
 
 
-
-'''
-df2B_g = iss_rem.merge(dm2, how = "left",
-				left_on=['last_name_clean'],
-			  	right_on=['contributor.lname_clean'])
-df2B_g['merge_match_type'] = '2B_g'
-df2B_g = df2B_g.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df2B_g, key='rid')
-print("ISS 2B_g: remaining:", iss_rem.shape, df2B_g.shape)
-'''
-
-
 ###############################
 #DIME 1 and ISS
 ###############################
@@ -348,18 +336,6 @@ df3A_g = df3A_g.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3A_g, key='rid')
 print("ISS 3A_g: remaining:", iss_rem.shape, df3A_g.shape)
 
-'''
-df3B_g = iss_rem.merge(dm1, how = "left",
-				left_on=['last_name_clean'],
-			  	right_on=['last.name_clean'])
-df3B_g['merge_match_type'] = '3B_g'
-df3B_g = df3B_g.dropna(subset=['party_flag'])
-iss_rem = anti_join(iss_rem, df3B_g, key='rid')
-print("ISS 3B_g: remaining:", iss_rem.shape, df3B_g.shape)
-'''
-
-
-
 
 ##Append the Results and Dedupe
 df = pd.concat([df1A, df1B, df1C, df1D, df1E, df2A, df2B, df3A, df3B,
@@ -367,12 +343,10 @@ df = pd.concat([df1A, df1B, df1C, df1D, df1E, df2A, df2B, df3A, df3B,
 				df2A_a, df2B_a, df3A_a, df3B_a,
 				df2A_g, df3A_g], 
 				axis=0, sort=True).reset_index(drop=True)
-#df['search'] = "STD"
+
 
 #Drop Pure Duplicates
 df = df.drop_duplicates(subset='rid')
-print(df.columns.tolist())
-
 
 
 #Keep Only ISS ID, Merge Variables
@@ -383,11 +357,6 @@ df = df[['rid',
 #Rejoin With Master ISS
 issf = pd.read_csv("../data/ISS/cleaned_iss_data.csv", low_memory=False)
 issf = issf.merge(df, how = 'left', on = ['rid'])
-
-#import pdb; pdb.set_trace()
-
-#issfB = issf.merge(df, how = 'left', on = ['rid', 'cid_master'])
-
 
 #################################################################
 #Drop Companies w/ High Board NAN 
@@ -414,18 +383,16 @@ dfd['p_missing'] = dfd['n_missing'] / dfd['n_iss']
 #Drop Criteria
 dfd['drop_cid'] = np.where(dfd['p_missing'] <= p_keep, "KEEP", "DROP")
 dfd = dfd.sort_values(by='p_missing').reset_index(drop=True)
-print(dfd.drop_cid.value_counts())
 dfd.to_csv('test_missing_iss_join2.csv', index=False)
 
 #Implement Keep Criteria
 dfd = dfd.loc[dfd['drop_cid'] == 'KEEP']
 c = dfd.shape[0]
-print(dfd.drop_cid.value_counts())
 
 
 #Merge with ISSF (Inner Join)
 dfi = issf.merge(dfd, how = 'inner', on = 'cid_master')
-print(dfi.shape)
+print(dfi.columns.tolist(), '\n', dfi.shape)
 bnm = dfi.party_flag.notna().sum()
 bm = dfi.party_flag.isna().sum()
 
@@ -434,10 +401,14 @@ print('[*] resulting companies at threshold: {}'.format(c))
 print('[*] found board member observations: {}'.format(bnm))
 print('[*] missing board member observations: {}'.format(bm))
 
+
+
+
 #Implications, Might Not Have Particanship for New Boardmembers
 
 #Save Results
 dfi.to_csv('../data/ISS/post_join_drop_ISS_select.csv', index=False)
 issf.to_csv('../data/ISS/post_join_drop_ISS_all.csv', index=False)
+
 
 
