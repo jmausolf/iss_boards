@@ -41,8 +41,8 @@ iss = pd.read_csv("../data/ISS/cleaned_iss_data.csv", low_memory=False)
 
 
 fec = pd.read_csv("../data/FEC/clean_fec_df_analysis.csv", low_memory=False)
-dm1 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME.csv")
-dm2 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME_cont_records.csv")
+dm1 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME_party.csv")
+dm2 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME_cont_records_party.csv")
 
 #Simulate Creating Neat Party Metrics By Name for DS
 fec = fec[['cid_master', 'fullname_fec', 'full_first', 'first_simple', 'middle', 'last']].drop_duplicates()
