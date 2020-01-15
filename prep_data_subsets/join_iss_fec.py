@@ -45,9 +45,10 @@ dm1 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME_party.csv"
 dm2 = pd.read_csv("../data/DIME/aoi_data/cleaned_bod_fortune_500_DIME_cont_records_party.csv")
 
 #Simulate Creating Neat Party Metrics By Name for DS
-fec = fec[['cid_master', 'fullname_fec', 'full_first', 'first_simple', 'last']].drop_duplicates()
-dm1 = dm1[['ticker', 'last.name_clean', 'first.name_clean']].drop_duplicates()
-dm2 = dm2[['ticker', 'contributor.lname_clean', 'contributor.fname_clean']].drop_duplicates()
+fec = fec[['cid_master', 'fullname_fec', 'full_first', 'first_simple', 'last', 'party']].drop_duplicates()
+dm1 = dm1[['ticker', 'last.name_clean', 'first.name_clean', 'party']].drop_duplicates()
+dm2 = dm2[['ticker', 'contributor.lname_clean', 'contributor.fname_clean', 'party']].drop_duplicates()
+
 
 
 #Add Party Flags
@@ -61,8 +62,8 @@ dm2['party_flag'] = True
 #Make Alt Join Company Cols and Join with ISSN
 #################################################################
 
-dfa = iss[['name', 'ticker', 'cid_master']]
-dfb = iss[['primary_employer']]
+dfa = iss[['name', 'ticker', 'cid_master']].copy()
+dfb = iss[['primary_employer']].copy()
 
 #Make Cleaned Columns
 dfa['clean_name'] = dfa['name']
@@ -70,9 +71,6 @@ dfa = rm_punct_col('clean_name', dfa)
 
 dfb['clean_primary_employer'] = dfb['primary_employer']
 dfb = rm_punct_col('clean_primary_employer', dfb)
-print(dfa)
-
-#import pdb; pdb.set_trace()
 
 
 df_alt = dfb.merge(dfa,
@@ -83,7 +81,6 @@ df_alt = df_alt.drop_duplicates(subset='primary_employer')
 df_alt = df_alt[['primary_employer', 'clean_primary_employer', 'clean_name', 'ticker',
        'cid_master']]
 
-print(df_alt.columns)
 df_alt.columns = ['primary_employer', 'clean_primary_employer',
 				  'alt_name', 'alt_ticker', 'alt_cid_master']
 
@@ -348,16 +345,17 @@ df = pd.concat([df1A, df1B, df1C, df1D, df1E, df2A, df2B, df3A, df3B,
 
 #Drop Pure Duplicates
 df = df.drop_duplicates(subset='rid')
-
+#print(df.columns)
 
 #Keep Only ISS ID, Merge Variables
 df = df[['rid',
-		 'party_flag', 'merge_match_type',
+		 'party_flag', 'party', 'merge_match_type',
 		 'alt_name', 'alt_ticker', 'alt_cid_master']]
 
 #Rejoin With Master ISS
 issf = pd.read_csv("../data/ISS/cleaned_iss_data.csv", low_memory=False)
 issf = issf.merge(df, how = 'left', on = ['rid'])
+#print(issf.columns.tolist(), '\n', issf.shape)
 
 #################################################################
 #Drop Companies w/ High Board NAN 
@@ -396,14 +394,19 @@ dfi = issf.merge(dfd, how = 'inner', on = 'cid_master')
 print(dfi.columns.tolist(), '\n', dfi.shape)
 bnm = dfi.party_flag.notna().sum()
 bm = dfi.party_flag.isna().sum()
+pnm = dfi.party.notna().sum()
+pm = dfi.party.isna().sum()
+
 
 print('[*] board missingness threshold: {}'.format(p_keep))
 print('[*] resulting companies at threshold: {}'.format(c))
 print('[*] found board member observations: {}'.format(bnm))
 print('[*] missing board member observations: {}'.format(bm))
+print('[*] board members with party: {}'.format(pnm))
+print('[*] board members without party: {}'.format(pm))
 
 
-
+#TODO, think about joins by cycle and imputing
 
 #Implications, Might Not Have Particanship for New Boardmembers
 
