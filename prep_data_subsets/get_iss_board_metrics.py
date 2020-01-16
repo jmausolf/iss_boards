@@ -71,12 +71,6 @@ def get_board_metrics(row):
     i_n = len(intersection)
     row['constant_bm_count'] = i_n
 
-
-
-    #return new_items, ni_n, old_items, oi_n, intersection, i_n, dupe_qc
-    
-
-
     return row
 
 
@@ -103,6 +97,10 @@ dm = dm.loc[(dm['cid_master'] == 'Facebook') | (dm['cid_master'] == 'Apple' )]
 dm = dm[['cid_master', 'ticker', 'year', 'cycle', 'fullname_clean_pure', 'party']]
 print(dm)
 
+#################################################################
+#Add Some Basic Metrics
+#################################################################
+
 #Add Yearly Board Size Column
 gb = ['ticker', 'year']
 tmp = dm.groupby(gb)['fullname_clean_pure'].count().reset_index()
@@ -116,6 +114,10 @@ def lsort(lst):
     return lst
 
 
+#################################################################
+#Get Board Member Change Metrics
+#################################################################
+
 #Get Yearly Board Member List
 c = 'fullname_clean_pure'
 tmp = dm.groupby(gb)[c].apply(list).apply(lsort)
@@ -126,56 +128,12 @@ tmp['prior_board'] = tmp.groupby(['ticker'])['board'].shift(1)
 
 
 #Get Board Change Results
-#new_items, ni_n, old_items, oi_n, intersection, i_n, dupe_qc
-bc = ['new_bm', 'new_bm_count',
-      'dropped_bm', 'dropped_bm_count',
-      'constant_bm', 'constant_bm_count', 'dupes_bm']
+tmp = tmp.dropna(subset=['prior_board'])
+tmp =  tmp.apply(get_board_metrics, axis=1)
 
-
-df = tmp.copy().dropna(subset=['prior_board'])
-print(df)
-print(df.columns)
-print(df.isna().sum())
-#df =  df.apply(get_board_metrics, axis=1)
-
-df =  df.apply(get_board_metrics, axis=1)
-
-print(df)
-
-
-#Drop Years When Old Board Not Available 
-#(Drop First Board Year)
-
-
-df.to_csv('test_lag.csv', index=False)
-
-
-
-#Board Set Constant Between Years?
-#tmp['size'] = int(len(tmp['board']))
-#print(tmp)
-
-#TODO
-
-#Perhaps Need to Write Functions to Compare Sets, Intersection, Difference
-
-#Lag the GB Set of Board Members One Year as New Row
-#Run Function that Compares Two Sets and Spits Out Data
-
-
-#tmp = tmp['board'].apply(list_sort)
-
-#dm = dm.merge(tmp)
-#print(dm)
-
-#dm.to_csv("test_boards.csv")
-#print(tmp)
-
-
-
-#Need to Groupby ticker, year
-
-
+#Add Yearly Board Member Change Metrics
+dm = dm.merge(tmp)
+print(dm)
 
 
 
