@@ -1,6 +1,9 @@
 import pandas as pd 
 import numpy as np 
 
+from collections import Counter 
+
+
 #################################################################
 # Utility Functions
 #################################################################
@@ -23,6 +26,61 @@ def clean_col(col):
     return c4
 
 
+def get_board_metrics(row):
+    #bc = ['new_bm', 'new_bm_count',
+    #  'dropped_bm', 'dropped_bm_count',
+    # 'constant_bm', 'constant_bm_count', 'dupes_bm']
+
+    list_ds2 = row['board']
+    list_ds1 = row['prior_board']
+
+    #Get Current List Max
+    #Should Not Be > 1
+    m = Counter(list_ds2).most_common(1)[0][1]
+
+    if m > 1:
+        dupe_qc = True
+    else:
+        dupe_qc = False
+    row['dupes_bm'] = dupe_qc
+
+    #New/Added Elements
+    new_items = list((Counter(list_ds2) - Counter(list_ds1)).elements())
+    new_items.sort()
+    row['new_bm'] = new_items
+
+    ni_n = len(new_items)
+    row['new_bm_count'] = ni_n
+
+    #Old/Dropped Elements
+    old_items = list((Counter(list_ds1) - Counter(list_ds2)).elements())
+    old_items.sort()
+    row['dropped_bm'] = old_items
+
+    oi_n = len(old_items)
+    row['dropped_bm_count'] = oi_n
+
+    #Intersection/Persistent Elements
+    s1 = set(list_ds1)
+    s2 = set(list_ds2)
+
+    intersection = list(s1.intersection(s2))
+    intersection.sort()
+    row['constant_bm'] = intersection
+
+    i_n = len(intersection)
+    row['constant_bm_count'] = i_n
+
+
+
+    #return new_items, ni_n, old_items, oi_n, intersection, i_n, dupe_qc
+    
+
+
+    return row
+
+
+
 
 
 #################################################################
@@ -39,7 +97,7 @@ print(dm.shape)
 
 
 #Isolate Subset for Draft
-dm = dm.loc[dm['cid_master'] == 'Facebook']
+dm = dm.loc[(dm['cid_master'] == 'Facebook') | (dm['cid_master'] == 'Apple' )]
 
 
 dm = dm[['cid_master', 'ticker', 'year', 'cycle', 'fullname_clean_pure', 'party']]
@@ -53,17 +111,45 @@ dm = dm.merge(tmp)
 print(dm)
 
 
-
-x = ['cid_master', 'ticker', 'year', 'cycle', 'fullname_clean_pure', 'party']
 def lsort(lst):
     lst.sort()
     return lst
 
 
-#Get Yearly Board Member List?
+#Get Yearly Board Member List
 c = 'fullname_clean_pure'
 tmp = dm.groupby(gb)[c].apply(list).apply(lsort)
 tmp = tmp.reset_index(name='board')
+
+#Get Lagged Board List (By Company)
+tmp['prior_board'] = tmp.groupby(['ticker'])['board'].shift(1)
+
+
+#Get Board Change Results
+#new_items, ni_n, old_items, oi_n, intersection, i_n, dupe_qc
+bc = ['new_bm', 'new_bm_count',
+      'dropped_bm', 'dropped_bm_count',
+      'constant_bm', 'constant_bm_count', 'dupes_bm']
+
+
+df = tmp.copy().dropna(subset=['prior_board'])
+print(df)
+print(df.columns)
+print(df.isna().sum())
+#df =  df.apply(get_board_metrics, axis=1)
+
+df =  df.apply(get_board_metrics, axis=1)
+
+print(df)
+
+
+#Drop Years When Old Board Not Available 
+#(Drop First Board Year)
+
+
+df.to_csv('test_lag.csv', index=False)
+
+
 
 #Board Set Constant Between Years?
 #tmp['size'] = int(len(tmp['board']))
@@ -79,10 +165,10 @@ tmp = tmp.reset_index(name='board')
 
 #tmp = tmp['board'].apply(list_sort)
 
-dm = dm.merge(tmp)
-print(dm)
+#dm = dm.merge(tmp)
+#print(dm)
 
-dm.to_csv("test_boards.csv")
+#dm.to_csv("test_boards.csv")
 #print(tmp)
 
 
