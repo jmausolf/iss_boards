@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np 
 
 from collections import Counter 
+from collections import ChainMap
 
 
 #################################################################
@@ -27,9 +28,6 @@ def clean_col(col):
 
 
 def get_board_metrics(row):
-    #bc = ['new_bm', 'new_bm_count',
-    #  'dropped_bm', 'dropped_bm_count',
-    # 'constant_bm', 'constant_bm_count', 'dupes_bm']
 
     list_ds2 = row['board']
     list_ds1 = row['prior_board']
@@ -91,11 +89,14 @@ print(dm.shape)
 
 
 #Isolate Subset for Draft
-dm = dm.loc[(dm['cid_master'] == 'Facebook') | (dm['cid_master'] == 'Apple' )]
+dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' )]
 
 
 dm = dm[['cid_master', 'ticker', 'year', 'cycle', 'fullname_clean_pure', 'party']]
 print(dm)
+
+#Fill NA Party Values with UNK
+dm['party'] = dm['party'].fillna("UNK")
 
 #################################################################
 #Add Some Basic Metrics
@@ -132,9 +133,95 @@ tmp = tmp.dropna(subset=['prior_board'])
 tmp =  tmp.apply(get_board_metrics, axis=1)
 
 #Add Yearly Board Member Change Metrics
-dm = dm.merge(tmp)
-print(dm)
+dm0 = dm.merge(tmp)
+print(dm0.shape)
+print(dm0.columns)
 
+dm0.to_csv("test_metrics.csv", index=False)
+
+#################################################################
+#Need Board Change Flags
+#################################################################
+
+
+
+#################################################################
+#Need Board Partisanship Overall Measures
+#################################################################
+
+#***All needs to occur on df prior to bm lag and drop na
+#since we are lagging again, needs to be on initial df
+dm1 = dm.copy()
+
+
+#Fullname and Party Columns
+fn = 'fullname_clean_pure'
+pv = 'party'
+
+
+
+
+#################################################################
+#Need Board Party Change Metrics
+#################################################################
+
+
+
+#Make A Column of Name, Party Dicts
+def make_row_dict(row, name_key, party_val):
+
+    k = row[name_key]
+    v = row[party_val]
+
+    d = {k: v}
+
+    row['name_party'] = d 
+
+    return row
+
+dm1 = dm1.apply(make_row_dict, name_key = fn, party_val = pv, axis=1)
+#print(dm1)
+
+
+
+def c_dict(lst):
+    d = dict(ChainMap(*lst))
+    return d
+
+
+#Get Yearly Board Member, Party Dict
+c = 'name_party'
+gb = ['ticker', 'year']
+#tmp = df.groupby(gb)[c].apply(list)
+tmp = dm1.groupby(gb)[c].apply(list).apply(c_dict)
+tmp = tmp.reset_index(name='bp_dict')
+#tmp.columns = ['ticker', 'year', 'board_party_dict']
+
+#Get Lagged Board List (By Company)
+tmp['prior_bp_dict'] = tmp.groupby(['ticker'])['bp_dict'].shift(1)
+
+
+
+#Get Board Party Change Results
+tmp = tmp.dropna(subset=['prior_bp_dict'])
+
+#print(tmp)
+#print(tmp.columns)
+
+
+#Add Yearly Board Party and Lagged Dicts
+dm1 = dm1.merge(tmp)
+dm1 = dm1.drop(['name_party'], axis=1)
+print(dm1.shape)
+print(dm1.columns)
+#tmp = tmp.reset_index(name='board')
+
+#Combine Before Calculating Metrics
+df = dm0.merge(dm1)
+print(df.shape)
+print(df.columns)
+
+df.to_csv("test_metrics.csv", index=False)
 
 
 
