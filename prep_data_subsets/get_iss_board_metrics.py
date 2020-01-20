@@ -110,7 +110,7 @@ def c_dict(lst):
     return d
 
 
-def get_party_bm_change(row):
+def get_party_bm_change(row, party_col):
 
     n_bm = row['new_bm']
     d_bm = row['dropped_bm']
@@ -118,27 +118,31 @@ def get_party_bm_change(row):
     n_dict = row['bp_dict']
     d_dict = row['prior_bp_dict']
 
+    #Set Outcols
+    nbp = 'new_bm_{}'.format(party_col)
+    dbp = 'dropped_bm_{}'.format(party_col)
+
 
     #Get New BM Parties
     if len(n_bm) == 0:
-        row['new_bm_party'] = []
+        row[nbp] = []
     else:
         n_bm_party = []
         for k in n_bm:
             p = n_dict[k]
             n_bm_party.append(p)
-        row['new_bm_party'] = n_bm_party
+        row[nbp] = n_bm_party
 
 
     #Get Dropped BM Parties
     if len(d_bm) == 0:
-        row['dropped_bm_party'] = []
+        row[dbp] = []
     else:
         d_bm_party = []
         for k in d_bm:
             p = d_dict[k]
             d_bm_party.append(p)
-        row['dropped_bm_party'] = d_bm_party
+        row[dbp] = d_bm_party
 
     return row
 
@@ -460,37 +464,57 @@ pv = 'party'
 #################################################################
 
 
+def get_party_change_cols(name_key, party_col, df_in):
 
-dm1 = dm1.apply(make_row_dict, name_key = fn, party_val = pv, axis=1)
-
-
-
-#Get Yearly Board Member, Party Dict
-c = 'name_party'
-gb = ['ticker', 'year']
-#tmp = df.groupby(gb)[c].apply(list)
-tmp = dm1.groupby(gb)[c].apply(list).apply(c_dict)
-tmp = tmp.reset_index(name='bp_dict')
-#tmp.columns = ['ticker', 'year', 'board_party_dict']
-
-#Get Lagged Board List (By Company)
-tmp['prior_bp_dict'] = tmp.groupby(['ticker'])['bp_dict'].shift(1)
-
-#Get Board Party Change Results
-tmp = tmp.dropna(subset=['prior_bp_dict'])
+    dm1 = df_in.copy()
 
 
-#Add Yearly Board Party and Lagged Dicts
-dm1 = dm1.merge(tmp)
-dm1 = dm1.drop(['name_party'], axis=1)
+    #Fullname and Party Columns
+    fn = name_key
+    pv = party_col
+
+    #Set Outcols
 
 
-#Combine Before Calculating Metrics
-df = dm0.merge(dm1)
+
+    #Make Base Dict Col
+    dm1 = dm1.apply(make_row_dict, name_key = fn, party_val = pv, axis=1)
 
 
-df = df.apply(get_party_bm_change, axis=1)
+    #Get Yearly Board Member, Party Dict
+    c = 'name_party'
+    gb = ['ticker', 'year']
+    tmp = dm1.groupby(gb)[c].apply(list).apply(c_dict)
+    tmp = tmp.reset_index(name='bp_dict')
 
+    #Get Lagged Board List (By Company)
+    tmp['prior_bp_dict'] = tmp.groupby(['ticker'])['bp_dict'].shift(1)
+
+    #Get Board Party Change Results
+    tmp = tmp.dropna(subset=['prior_bp_dict'])
+
+    #Add Yearly Board Party and Lagged Dicts
+    dm1 = dm1.merge(tmp)
+    dm1 = dm1.drop(['name_party'], axis=1)
+
+    #Combine Before Calculating Metrics
+    df = dm0.merge(dm1)
+
+    df = df.apply(get_party_bm_change, party_col = pv, axis=1)
+
+    #Drop Extra Columns
+    df = df.drop(['bp_dict', 'prior_bp_dict'], axis=1)
+
+    return df
+
+
+#Fullname and Party Columns
+#dm1 = dm.copy()
+fn = 'fullname_clean_pure'
+pv = 'party'
+
+
+df = get_party_change_cols(fn, pv, dm)
 
 
 
