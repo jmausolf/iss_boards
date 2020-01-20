@@ -167,7 +167,7 @@ def get_simple_event(i):
         return [i]
     else:
         n = int(i.split('_', 1)[0])
-        if '_REP' in i:
+        if '_SWAP' in i:
             v = 'SWAP'
             return [v for x in range(0, n)]
         if '_ADD' in i:
@@ -272,6 +272,12 @@ tmp2 = dm[['ticker', 'year', 'pid2n']].copy()
 tmp2['pid2ni_med'] = tmp2.groupby(gb).transform(lambda x: x.fillna(x.median()))
 tmp2 = tmp2[['pid2ni_med']]
 
+#Make a Character of Imputed Column
+c = 'pid2ni_med'
+tmp2['pid2ni_med_str'] = np.where(tmp2[c] < 0, "DEM",
+                                  np.where(tmp2[c] > 0, "REP", None))
+
+
 
 #import pdb; pdb.set_trace()
 
@@ -339,10 +345,10 @@ print(dm0.isna().sum())
 print(dm0.dtypes)
 
 dm0['board_net_change'] = np.where( ((dm0[c1] == 0) & (dm0[c2] == 0)), "NO_CHANGE",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_REP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_SWAP",
 
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 1)), "1_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 2)), "2_BM_ADD",
@@ -378,10 +384,10 @@ dm0['board_all_change'] = np.where(
                     ((dm0[c1] == 0) & (dm0[c2] == 0)), "NO_CHANGE",
 
                     #Equal Replacement
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_REP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_SWAP",
 
                     #Only Added
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 1)), "1_BM_ADD",
@@ -396,10 +402,10 @@ dm0['board_all_change'] = np.where(
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), "N_BM_DROP",
 
                     #Replacement and Add
-                    np.where( (dm0[c1] > dm0[c2]), dm0[d].apply(str)+'_BM_REP_'+dm0[ald].apply(str)+'_BM_ADD',
+                    np.where( (dm0[c1] > dm0[c2]), dm0[d].apply(str)+'_BM_SWAP_'+dm0[ald].apply(str)+'_BM_ADD',
 
                     #Replacement and Drop
-                    np.where( (dm0[c1] < dm0[c2]), dm0[a].apply(str)+'_BM_REP_'+dm0[dla].apply(str)+'_BM_DROP',
+                    np.where( (dm0[c1] < dm0[c2]), dm0[a].apply(str)+'_BM_SWAP_'+dm0[dla].apply(str)+'_BM_DROP',
 
                     "OTHER")))))))))))))))
 
@@ -410,10 +416,10 @@ dm0['board_all_change_events'] = np.where(
                     ((dm0[c1] == 0) & (dm0[c2] == 0)), "NO_CHANGE",
 
                     #Equal Replacement
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_REP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_REP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_SWAP",
 
                     #Only Added
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 1)), "1_BM_ADD",
@@ -428,10 +434,10 @@ dm0['board_all_change_events'] = np.where(
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), "N_BM_DROP",
 
                     #Replacement and Add
-                    np.where( (dm0[c1] > dm0[c2]), dm0[d].apply(str)+'_BM_REP,'+dm0[ald].apply(str)+'_BM_ADD',
+                    np.where( (dm0[c1] > dm0[c2]), dm0[d].apply(str)+'_BM_SWAP,'+dm0[ald].apply(str)+'_BM_ADD',
 
                     #Replacement and Drop
-                    np.where( (dm0[c1] < dm0[c2]), dm0[a].apply(str)+'_BM_REP,'+dm0[dla].apply(str)+'_BM_DROP',
+                    np.where( (dm0[c1] < dm0[c2]), dm0[a].apply(str)+'_BM_SWAP,'+dm0[dla].apply(str)+'_BM_DROP',
 
                     "OTHER")))))))))))))))
 
@@ -505,7 +511,10 @@ def get_party_change_cols(name_key, party_col, df_in):
     #Drop Extra Columns
     df = df.drop(['bp_dict', 'prior_bp_dict'], axis=1)
 
-    return df
+    #TODO
+    #Rename Dict Columns with PV, vs Drop
+
+    return df.astype(str)
 
 
 #Fullname and Party Columns
@@ -513,10 +522,19 @@ def get_party_change_cols(name_key, party_col, df_in):
 fn = 'fullname_clean_pure'
 pv = 'party'
 
+#Get Party Change with Original Party Variable
+df1 = get_party_change_cols(fn, pv, dm)
+print(df1.columns)
+#df = df.astype(str)
 
-df = get_party_change_cols(fn, pv, dm)
+#Get Party Change with Imputed Party Variable
+pv = 'pid2ni_med_str'
+df2 = get_party_change_cols(fn, pv, dm)
+print(df2.columns)
 
-
+#Combine
+df = df1.merge(df2)
+print(df.columns)
 
 #Save Results
 df = df.astype(str)
