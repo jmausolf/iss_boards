@@ -212,6 +212,37 @@ def recode_events(row, simple=True):
 
 
 #################################################################
+#Convert Multiple Change Events to Rows
+#################################################################
+
+
+def split_sep_var(var, sep, df):
+    return df[var].str.split(sep, expand=True).stack().str.strip().reset_index(level=1, drop=True)
+    
+
+def split_subjects_nvars(vslist, df):
+
+    varlist = []
+    seplist = []
+    series_list = []
+
+    for vs in vslist:
+        var = vs[0]
+        sep = vs[1]
+
+        varlist.append(var)
+        seplist.append(sep)
+
+        s = split_sep_var(var, sep, df)
+        series_list.append(s)
+
+    df1 = pd.concat(series_list, axis=1, keys=varlist)
+    df = df.drop(varlist, axis=1).join(df1).reset_index(drop=True)
+    return df
+
+
+
+#################################################################
 #Load Key Dataframes
 #################################################################
 
@@ -340,9 +371,9 @@ dm0['net_added'] = dm0.net_added.astype(str)
 dm0['net_dropped'] = dm0[c2] - dm0[c1]
 dm0['net_dropped'] = dm0.net_dropped.astype(str)
 
-print(dm0.isna().sum())
+#print(dm0.isna().sum())
 
-print(dm0.dtypes)
+#print(dm0.dtypes)
 
 dm0['board_net_change'] = np.where( ((dm0[c1] == 0) & (dm0[c2] == 0)), "NO_CHANGE",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
@@ -536,9 +567,40 @@ print(df2.columns)
 df = df1.merge(df2)
 print(df.columns)
 
-#Save Results
+
+
+
+#Convert to Company, Year Data
 df = df.astype(str)
 df = df.drop_duplicates(subset=['cid_master', 'ticker', 'year'])
+
+
+#Convert Change Events to Rows
+change_cols = []
+#change_cols.append(['board_change_events_list', ','])
+change_cols.append(['new_bm_party', ','])
+#change_cols.append(['dropped_bm_party', ','])
+change_cols.append(['new_bm_pid2ni_med_str', ','])
+#change_cols.append(['dropped_bm_pid2ni_med_str', ','])
+
+print(change_cols)
+
+#Do Events
+change_cols = []
+change_cols.append(['board_change_events_list', ','])
+df = split_subjects_nvars(change_cols, df)
+
+#Do Adds
+change_cols = []
+change_cols.append(['new_bm_party', ','])
+change_cols.append(['new_bm_pid2ni_med_str', ','])
+df = split_subjects_nvars(change_cols, df)
+
+#Do Drops
+change_cols = []
+change_cols.append(['dropped_bm_party', ','])
+change_cols.append(['dropped_bm_pid2ni_med_str', ','])
+df = split_subjects_nvars(change_cols, df)
 
 print(df)
 df.to_csv("test_metrics.csv", index=False)
