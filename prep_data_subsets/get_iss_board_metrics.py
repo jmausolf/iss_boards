@@ -338,6 +338,30 @@ cols = tmp.columns
 clean_cols = [clean_col(c) for c in cols]
 tmp.columns = clean_cols
 
+
+#Add Board Party Columns
+
+def make_str_bp_col(party_var, df):
+
+    p = party_var
+    bp = 'bp_{}'.format(p)
+    df[bp] = np.where(df[p] < 0, "DEM",
+                np.where(df[p] >= 0, "REP", None))
+    return df
+
+bp_cols = ['pid2n_mean', 'pid2n_median',
+        'pid2ni_mean_mean', 'pid2ni_mean_median',
+        'pid2ni_med_mean', 'pid2ni_med_median',
+        'pid3n_mean', 'pid3n_median']
+
+for c in bp_cols:
+    tmp = make_str_bp_col(c, tmp)
+
+print(tmp)
+print(tmp.columns)
+#import pdb; pdb.set_trace()
+
+
 #Merge Party Metrics
 dm = dm.merge(tmp)
 
@@ -581,6 +605,17 @@ print(df.columns)
 df = df.astype(str)
 df = df.drop_duplicates(subset=['cid_master', 'ticker', 'year'])
 
+#TODO Drop Non-Board-Level Cols
+drop_cols = ['fullname_clean_pure', 'party', 'party_na',
+             'pid3n', 'pid2n', 'pid2ni_mean', 
+             'pid2ni_med', 'pid2ni_med_str']
+df = df.drop(drop_cols, axis=1)
+
+
+#################################################################
+#Convert Multi-Change Events to Event Rows
+#################################################################
+
 
 #Convert Change Events to Rows
 change_cols = []
@@ -609,7 +644,55 @@ change_cols.append(['dropped_bm_party', ','])
 change_cols.append(['dropped_bm_pid2ni_med_str', ','])
 df = split_subjects_nvars(change_cols, df)
 
+
+#################################################################
+#Add Matching Columns
+#################################################################
+
+'''
+Index(['ticker', 'year', 'pid2ni_mean_mean', 'pid2ni_mean_median',
+       'pid3n_mean', 'pid3n_median', 'pid2n_mean', 'pid2n_median',
+       'pid2ni_med_mean', 'pid2ni_med_median', 'bp_pid2n_mean',
+       'bp_pid2n_median', 'bp_pid2ni_mean_mean', 'bp_pid2ni_mean_median',
+       'bp_pid2ni_med_mean', 'bp_pid2ni_med_median', 'bp_pid3n_mean',
+       'bp_pid3n_median'],
+'''
+
+#Key Cols
+e = 'board_change_events_list'
+bpA = 'bp_pid2ni_med_median'
+bpB = 'bp_pid2n_mean'
+
+a1 = 'new_bm_party'
+a2 = 'new_bm_pid2ni_med_str'
+
+d1 = 'dropped_bm_party'
+d2 = 'dropped_bm_pid2ni_med_str'
+
+#Make Equal Swap Columns
+c = 'equal_swap_party'
+df[c] = np.where( ((df[e] == "SWAP") & (df[a1] == df[d1])), "YES",
+            np.where( ((df[e] == "SWAP") & (df[a1] != df[d1])), "NO", None))
+
+#Make Equal Swap Columns
+c = 'equal_swap_pid2ni_med_str'
+df[c] = np.where( ((df[e] == "SWAP") & (df[a2] == df[d2])), "YES",
+            np.where( ((df[e] == "SWAP") & (df[a2] != df[d2])), "NO", None))
+
+
+
+#Make Event Match Column
+
+'''
+dm0['party_match'] = np.where((dm0[c1] == 1), "1_BM_ADD",
+                    np.where((dm0[c1] == 2), "2_BM_ADD",
+                    np.where((dm0[c1] == 3), "3_BM_ADD",
+                    np.where((dm0[c1] > 3), "N_BM_ADD", ""))))
+
+'''
+
 print(df)
+print(df.columns)
 df.to_csv("test_metrics.csv", index=False)
 
 
