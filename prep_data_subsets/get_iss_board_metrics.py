@@ -217,7 +217,14 @@ def recode_events(row, simple=True):
 
 
 def split_sep_var(var, sep, df):
-    return df[var].str.split(sep, expand=True).stack().str.strip().reset_index(level=1, drop=True)
+
+    #Strip Out List, String Elements
+    v = df[var].str.replace('[', '').str.replace(']','')
+    v = v.str.replace("'", '')
+    v = v.str.split(sep, expand=True).stack().str.strip()
+    v = v.reset_index(level=1, drop=True)
+    return v
+    #return df[var].str.split(sep, expand=True).stack().str.strip().reset_index(level=1, drop=True)
     
 
 def split_subjects_nvars(vslist, df):
