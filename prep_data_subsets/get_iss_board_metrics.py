@@ -660,8 +660,14 @@ Index(['ticker', 'year', 'pid2ni_mean_mean', 'pid2ni_mean_median',
 
 #Key Cols
 e = 'board_change_events_list'
-bpA = 'bp_pid2ni_med_median'
-bpB = 'bp_pid2n_mean'
+
+#BP Party NA (pid2n)
+bp1a = 'bp_pid2n_mean' 
+bp1b = 'bp_pid2n_median'
+
+#BP Party NA (pid2n imputed)
+bp2a = 'bp_pid2ni_med_mean'
+bp2b = 'bp_pid2ni_med_median'
 
 a1 = 'new_bm_party'
 a2 = 'new_bm_pid2ni_med_str'
@@ -669,19 +675,87 @@ a2 = 'new_bm_pid2ni_med_str'
 d1 = 'dropped_bm_party'
 d2 = 'dropped_bm_pid2ni_med_str'
 
+ae = ['SWAP', 'ADD']
+de = ['DROP']
+
+##########################################
 #Make Equal Swap Columns
+##########################################
+
+
 c = 'equal_swap_party'
 df[c] = np.where( ((df[e] == "SWAP") & (df[a1] == df[d1])), "YES",
             np.where( ((df[e] == "SWAP") & (df[a1] != df[d1])), "NO", None))
 
-#Make Equal Swap Columns
-c = 'equal_swap_pid2ni_med_str'
+c = 'equal_swap_pid2ni_med'
 df[c] = np.where( ((df[e] == "SWAP") & (df[a2] == df[d2])), "YES",
             np.where( ((df[e] == "SWAP") & (df[a2] != df[d2])), "NO", None))
 
 
 
-#Make Event Match Column
+##########################################
+#Make Event Match Columns
+#Get Event Match (Partisan Expectation) 
+#1. For Swap/Add, 2. Drops
+
+c = 'event_match_party1a'
+df[c] = np.where(     ((df[e].isin(ae)) & (df[a1] == df[bp1a])), "YES",
+            np.where( ((df[e].isin(ae)) & (df[a1] != df[bp1a])), "NO",
+            np.where( ((df[e].isin(de)) & (df[d1] != df[bp1a])), "YES",
+            np.where( ((df[e].isin(de)) & (df[d1] == df[bp1a])), "NO", None))))
+
+c = 'event_match_party1b'
+df[c] = np.where(     ((df[e].isin(ae)) & (df[a1] == df[bp1b])), "YES",
+            np.where( ((df[e].isin(ae)) & (df[a1] != df[bp1b])), "NO",
+            np.where( ((df[e].isin(de)) & (df[d1] != df[bp1b])), "YES",
+            np.where( ((df[e].isin(de)) & (df[d1] == df[bp1b])), "NO", None))))
+
+
+c = 'event_match_pid2ni_med2a'
+df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2a])), "YES",
+            np.where( ((df[e].isin(ae)) & (df[a2] != df[bp2a])), "NO",
+            np.where( ((df[e].isin(de)) & (df[d2] != df[bp2a])), "YES",
+            np.where( ((df[e].isin(de)) & (df[d2] == df[bp2a])), "NO", None))))
+
+c = 'event_match_pid2ni_med2b'
+df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2b])), "YES",
+            np.where( ((df[e].isin(ae)) & (df[a2] != df[bp2b])), "NO",
+            np.where( ((df[e].isin(de)) & (df[d2] != df[bp2b])), "YES",
+            np.where( ((df[e].isin(de)) & (df[d2] == df[bp2b])), "NO", None))))
+
+
+##########################################
+#Make Partisan Match Columns
+#(Simple Partisan Matching) 
+#1. For Swap/Add, 2. Drops
+
+c = 'partisan_match_party1a'
+df[c] = np.where(     ((df[e].isin(ae)) & (df[a1] == df[bp1a])), "YES",
+            np.where( ((df[e].isin(ae)) & (df[a1] != df[bp1a])), "NO",
+            np.where( ((df[e].isin(de)) & (df[d1] == df[bp1a])), "YES",
+            np.where( ((df[e].isin(de)) & (df[d1] != df[bp1a])), "NO", None))))
+
+c = 'partisan_match_party1b'
+df[c] = np.where(     ((df[e].isin(ae)) & (df[a1] == df[bp1b])), "YES",
+            np.where( ((df[e].isin(ae)) & (df[a1] != df[bp1b])), "NO",
+            np.where( ((df[e].isin(de)) & (df[d1] == df[bp1b])), "YES",
+            np.where( ((df[e].isin(de)) & (df[d1] != df[bp1b])), "NO", None))))
+
+
+c = 'partisan_match_pid2ni_med2a'
+df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2a])), "YES",
+            np.where( ((df[e].isin(ae)) & (df[a2] != df[bp2a])), "NO",
+            np.where( ((df[e].isin(de)) & (df[d2] == df[bp2a])), "YES",
+            np.where( ((df[e].isin(de)) & (df[d2] != df[bp2a])), "NO", None))))
+
+c = 'partisan_match_pid2ni_med2b'
+df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2b])), "YES",
+            np.where( ((df[e].isin(ae)) & (df[a2] != df[bp2b])), "NO",
+            np.where( ((df[e].isin(de)) & (df[d2] == df[bp2b])), "YES",
+            np.where( ((df[e].isin(de)) & (df[d2] != df[bp2b])), "NO", None))))
+
+
+
 
 '''
 dm0['party_match'] = np.where((dm0[c1] == 1), "1_BM_ADD",
