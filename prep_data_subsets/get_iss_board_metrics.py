@@ -216,29 +216,11 @@ def flatten(lst):
             f.append(i)
     return f
 
+
 def val_iter(val, c, sep='.'):
     n = c+1
     val = '{}{}{}'.format(val, sep, n)
     return val
-
-
-def get_action_count(val):
-    #print(val)
-
-    #Drop Event Count
-    val = val.split('-')[0]
-
-    if val == 'NO_CHANGE' or val == 'OTHER':
-        a = 1
-    else:
-        a = int(val.split('.')[1])
-    print(a)
-    return a
-
-def get_event_count(val):
-    e = val.split('-')[1]
-    print(e)
-    return e
 
 
 def extract_event_action_counts(row):
@@ -268,11 +250,6 @@ def extract_event_action_counts(row):
 
 def get_simple_event(i):
 
-    #"N_BM_SWAP"
-    #"N_BM_ADD"
-    #"N_BM_DROP"
-
-
     if i == 'NO_CHANGE' or i == 'OTHER':
         return [i]
     else:
@@ -298,95 +275,9 @@ def get_simple_event(i):
 
 def recode_events(row, simple=True):
 
-    #"N_BM_SWAP"
-    #"N_BM_ADD"
-    #"N_BM_DROP"
-
-    try:
-
-        #Out Col 
-        o = 'board_change_events_list'
-        n = 'total_board_events'
-
-        #Get Column
-        i = row['board_all_change_events']
-
-        #Drop Spaces
-        i = i.replace(r'\s', '').replace(' ', '')
-
-        #Get Multiple Events
-        s = i.split(',')
-
-        if len(s) > 1:
-            if simple is True:
-                s0 = [get_simple_event(i) for i in s]
-                l = flatten(s0)
-                #row[o] = flatten(s0)
-            else:
-                l = s
-                #row[o] = s
-
-        else:
-            if simple is True:
-                i0 = get_simple_event(i)
-                l = flatten(i0)
-                #row[o] = flatten(i0)
-            else:
-                l = [i]
-                #row[o] = [i]
-
-        #Add Iteration Number to Full List
-        #import pdb; pdb.set_trace()
-        c = len(l)
-        l1 = [val_iter(x, y, sep='-') for x, y in zip(l, range(0, c))]
-        #print(l1)
-
-        #Action Count
-        #la = [get_action_count(x) for x in l1]
-        #print(la)
-
-        #le = [get_event_count(x) for x in l1]
-
-        row[o] = l1
-        row[n] = len(row[o])
-
-
-
-    except:
-        import pdb; pdb.set_trace()
-
-        #Out Col 
-        o = 'board_change_events_list'
-
-        #Get Column
-        i = row['board_all_change_events']
-
-        #Drop Spaces
-        i = i.replace(r'\s', '').replace(' ', '')
-
-        #Get Multiple Events
-        s = i.split(',')
-
-        if len(s) > 1:
-            if simple is True:
-                s0 = [get_simple_event(i) for i in s]
-                row[o] = flatten(s0)
-            else:
-                row[o] = s
-
-        else:
-            if simple is True:
-                i0 = get_simple_event(i)
-                row[o] = flatten(i0)
-            else:
-                row[o] = [i]
-
-    return row
-
-def recode_events_org(row, simple=True):
-
     #Out Col 
     o = 'board_change_events_list'
+    n = 'total_board_events'
 
     #Get Column
     i = row['board_all_change_events']
@@ -400,18 +291,25 @@ def recode_events_org(row, simple=True):
     if len(s) > 1:
         if simple is True:
             s0 = [get_simple_event(i) for i in s]
-            row[o] = flatten(s0)
+            l = flatten(s0)
         else:
-            row[o] = s
+            l = s
 
     else:
         if simple is True:
             i0 = get_simple_event(i)
-            row[o] = flatten(i0)
+            l = flatten(i0)
         else:
-            row[o] = [i]
+            l = [i]
 
+    #Add Iteration Number to Full List
+    c = len(l)
+    l1 = [val_iter(x, y, sep='-') for x, y in zip(l, range(0, c))]
+
+    row[o] = l1
+    row[n] = len(row[o])
     return row
+
 
 
 #################################################################
@@ -425,12 +323,9 @@ def split_sep_var(var, sep, df):
     v = df[var].str.replace('[', '').str.replace(']','')
     v = v.str.replace("'", '')
     v = v.str.split(sep, expand=True).stack().str.strip()
-    #v = v.reset_index(level=1, drop=True)
     v = v.reset_index(level=1, drop=True)
-    #v = v.reset_index()
     return v
-    #return df[var].str.split(sep, expand=True).stack().str.strip().reset_index(level=1, drop=True)
-    
+
 
 def split_subjects_nvars(vslist, df):
 
@@ -448,47 +343,6 @@ def split_subjects_nvars(vslist, df):
         s = split_sep_var(var, sep, df)
         series_list.append(s)
 
-    '''
-    import pdb; pdb.set_trace()
-    print(varlist)
-    print(series_list)
-    print(len(series_list))
-
-    s0 = series_list[0].reset_index(name='v1')['index']
-    s1 = series_list[0].reset_index(name='v1')
-    s2 = series_list[1].reset_index(name='v2')
-    s3 = series_list[2].reset_index(name='v3')
-    s4 = series_list[3].reset_index(name='v4')
-
-    #s = pd.concat([s0, s1], axis=1)
-    #dfx0 = s0.merge(s1)
-
-    dfx0 = pd.concat([s0, s1], axis=1)
-
-    dfx1 = pd.concat([s0, s3], axis=1)
-
-    dfx1 = s1.merge(s2).drop_duplicates()
-    print(dfx1.shape)
-    print(dfx1)
-
-    dfx2 = s1.merge(s3).drop_duplicates()
-    print(dfx2.shape)
-    print(dfx2)
-
-    dfx3 = s1.merge(s4).drop_duplicates()
-    print(dfx3.shape)
-    print(dfx3)
-
-    s = s0.merge(s1, how = 'left', on = ['index'])
-
-    s = s0.merge(s1, how = 'inner', on = ['index'])
-
-    s = s0.merge(s1)
-
-    s = pd.concat([s0, s1], axis=1)
-
-    s = s0.set_index('index').join(s1.set_index('index'))
-    '''
     df1 = pd.concat(series_list, axis=1, keys=varlist)
     df = df.drop(varlist, axis=1).join(df1).reset_index(drop=True)
     return df
@@ -640,38 +494,20 @@ dm0['board_net_change'] = np.where( ((dm0[c1] == 0) & (dm0[c2] == 0)), "NO_CHANG
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
-                    #np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_SWAP',
 
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 1)), "1_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 2)), "2_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 3)), "3_BM_ADD",
-                    #np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] > 3)), "N_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] > 3)), dm0[ald].apply(str)+'_BM_ADD',
 
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 1)), "1_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 2)), "2_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 3)), "3_BM_DROP",
-                    #np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] > 3)), "N_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] > 3)), dm0[dla].apply(str)+'_BM_DROP',
                     "OTHER")))))))))))))
 
-'''
-dm0['board_add_change'] = np.where((dm0[c1] == 1), "1_BM_ADD",
-                    np.where((dm0[c1] == 2), "2_BM_ADD",
-                    np.where((dm0[c1] == 3), "3_BM_ADD",
-                    np.where((dm0[c1] > 3), "N_BM_ADD", ""))))
 
-dm0['board_drop_change'] = np.where( (dm0[c2] == 1), "1_BM_DROP",
-                    np.where( (dm0[c2] == 2), "2_BM_DROP",
-                    np.where( (dm0[c2] == 3), "3_BM_DROP",
-                    np.where( (dm0[c2] > 3), "N_BM_DROP", ""))))
-'''
-
-a = 'new_bm_count'
-d = 'dropped_bm_count'
-ald = 'net_added'
-dla = 'net_dropped'
 dm0['board_all_change'] = np.where( 
 
                     #No Change
@@ -799,33 +635,10 @@ change_cols.append(['board_change_events_list', ','])
 df = split_subjects_nvars(change_cols, df)
 
 
-
-df = df[['cid_master', 'ticker', 'year',
-       'cp_board_change_events_list', 'cp_new_bm_party', 'cp_dropped_bm_party',
-       'new_bm_party', 'dropped_bm_party',
-       'board_change_events_list']]
-
-'''
-df = df[['ticker', 'year', 'new_bm_party',
-       'dropped_bm_party',
-       'board_change_events_list', 'cp_board_change_events_list']]
-'''
-
-#df['action_count'] = df['board_change_events_list'].apply(lambda x: get_action_count(x))
-
 #Extract Event Action Codes
 df = df.apply(extract_event_action_counts, axis=1)
 
 print(df)
-
-df.to_csv('test_events.csv', index=False)
-
-
-df = pd.read_csv('test_events.csv')
-
-#TODO
-#Unfold Events, Use Add, Drop Columns + Board Event List Col 
-#to recode add and drop cols
 
 
 
@@ -870,35 +683,25 @@ a = 'new_bm_party'
 d = 'dropped_bm_party'
 df = df.apply(recode_add_drop_events, events = e, event_count = c, add_col = a, drop_col = d, axis=1)
 
-df.to_csv('test_events.csv', index=False)
+
+a = 'new_bm_pid2ni_med_str'
+d = 'dropped_bm_pid2ni_med_str'
+df = df.apply(recode_add_drop_events, events = e, event_count = c, add_col = a, drop_col = d, axis=1)
 
 '''
-#Do Adds
-change_cols = []
-change_cols.append(['new_bm_party', ','])
-change_cols.append(['new_bm_pid2ni_med_str', ','])
-df = split_subjects_nvars(change_cols, df)
-print(df.shape)
-
-#Do Drops
-change_cols = []
-change_cols.append(['dropped_bm_party', ','])
-change_cols.append(['dropped_bm_pid2ni_med_str', ','])
-df = split_subjects_nvars(change_cols, df)
-print(df.shape)
+df = df[['cid_master', 'ticker', 'year',
+       'cp_board_change_events_list', 'cp_new_bm_party', 'cp_dropped_bm_party',
+       'new_bm_party', 'dropped_bm_party',
+       'cp_new_bm_pid2ni_med_str', 'cp_dropped_bm_pid2ni_med_str',
+       'new_bm_pid2ni_med_str', 'dropped_bm_pid2ni_med_str',
+       'board_change_events_list']]
 '''
 
-#Do Events
-#change_cols = []
-#change_cols.append(['board_change_events_list', ','])
-#df = split_subjects_nvars(change_cols, df)
+#df.to_csv('test_events.csv', index=False)
 
 
-#df = df.drop_duplicates()
-print(df.shape)
 
 
-'''
 #################################################################
 #Add Matching Columns
 #################################################################
@@ -1003,7 +806,7 @@ df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2b])), "YES",
             np.where( ((df[e].isin(de)) & (df[d2] != df[bp2b])), "NO", None))))
 
 
-'''
+
 print(df)
 print(df.columns)
 print('[*] saving result {} : {}...'.format(outfile, df.shape))
