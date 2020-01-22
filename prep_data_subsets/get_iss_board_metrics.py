@@ -1,14 +1,17 @@
 import pandas as pd 
 import numpy as np 
+import ast
 
 from collections import Counter 
 from collections import ChainMap
 
-#from test_dict import *
+#################################################################
+# Set Options
+#################################################################
 
-#from recode_events import *
-
-
+infile = '../data/ISS/post_join_drop_ISS_select.csv'
+outfile = '../data/ISS/ISS_board_change_analysis.csv'
+fullname_var = 'fullname_clean_pure'
 
 #################################################################
 # Utility Functions
@@ -30,6 +33,15 @@ def clean_col(col):
     c3 = c2.replace(',', '_').lower()
     c4 = c3.replace('\n', '').strip()
     return c4
+
+
+def make_str_bp_col(party_var, df):
+
+    p = party_var
+    bp = 'bp_{}'.format(p)
+    df[bp] = np.where(df[p] < 0, "DEM",
+                np.where(df[p] >= 0, "REP", None))
+    return df
 
 
 #################################################################
@@ -147,6 +159,50 @@ def get_party_bm_change(row, party_col):
     return row
 
 
+def get_party_change_cols(name_key, party_col, df_in):
+
+    dm1 = df_in.copy()
+
+    #Fullname and Party Columns
+    fn = name_key
+    pv = party_col
+
+    #Set Outcols
+    bpd = 'bp_dict_{}'.format(pv)
+    pbpd = 'prior_bp_dict_{}'.format(pv)
+
+
+    #Make Base Dict Col
+    dm1 = dm1.apply(make_row_dict, name_key = fn, party_val = pv, axis=1)
+
+    #Get Yearly Board Member, Party Dict
+    c = 'name_party'
+    gb = ['ticker', 'year']
+    tmp = dm1.groupby(gb)[c].apply(list).apply(c_dict)
+    tmp = tmp.reset_index(name='bp_dict')
+
+    #Get Lagged Board List (By Company)
+    tmp['prior_bp_dict'] = tmp.groupby(['ticker'])['bp_dict'].shift(1)
+
+    #Get Board Party Change Results
+    tmp = tmp.dropna(subset=['prior_bp_dict'])
+
+    #Add Yearly Board Party and Lagged Dicts
+    dm1 = dm1.merge(tmp)
+    dm1 = dm1.drop(['name_party'], axis=1)
+
+    #Combine Before Calculating Metrics
+    df = dm0.merge(dm1)
+
+    df = df.apply(get_party_bm_change, party_col = pv, axis=1)
+
+    #Rename Dict Columns using Party Value
+    df.rename(columns={'bp_dict': bpd,
+                       'prior_bp_dict': pbpd}, inplace=True)
+
+    return df.astype(str)
+
+
 #################################################################
 #Recode Event Change Functions
 #################################################################
@@ -160,27 +216,174 @@ def flatten(lst):
             f.append(i)
     return f
 
+def val_iter(val, c, sep='.'):
+    n = c+1
+    val = '{}{}{}'.format(val, sep, n)
+    return val
+
+
+def get_action_count(val):
+    #print(val)
+
+    #Drop Event Count
+    val = val.split('-')[0]
+
+    if val == 'NO_CHANGE' or val == 'OTHER':
+        a = 1
+    else:
+        a = int(val.split('.')[1])
+    print(a)
+    return a
+
+def get_event_count(val):
+    e = val.split('-')[1]
+    print(e)
+    return e
+
+
+def extract_event_action_counts(row):
+
+    col = 'board_change_events_list'
+    e = row[col]
+
+    #Get Event
+    event = e.split('-')[0]
+
+    #Get Action Count, Event Count
+    if event == 'NO_CHANGE' or event == 'OTHER':
+        ac = 1
+        ec = int(e.split('-')[1])
+        event = event
+    else:
+        ac = int(event.split('.')[1])
+        ec = int(e.split('-')[1])
+        event = event.split('.')[0]
+
+
+    row[col] = event
+    row['action_count'] = ac
+    row['event_count'] = ec
+
+    return row
 
 def get_simple_event(i):
+
+    #"N_BM_SWAP"
+    #"N_BM_ADD"
+    #"N_BM_DROP"
+
 
     if i == 'NO_CHANGE' or i == 'OTHER':
         return [i]
     else:
+        #Split of N+ 
+        if 'N_' in i:
+            i = i.split('N_')[1]
+        else:
+            pass
+
         n = int(i.split('_', 1)[0])
         if '_SWAP' in i:
             v = 'SWAP'
-            return [v for x in range(0, n)]
+            return [val_iter(v, x) for x in range(0, n)]
         if '_ADD' in i:
             v = 'ADD'
-            return [v for x in range(0, n)]
+            return [val_iter(v, x) for x in range(0, n)]
         if '_DROP' in i:
             v = 'DROP'
-            return [v for x in range(0, n)]
+            return [val_iter(v, x) for x in range(0, n)]
         else:
             return i
 
 
 def recode_events(row, simple=True):
+
+    #"N_BM_SWAP"
+    #"N_BM_ADD"
+    #"N_BM_DROP"
+
+    try:
+
+        #Out Col 
+        o = 'board_change_events_list'
+        n = 'total_board_events'
+
+        #Get Column
+        i = row['board_all_change_events']
+
+        #Drop Spaces
+        i = i.replace(r'\s', '').replace(' ', '')
+
+        #Get Multiple Events
+        s = i.split(',')
+
+        if len(s) > 1:
+            if simple is True:
+                s0 = [get_simple_event(i) for i in s]
+                l = flatten(s0)
+                #row[o] = flatten(s0)
+            else:
+                l = s
+                #row[o] = s
+
+        else:
+            if simple is True:
+                i0 = get_simple_event(i)
+                l = flatten(i0)
+                #row[o] = flatten(i0)
+            else:
+                l = [i]
+                #row[o] = [i]
+
+        #Add Iteration Number to Full List
+        #import pdb; pdb.set_trace()
+        c = len(l)
+        l1 = [val_iter(x, y, sep='-') for x, y in zip(l, range(0, c))]
+        #print(l1)
+
+        #Action Count
+        #la = [get_action_count(x) for x in l1]
+        #print(la)
+
+        #le = [get_event_count(x) for x in l1]
+
+        row[o] = l1
+        row[n] = len(row[o])
+
+
+
+    except:
+        import pdb; pdb.set_trace()
+
+        #Out Col 
+        o = 'board_change_events_list'
+
+        #Get Column
+        i = row['board_all_change_events']
+
+        #Drop Spaces
+        i = i.replace(r'\s', '').replace(' ', '')
+
+        #Get Multiple Events
+        s = i.split(',')
+
+        if len(s) > 1:
+            if simple is True:
+                s0 = [get_simple_event(i) for i in s]
+                row[o] = flatten(s0)
+            else:
+                row[o] = s
+
+        else:
+            if simple is True:
+                i0 = get_simple_event(i)
+                row[o] = flatten(i0)
+            else:
+                row[o] = [i]
+
+    return row
+
+def recode_events_org(row, simple=True):
 
     #Out Col 
     o = 'board_change_events_list'
@@ -222,7 +425,9 @@ def split_sep_var(var, sep, df):
     v = df[var].str.replace('[', '').str.replace(']','')
     v = v.str.replace("'", '')
     v = v.str.split(sep, expand=True).stack().str.strip()
+    #v = v.reset_index(level=1, drop=True)
     v = v.reset_index(level=1, drop=True)
+    #v = v.reset_index()
     return v
     #return df[var].str.split(sep, expand=True).stack().str.strip().reset_index(level=1, drop=True)
     
@@ -243,6 +448,47 @@ def split_subjects_nvars(vslist, df):
         s = split_sep_var(var, sep, df)
         series_list.append(s)
 
+    '''
+    import pdb; pdb.set_trace()
+    print(varlist)
+    print(series_list)
+    print(len(series_list))
+
+    s0 = series_list[0].reset_index(name='v1')['index']
+    s1 = series_list[0].reset_index(name='v1')
+    s2 = series_list[1].reset_index(name='v2')
+    s3 = series_list[2].reset_index(name='v3')
+    s4 = series_list[3].reset_index(name='v4')
+
+    #s = pd.concat([s0, s1], axis=1)
+    #dfx0 = s0.merge(s1)
+
+    dfx0 = pd.concat([s0, s1], axis=1)
+
+    dfx1 = pd.concat([s0, s3], axis=1)
+
+    dfx1 = s1.merge(s2).drop_duplicates()
+    print(dfx1.shape)
+    print(dfx1)
+
+    dfx2 = s1.merge(s3).drop_duplicates()
+    print(dfx2.shape)
+    print(dfx2)
+
+    dfx3 = s1.merge(s4).drop_duplicates()
+    print(dfx3.shape)
+    print(dfx3)
+
+    s = s0.merge(s1, how = 'left', on = ['index'])
+
+    s = s0.merge(s1, how = 'inner', on = ['index'])
+
+    s = s0.merge(s1)
+
+    s = pd.concat([s0, s1], axis=1)
+
+    s = s0.set_index('index').join(s1.set_index('index'))
+    '''
     df1 = pd.concat(series_list, axis=1, keys=varlist)
     df = df.drop(varlist, axis=1).join(df1).reset_index(drop=True)
     return df
@@ -253,26 +499,23 @@ def split_subjects_nvars(vslist, df):
 #Load Key Dataframes
 #################################################################
 
-dm = pd.read_csv('../data/ISS/post_join_drop_ISS_select.csv')
-print(dm.columns.tolist())
+#Load Data
+dm = pd.read_csv(infile, low_memory=False)
+print('[*] loading dataframe {} : {}...'.format(infile, dm.shape))
 
-#Duplicate Tickers? HP?
-print(dm.shape)
-dm = dm.drop_duplicates(subset=['ticker', 'year', 'fullname_clean_pure'])
-print(dm.shape)
-
+#Drop Duplicates
+dm = dm.drop_duplicates(subset=['ticker', 'year', fullname_var])
 
 #Isolate Subset for Draft
-dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' )]
+#dm = dm.loc[(dm['cid_master'] == 'Air Products & Chemicals') | (dm['cid_master'] == 'Apple' )]
+dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
 
 
-dm = dm[['cid_master', 'ticker', 'year', 'cycle', 'fullname_clean_pure', 'party']]
-#print(dm)
+dm = dm[['cid_master', 'ticker', 'year', 'cycle', fullname_var, 'party']]
 
 #Make Copy with NA & Fill NA Party Values with UNK
 dm['party_na'] = dm['party']
 dm['party'] = dm['party'].fillna("UNK")
-print(dm.shape)
 
 #################################################################
 #Add Some Basic Metrics
@@ -280,10 +523,16 @@ print(dm.shape)
 
 #Add Yearly Board Size Column
 gb = ['ticker', 'year']
-tmp = dm.groupby(gb)['fullname_clean_pure'].count().reset_index()
+tmp = dm.groupby(gb)[fullname_var].count().reset_index()
 tmp.columns = ['ticker', 'year', 'board_size']
 dm = dm.merge(tmp)
 
+
+#################################################################
+#Add Board Partisanship Overall Measures
+#################################################################
+
+print('[*] calculating board partisanship measures...')
 
 #Add Numeric Party Cols
 p = 'party'
@@ -315,17 +564,11 @@ c = 'pid2ni_med'
 tmp2['pid2ni_med_str'] = np.where(tmp2[c] < 0, "DEM",
                                   np.where(tmp2[c] > 0, "REP", None))
 
-
-
-#import pdb; pdb.set_trace()
-
+#Combine data with imputed columns
 dm = pd.concat([dm, tmp1, tmp2], axis=1)
-print(dm.shape)
 
 #Add Yearly Board Size Column
 gb = ['ticker', 'year']
-#tmp = dm.groupby(gb)['fullname_clean_pure'].count().reset_index()
-
 tmp = dm.groupby(gb).agg({'pid2n' : ['mean', 'median'],
                           'pid2ni_mean' : ['mean', 'median'],
                           'pid2ni_med' : ['mean', 'median'],
@@ -340,15 +583,6 @@ tmp.columns = clean_cols
 
 
 #Add Board Party Columns
-
-def make_str_bp_col(party_var, df):
-
-    p = party_var
-    bp = 'bp_{}'.format(p)
-    df[bp] = np.where(df[p] < 0, "DEM",
-                np.where(df[p] >= 0, "REP", None))
-    return df
-
 bp_cols = ['pid2n_mean', 'pid2n_median',
         'pid2ni_mean_mean', 'pid2ni_mean_median',
         'pid2ni_med_mean', 'pid2ni_med_median',
@@ -356,11 +590,6 @@ bp_cols = ['pid2n_mean', 'pid2n_median',
 
 for c in bp_cols:
     tmp = make_str_bp_col(c, tmp)
-
-print(tmp)
-print(tmp.columns)
-#import pdb; pdb.set_trace()
-
 
 #Merge Party Metrics
 dm = dm.merge(tmp)
@@ -371,8 +600,10 @@ dm = dm.merge(tmp)
 #Get Board Member Change Metrics
 #################################################################
 
+print('[*] calculating board member changes...')
+
 #Get Yearly Board Member List
-c = 'fullname_clean_pure'
+c = fullname_var
 tmp = dm.groupby(gb)[c].apply(list).apply(lsort)
 tmp = tmp.reset_index(name='board')
 
@@ -386,10 +617,6 @@ tmp =  tmp.apply(get_board_metrics, axis=1)
 
 #Add Yearly Board Member Change Metrics
 dm0 = dm.merge(tmp)
-print(dm0.shape)
-print(dm0.columns)
-
-dm0.to_csv("test_metrics.csv", index=False)
 
 #################################################################
 #Need Board Change Flags
@@ -402,28 +629,34 @@ dm0['net_added'] = dm0.net_added.astype(str)
 dm0['net_dropped'] = dm0[c2] - dm0[c1]
 dm0['net_dropped'] = dm0.net_dropped.astype(str)
 
-#print(dm0.isna().sum())
 
-#print(dm0.dtypes)
+a = 'new_bm_count'
+d = 'dropped_bm_count'
+ald = 'net_added'
+dla = 'net_dropped'
+
 
 dm0['board_net_change'] = np.where( ((dm0[c1] == 0) & (dm0[c2] == 0)), "NO_CHANGE",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_SWAP",
+                    #np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_SWAP',
 
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 1)), "1_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 2)), "2_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 3)), "3_BM_ADD",
-                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] > 3)), "N_BM_ADD",
+                    #np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] > 3)), "N_BM_ADD",
+                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] > 3)), dm0[ald].apply(str)+'_BM_ADD',
 
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 1)), "1_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 2)), "2_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 3)), "3_BM_DROP",
-                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] > 3)), "N_BM_DROP",
+                    #np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] > 3)), "N_BM_DROP",
+                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] > 3)), dm0[dla].apply(str)+'_BM_DROP',
                     "OTHER")))))))))))))
 
-
+'''
 dm0['board_add_change'] = np.where((dm0[c1] == 1), "1_BM_ADD",
                     np.where((dm0[c1] == 2), "2_BM_ADD",
                     np.where((dm0[c1] == 3), "3_BM_ADD",
@@ -433,8 +666,7 @@ dm0['board_drop_change'] = np.where( (dm0[c2] == 1), "1_BM_DROP",
                     np.where( (dm0[c2] == 2), "2_BM_DROP",
                     np.where( (dm0[c2] == 3), "3_BM_DROP",
                     np.where( (dm0[c2] > 3), "N_BM_DROP", ""))))
-
-
+'''
 
 a = 'new_bm_count'
 d = 'dropped_bm_count'
@@ -449,19 +681,19 @@ dm0['board_all_change'] = np.where(
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_SWAP',
 
                     #Only Added
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 1)), "1_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 2)), "2_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 3)), "3_BM_ADD",
-                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] > 3)), "N_BM_ADD",
+                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_ADD',
 
                     #Only Dropped
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 1)), "1_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 2)), "2_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 3)), "3_BM_DROP",
-                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), "N_BM_DROP",
+                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), dm0[dla].apply(str)+'_BM_DROP',
 
                     #Replacement and Add
                     np.where( (dm0[c1] > dm0[c2]), dm0[d].apply(str)+'_BM_SWAP_'+dm0[ald].apply(str)+'_BM_ADD',
@@ -481,19 +713,19 @@ dm0['board_all_change_events'] = np.where(
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), "N_BM_SWAP",
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_SWAP',
 
                     #Only Added
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 1)), "1_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 2)), "2_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 3)), "3_BM_ADD",
-                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] > 3)), "N_BM_ADD",
+                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_ADD',
 
                     #Only Dropped
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 1)), "1_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 2)), "2_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 3)), "3_BM_DROP",
-                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), "N_BM_DROP",
+                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), dm0[dla].apply(str)+'_BM_DROP',
 
                     #Replacement and Add
                     np.where( (dm0[c1] > dm0[c2]), dm0[d].apply(str)+'_BM_SWAP,'+dm0[ald].apply(str)+'_BM_ADD',
@@ -509,156 +741,172 @@ dm0['board_all_change_events'] = np.where(
 dm0 = dm0.apply(recode_events, simple = True, axis=1)
 
 
-
-
-#################################################################
-#Need Board Partisanship Overall Measures
-#################################################################
-
-#***All needs to occur on df prior to bm lag and drop na
-#since we are lagging again, needs to be on initial df
-dm1 = dm.copy()
-
-
-#Fullname and Party Columns
-fn = 'fullname_clean_pure'
-pv = 'party'
-
-
-
-
 #################################################################
 #Need Board Party Change Metrics
 #################################################################
 
+print('[*] calculating board member party changes...')
 
-def get_party_change_cols(name_key, party_col, df_in):
-
-    dm1 = df_in.copy()
-
-
-    #Fullname and Party Columns
-    fn = name_key
-    pv = party_col
-
-    #Set Outcols
-
-
-
-    #Make Base Dict Col
-    dm1 = dm1.apply(make_row_dict, name_key = fn, party_val = pv, axis=1)
-
-
-    #Get Yearly Board Member, Party Dict
-    c = 'name_party'
-    gb = ['ticker', 'year']
-    tmp = dm1.groupby(gb)[c].apply(list).apply(c_dict)
-    tmp = tmp.reset_index(name='bp_dict')
-
-    #Get Lagged Board List (By Company)
-    tmp['prior_bp_dict'] = tmp.groupby(['ticker'])['bp_dict'].shift(1)
-
-    #Get Board Party Change Results
-    tmp = tmp.dropna(subset=['prior_bp_dict'])
-
-    #Add Yearly Board Party and Lagged Dicts
-    dm1 = dm1.merge(tmp)
-    dm1 = dm1.drop(['name_party'], axis=1)
-
-    #Combine Before Calculating Metrics
-    df = dm0.merge(dm1)
-
-    df = df.apply(get_party_bm_change, party_col = pv, axis=1)
-
-    #Drop Extra Columns
-    df = df.drop(['bp_dict', 'prior_bp_dict'], axis=1)
-
-    #TODO
-    #Rename Dict Columns with PV, vs Drop
-
-    return df.astype(str)
-
+#Make Copy of Data
+dm1 = dm.copy()
 
 #Fullname and Party Columns
-#dm1 = dm.copy()
-fn = 'fullname_clean_pure'
+fn = fullname_var
 pv = 'party'
 
 #Get Party Change with Original Party Variable
 df1 = get_party_change_cols(fn, pv, dm)
-print(df1.columns)
-#df = df.astype(str)
 
 #Get Party Change with Imputed Party Variable
 pv = 'pid2ni_med_str'
 df2 = get_party_change_cols(fn, pv, dm)
-print(df2.columns)
 
 #Combine
 df = df1.merge(df2)
-print(df.columns)
-
-
-
 
 #Convert to Company, Year Data
 df = df.astype(str)
 df = df.drop_duplicates(subset=['cid_master', 'ticker', 'year'])
 
-#TODO Drop Non-Board-Level Cols
-drop_cols = ['fullname_clean_pure', 'party', 'party_na',
+#Drop Non-Board-Level Cols
+drop_cols = [fullname_var, 'party', 'party_na',
              'pid3n', 'pid2n', 'pid2ni_mean', 
              'pid2ni_med', 'pid2ni_med_str']
 df = df.drop(drop_cols, axis=1)
 
+#df.to_csv("test_base_test_metrics.csv", index=False)
 
 #################################################################
 #Convert Multi-Change Events to Event Rows
 #################################################################
 
+#df = pd.read_csv("test_base_test_metrics.csv")
 
-#Convert Change Events to Rows
-change_cols = []
-#change_cols.append(['board_change_events_list', ','])
-change_cols.append(['new_bm_party', ','])
-#change_cols.append(['dropped_bm_party', ','])
-change_cols.append(['new_bm_pid2ni_med_str', ','])
-#change_cols.append(['dropped_bm_pid2ni_med_str', ','])
+print('[*] converting compound events to rows...')
 
-print(change_cols)
+#make duplicate cols of originals
+df['cp_board_change_events_list'] = df['board_change_events_list']
+df['cp_new_bm_pid2ni_med_str'] = df['new_bm_pid2ni_med_str']
+df['cp_dropped_bm_pid2ni_med_str'] = df['dropped_bm_pid2ni_med_str']
+df['cp_new_bm_party'] = df['new_bm_party']
+df['cp_dropped_bm_party'] = df['dropped_bm_party']
+
+print(df.shape)
 
 #Do Events
 change_cols = []
 change_cols.append(['board_change_events_list', ','])
 df = split_subjects_nvars(change_cols, df)
 
+
+
+df = df[['cid_master', 'ticker', 'year',
+       'cp_board_change_events_list', 'cp_new_bm_party', 'cp_dropped_bm_party',
+       'new_bm_party', 'dropped_bm_party',
+       'board_change_events_list']]
+
+'''
+df = df[['ticker', 'year', 'new_bm_party',
+       'dropped_bm_party',
+       'board_change_events_list', 'cp_board_change_events_list']]
+'''
+
+#df['action_count'] = df['board_change_events_list'].apply(lambda x: get_action_count(x))
+
+#Extract Event Action Codes
+df = df.apply(extract_event_action_counts, axis=1)
+
+print(df)
+
+df.to_csv('test_events.csv', index=False)
+
+
+df = pd.read_csv('test_events.csv')
+
+#TODO
+#Unfold Events, Use Add, Drop Columns + Board Event List Col 
+#to recode add and drop cols
+
+
+
+
+
+def recode_add_drop_events(row, events, event_count, add_col, drop_col):
+
+    e = events
+    c = event_count
+    a = add_col
+    d = drop_col
+
+    #Get Add, Drop Lists
+    la = ast.literal_eval(row[a])
+    ld = ast.literal_eval(row[d])
+
+    #Get Index Number
+    n = int(row[c])
+    i = n-1
+
+    if row[e] == 'NO_CHANGE' or row[e] == 'OTHER':
+        row[a] = None
+        row[d] = None
+
+    if 'ADD' in row[e]:
+        row[a] = la[i]
+        row[d] = None
+
+    if 'DROP' in row[e]:
+        row[d] = ld[i]
+        row[a] = None
+
+    if 'SWAP' in row[e]:
+        row[a] = la[i]
+        row[d] = ld[i]
+
+    return row
+
+e = 'board_change_events_list'
+c = 'event_count'
+a = 'new_bm_party'
+d = 'dropped_bm_party'
+df = df.apply(recode_add_drop_events, events = e, event_count = c, add_col = a, drop_col = d, axis=1)
+
+df.to_csv('test_events.csv', index=False)
+
+'''
 #Do Adds
 change_cols = []
 change_cols.append(['new_bm_party', ','])
 change_cols.append(['new_bm_pid2ni_med_str', ','])
 df = split_subjects_nvars(change_cols, df)
+print(df.shape)
 
 #Do Drops
 change_cols = []
 change_cols.append(['dropped_bm_party', ','])
 change_cols.append(['dropped_bm_pid2ni_med_str', ','])
 df = split_subjects_nvars(change_cols, df)
+print(df.shape)
+'''
+
+#Do Events
+#change_cols = []
+#change_cols.append(['board_change_events_list', ','])
+#df = split_subjects_nvars(change_cols, df)
 
 
+#df = df.drop_duplicates()
+print(df.shape)
+
+
+'''
 #################################################################
 #Add Matching Columns
 #################################################################
 
-'''
-Index(['ticker', 'year', 'pid2ni_mean_mean', 'pid2ni_mean_median',
-       'pid3n_mean', 'pid3n_median', 'pid2n_mean', 'pid2n_median',
-       'pid2ni_med_mean', 'pid2ni_med_median', 'bp_pid2n_mean',
-       'bp_pid2n_median', 'bp_pid2ni_mean_mean', 'bp_pid2ni_mean_median',
-       'bp_pid2ni_med_mean', 'bp_pid2ni_med_median', 'bp_pid3n_mean',
-       'bp_pid3n_median'],
-'''
+print('[*] coding results...')
 
-#Key Cols
+#Key Cols, Abbreviations
+
 e = 'board_change_events_list'
 
 #BP Party NA (pid2n)
@@ -755,29 +1003,12 @@ df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2b])), "YES",
             np.where( ((df[e].isin(de)) & (df[d2] != df[bp2b])), "NO", None))))
 
 
-
-
 '''
-dm0['party_match'] = np.where((dm0[c1] == 1), "1_BM_ADD",
-                    np.where((dm0[c1] == 2), "2_BM_ADD",
-                    np.where((dm0[c1] == 3), "3_BM_ADD",
-                    np.where((dm0[c1] > 3), "N_BM_ADD", ""))))
-
-'''
-
 print(df)
 print(df.columns)
+print('[*] saving result {} : {}...'.format(outfile, df.shape))
+df.to_csv(outfile, index=False)
 df.to_csv("test_metrics.csv", index=False)
 
-
-#################################################################
-#TODO
-#Unfold Party Change Lists, Change Events Into Rows
-#[SWAP, DROP] | ['DEM'] | ['DEM', 'REP'] 
-# -->
-#SWAP | DEM | DEM
-#DROP |     | REP
-
-#################################################################
 
 
