@@ -228,18 +228,25 @@ def extract_event_action_counts(row):
     col = 'board_change_events_list'
     e = row[col]
 
-    #Get Event
-    event = e.split('-')[0]
+    try:
 
-    #Get Action Count, Event Count
-    if event == 'NO_CHANGE' or event == 'OTHER':
-        ac = 1
-        ec = int(e.split('-')[1])
-        event = event
-    else:
-        ac = int(event.split('.')[1])
-        ec = int(e.split('-')[1])
-        event = event.split('.')[0]
+        #Get Event
+        event = e.split('-')[0]
+
+        #Get Action Count, Event Count
+        if event == 'NO_CHANGE' or event == 'OTHER':
+            ac = 1
+            ec = int(e.split('-')[1])
+            event = event
+        else:
+            ac = int(event.split('.')[1])
+            ec = int(e.split('-')[1])
+            event = event.split('.')[0]
+
+    except:
+        import pdb; pdb.set_trace()
+        print(row)
+        print(e)
 
 
     row[col] = event
@@ -362,7 +369,7 @@ dm = dm.drop_duplicates(subset=['ticker', 'year', fullname_var])
 
 #Isolate Subset for Draft
 #dm = dm.loc[(dm['cid_master'] == 'Air Products & Chemicals') | (dm['cid_master'] == 'Apple' )]
-dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
+#dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
 
 
 dm = dm[['cid_master', 'ticker', 'year', 'cycle', fullname_var, 'party']]
@@ -494,17 +501,17 @@ dm0['board_net_change'] = np.where( ((dm0[c1] == 0) & (dm0[c2] == 0)), "NO_CHANG
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_SWAP',
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[c1].apply(str)+'_BM_SWAP',
 
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 1)), "1_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 2)), "2_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] == 3)), "3_BM_ADD",
-                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] > 3)), dm0[ald].apply(str)+'_BM_ADD',
+                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c1] - dm0[c2] > 3)), dm0[c1].apply(str)+'_BM_ADD',
 
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 1)), "1_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 2)), "2_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] == 3)), "3_BM_DROP",
-                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] > 3)), dm0[dla].apply(str)+'_BM_DROP',
+                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c2] - dm0[c1] > 3)), dm0[c2].apply(str)+'_BM_DROP',
                     "OTHER")))))))))))))
 
 
@@ -517,19 +524,19 @@ dm0['board_all_change'] = np.where(
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_SWAP',
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[c1].apply(str)+'_BM_SWAP',
 
                     #Only Added
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 1)), "1_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 2)), "2_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 3)), "3_BM_ADD",
-                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_ADD',
+                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] > 3)), dm0[c1].apply(str)+'_BM_ADD',
 
                     #Only Dropped
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 1)), "1_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 2)), "2_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 3)), "3_BM_DROP",
-                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), dm0[dla].apply(str)+'_BM_DROP',
+                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), dm0[c2].apply(str)+'_BM_DROP',
 
                     #Replacement and Add
                     np.where( (dm0[c1] > dm0[c2]), dm0[d].apply(str)+'_BM_SWAP_'+dm0[ald].apply(str)+'_BM_ADD',
@@ -549,19 +556,19 @@ dm0['board_all_change_events'] = np.where(
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 1)), "1_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 2)), "2_BM_SWAP",
                     np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] == 3)), "3_BM_SWAP",
-                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_SWAP',
+                    np.where( ((dm0[c1] == dm0[c2]) & (dm0[c1] > 3)), dm0[c1].apply(str)+'_BM_SWAP',
 
                     #Only Added
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 1)), "1_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 2)), "2_BM_ADD",
                     np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] == 3)), "3_BM_ADD",
-                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] > 3)), dm0[ald].apply(str)+'_BM_ADD',
+                    np.where( ((dm0[c1] > dm0[c2]) & (dm0[c2] == 0) & (dm0[c1] > 3)), dm0[c1].apply(str)+'_BM_ADD',
 
                     #Only Dropped
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 1)), "1_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 2)), "2_BM_DROP",
                     np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] == 3)), "3_BM_DROP",
-                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), dm0[dla].apply(str)+'_BM_DROP',
+                    np.where( ((dm0[c1] < dm0[c2]) & (dm0[c1] == 0) & (dm0[c2] > 3)), dm0[c2].apply(str)+'_BM_DROP',
 
                     #Replacement and Add
                     np.where( (dm0[c1] > dm0[c2]), dm0[d].apply(str)+'_BM_SWAP,'+dm0[ald].apply(str)+'_BM_ADD',
