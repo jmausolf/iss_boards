@@ -101,6 +101,26 @@ df = df.merge(dm, how = 'left', on = 'ticker')
 
 #Add Election Cycle Column
 df['cycle'] = df['year'].apply(convert_cycle)
+print(df.dtypes)
+
+#TODO Add FEC Company Summary Metrics
+fcs = pd.read_csv("../data/FEC/company_party_polarization.csv")
+
+
+#Rename FEC Summary Cols for Clarity
+cols = fcs.columns.tolist()
+c1 = ['cycle', 'cid_master']
+cols.remove('cycle')
+cols.remove('cid_master')
+c2 = ['fec_{}'.format(c) for c in cols]
+new_cols = c1 + c2
+fcs.columns = new_cols
+
+
+#Reformat Cycle and Join
+fcs['cycle'] = fcs['cycle'].apply(lambda x: str(int(x)))
+df = df.merge(fcs, how = 'left', on = ['cid_master', 'cycle'])
+
 
 #Clean ISS Names
 df = clean_firstname_col("first_name", df)

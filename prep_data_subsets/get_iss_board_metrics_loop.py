@@ -168,8 +168,6 @@ def get_party_bm_change(row, party_col):
 
 def get_party_change_cols(name_key, party_col, lag, df_in, df_flags):
 
-    print('[*] requested dictionary yearly lag is {} year(s)...'.format(lag))
-
     dm1 = df_in.copy()
     dm0 = df_flags.copy()
 
@@ -522,9 +520,9 @@ print('[*] loading dataframe {} : {}...'.format(infile, dm.shape))
 #Drop Duplicates
 dm = dm.drop_duplicates(subset=['ticker', 'year', fullname_var])
 
-#Isolate Subset for Draft
+#Isolate Subset for Testing
 #dm = dm.loc[(dm['cid_master'] == 'Air Products & Chemicals') | (dm['cid_master'] == 'Apple' )]
-dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
+#dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
 
 
 dm = dm[['cid_master', 'ticker', 'year', 'cycle', fullname_var, 'party']]
@@ -636,169 +634,44 @@ for c in bp_cols:
 dm = dm.merge(tmp)
 
 
-#################################################################
-#Drop Companies if Min Board Size < Lag
-#################################################################
-
-
-#Set Lag Years
-lag = 3
-
-#Board Lag can at most = board_years - 1
-#e.g. apple 12 board years can only have a lag of 11
-
-print('[*] requested yearly lag is {} year(s)...'.format(lag))
-
-#Add Lag Year Column
-dm['lag_years'] = lag
-
-
 
 #################################################################
-#Get Board Member Change Metrics
-#################################################################
-
-print('[*] calculating board member changes...')
-
-#Get Yearly Board Member List
-c = fullname_var
-tmp = dm.groupby(gb)[c].apply(list).apply(lsort)
-tmp = tmp.reset_index(name='board')
-
-#import pdb; pdb.set_trace()
-#Get Lagged Board List (By Company)
-tmp['prior_board'] = tmp.groupby(['ticker'])['board'].shift(lag)
-tmp['prior_board_year'] = tmp.groupby(['ticker'])['year'].shift(lag)
-
-#Get Board Change Results
-tmp = tmp.dropna(subset=['prior_board'])
-tmp['prior_board_year'] = tmp[['prior_board_year']].astype(int)
-tmp =  tmp.apply(get_board_metrics, axis=1)
-
-#Add Yearly Board Member Change Metrics
-dm0 = dm.merge(tmp)
-
-
-#################################################################
-#Get Board Party Change Metrics
-#################################################################
-
-print('[*] calculating board member party changes...')
-
-#Add Board Change Flags
-dma = add_board_change_flags(dm0)
-
-#Fullname and Party Columns
-fn = fullname_var
-pv = 'party'
-
-#Get Party Change with Original Party Variable
-df1 = get_party_change_cols(fn, pv, lag, dm, dma)
-
-#Get Party Change with Imputed Party Variable
-pv = 'pid2ni_med_str'
-df2 = get_party_change_cols(fn, pv, lag, dm, dma)
-
-#Combine
-df = df1.merge(df2)
-
-#Convert to Company, Year Data
-df = df.astype(str)
-df = df.drop_duplicates(subset=['cid_master', 'ticker', 'year'])
-
-#Drop Non-Board-Level Cols
-drop_cols = [fullname_var, 'party', 'party_na',
-             'pid3n', 'pid2n', 'pid2ni_mean', 
-             'pid2ni_med', 'pid2ni_med_str']
-df = df.drop(drop_cols, axis=1)
-
-
-#################################################################
-#Convert Multi-Change Events to Event Rows
+#Add Event Matching Columns
 #################################################################
 
 
-print('[*] converting compound events to rows...')
+def make_equal_swap_col(df, add_col, drop_col, event_col='board_change_events_list'):
 
-#make duplicate cols of originals
-df['cp_board_change_events_list'] = df['board_change_events_list']
-#df['cp_new_bm_pid2ni_med_str'] = df['new_bm_pid2ni_med_str']
-#df['cp_dropped_bm_pid2ni_med_str'] = df['dropped_bm_pid2ni_med_str']
-#df['cp_new_bm_party'] = df['new_bm_party']
-#df['cp_dropped_bm_party'] = df['dropped_bm_party']
+      e = event_col
+      a = add_col
+      d = drop_col
 
-#Convert Events
-change_cols = []
-change_cols.append(['board_change_events_list', ','])
-df = split_subjects_nvars(change_cols, df)
+      ae = ['SWAP', 'ADD']
+      de = ['DROP']
 
-#Extract Event Action Codes
-df = df.apply(extract_event_action_counts, axis=1)
-print(df)
+      ## Get Party from Add Drop
+      p1 = a.split('new_bm_')[1]
+      p2 = d.split('dropped_bm_')[1]
 
+      #QC
+      assert p1 == p2, (
+            "[*] add and drop parties must be equal..."+\
+            "\n add party: {}".format(p1)+\
+            "\n drop party: {}".format(p2)
+            )
 
-#Core Aliases
-e = 'board_change_events_list'
-c = 'event_count'
+      #Make Equal Swap Column
+      es = 'equal_swap_ep_{}'.format(p1)
+      df[es] = np.where( ((df[e] == "SWAP") & (df[a] == df[d])), "YES",
+                  np.where( ((df[e] == "SWAP") & (df[a] != df[d])), "NO", None))
 
-#Recode Party Events
-a = 'new_bm_party'
-d = 'dropped_bm_party'
-df = df.apply(recode_add_drop_events,
-    events = e,
-    event_count = c,
-    add_col = a,
-    drop_col = d,
-    axis=1)
-
-
-#Recode PID2NI Events
-a = 'new_bm_pid2ni_med_str'
-d = 'dropped_bm_pid2ni_med_str'
-df = df.apply(recode_add_drop_events,
-    events = e,
-    event_count = c,
-    add_col = a,
-    drop_col = d,
-    axis=1)
-
-
-#################################################################
-#Add Matching Columns
-#################################################################
-
-print('[*] coding results...')
-
-#Key Cols, Abbreviations
-
-e = 'board_change_events_list'
-
-#BP Party NA (pid2n)
-bp1a = 'bp_pid2n_mean' 
-bp1b = 'bp_pid2n_median'
-
-#BP Party NA (pid2n imputed)
-bp2a = 'bp_pid2ni_med_mean'
-bp2b = 'bp_pid2ni_med_median'
-
-a1 = 'new_bm_party'
-a2 = 'new_bm_pid2ni_med_str'
-
-d1 = 'dropped_bm_party'
-d2 = 'dropped_bm_pid2ni_med_str'
-
-ae = ['SWAP', 'ADD']
-de = ['DROP']
-
-import pdb; pdb.set_trace()
+      return df
 
 
 def make_event_match_cols(df, bp_col, add_col, drop_col, event_col='board_change_events_list'):
 
       e = event_col
       bp = bp_col
-
-      print(bp)
 
       a = add_col
       d = drop_col
@@ -810,136 +683,212 @@ def make_event_match_cols(df, bp_col, add_col, drop_col, event_col='board_change
       p1 = a.split('new_bm_')[1]
       p2 = d.split('dropped_bm_')[1]
 
-      ##Board Parties
-
-      print(p1, p2)
+      #QC
       assert p1 == p2, (
-            "[*] add and drop parties must be equal...")
+            "[*] add and drop parties must be equal..."+\
+            "\n add party: {}".format(p1)+\
+            "\n drop party: {}".format(p2)
+            )
 
-
-
-      ##########################################
-      #Make Equal Swap Columns
-      ##########################################
-
-      es = 'equal_swap_ep_{}'.format(p1)
-      df[es] = np.where( ((df[e] == "SWAP") & (df[a] == df[d])), "YES",
-                  np.where( ((df[e] == "SWAP") & (df[a] != df[d])), "NO", None))
-
-
-      ##########################################
       #Make Event Match Columns
-      #Get Event Match (Partisan Expectation) 
-      #1. For Swap/Add, 2. Drops
-
       c = 'event_match_party1a'
       em = 'event_match_ep_{}_{}'.format(p1, bp)
-      print(em)
-      df[em] = np.where(     ((df[e].isin(ae)) & (df[a] == df[bp1a])), "YES",
-                  np.where( ((df[e].isin(ae)) & (df[a] != df[bp1a])), "NO",
-                  np.where( ((df[e].isin(de)) & (df[d] != df[bp1a])), "YES",
-                  np.where( ((df[e].isin(de)) & (df[d] == df[bp1a])), "NO", None))))
+      df[em] = np.where(     ((df[e].isin(ae)) & (df[a] == df[bp])), "YES",
+                  np.where( ((df[e].isin(ae)) & (df[a] != df[bp])), "NO",
+                  np.where( ((df[e].isin(de)) & (df[d] != df[bp])), "YES",
+                  np.where( ((df[e].isin(de)) & (df[d] == df[bp])), "NO", None))))
 
 
-      ##########################################
       #Make Partisan Match Columns
-      #(Simple Partisan Matching) 
-      #1. For Swap/Add, 2. Drops
-
       c = 'partisan_match_party1a'
       pm = 'partisan_match_ep_{}_{}'.format(p1, bp)
-      print(pm)
-      df[pm] = np.where(     ((df[e].isin(ae)) & (df[a] == df[bp1a])), "YES",
-                  np.where( ((df[e].isin(ae)) & (df[a] != df[bp1a])), "NO",
-                  np.where( ((df[e].isin(de)) & (df[d] == df[bp1a])), "YES",
-                  np.where( ((df[e].isin(de)) & (df[d] != df[bp1a])), "NO", None))))
-
+      df[pm] = np.where(     ((df[e].isin(ae)) & (df[a] == df[bp])), "YES",
+                  np.where( ((df[e].isin(ae)) & (df[a] != df[bp])), "NO",
+                  np.where( ((df[e].isin(de)) & (df[d] == df[bp])), "YES",
+                  np.where( ((df[e].isin(de)) & (df[d] != df[bp])), "NO", None))))
 
       return df
 
 
-df = make_event_match_cols(df, bp1a, a1, d1)
-
-##########################################
-#Make Equal Swap Columns
-##########################################
-
-
-c = 'equal_swap_party'
-df[c] = np.where( ((df[e] == "SWAP") & (df[a1] == df[d1])), "YES",
-            np.where( ((df[e] == "SWAP") & (df[a1] != df[d1])), "NO", None))
-
-c = 'equal_swap_pid2ni_med'
-df[c] = np.where( ((df[e] == "SWAP") & (df[a2] == df[d2])), "YES",
-            np.where( ((df[e] == "SWAP") & (df[a2] != df[d2])), "NO", None))
 
 
 
-##########################################
-#Make Event Match Columns
-#Get Event Match (Partisan Expectation) 
-#1. For Swap/Add, 2. Drops
-
-c = 'event_match_party1a'
-df[c] = np.where(     ((df[e].isin(ae)) & (df[a1] == df[bp1a])), "YES",
-            np.where( ((df[e].isin(ae)) & (df[a1] != df[bp1a])), "NO",
-            np.where( ((df[e].isin(de)) & (df[d1] != df[bp1a])), "YES",
-            np.where( ((df[e].isin(de)) & (df[d1] == df[bp1a])), "NO", None))))
-
-c = 'event_match_party1b'
-df[c] = np.where(     ((df[e].isin(ae)) & (df[a1] == df[bp1b])), "YES",
-            np.where( ((df[e].isin(ae)) & (df[a1] != df[bp1b])), "NO",
-            np.where( ((df[e].isin(de)) & (df[d1] != df[bp1b])), "YES",
-            np.where( ((df[e].isin(de)) & (df[d1] == df[bp1b])), "NO", None))))
 
 
-c = 'event_match_pid2ni_med2a'
-df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2a])), "YES",
-            np.where( ((df[e].isin(ae)) & (df[a2] != df[bp2a])), "NO",
-            np.where( ((df[e].isin(de)) & (df[d2] != df[bp2a])), "YES",
-            np.where( ((df[e].isin(de)) & (df[d2] == df[bp2a])), "NO", None))))
+def main():
 
-c = 'event_match_pid2ni_med2b'
-df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2b])), "YES",
-            np.where( ((df[e].isin(ae)) & (df[a2] != df[bp2b])), "NO",
-            np.where( ((df[e].isin(de)) & (df[d2] != df[bp2b])), "YES",
-            np.where( ((df[e].isin(de)) & (df[d2] == df[bp2b])), "NO", None))))
+    #################################################################
+    #Get Board Member Change Metrics
+    #################################################################
 
+    print('[*] calculating board member changes...')
 
-##########################################
-#Make Partisan Match Columns
-#(Simple Partisan Matching) 
-#1. For Swap/Add, 2. Drops
+    #Get Yearly Board Member List
+    c = fullname_var
+    tmp = dm.groupby(gb)[c].apply(list).apply(lsort)
+    tmp = tmp.reset_index(name='board')
 
-c = 'partisan_match_party1a'
-df[c] = np.where(     ((df[e].isin(ae)) & (df[a1] == df[bp1a])), "YES",
-            np.where( ((df[e].isin(ae)) & (df[a1] != df[bp1a])), "NO",
-            np.where( ((df[e].isin(de)) & (df[d1] == df[bp1a])), "YES",
-            np.where( ((df[e].isin(de)) & (df[d1] != df[bp1a])), "NO", None))))
+    #import pdb; pdb.set_trace()
+    #Get Lagged Board List (By Company)
+    tmp['prior_board'] = tmp.groupby(['ticker'])['board'].shift(lag)
+    tmp['prior_board_year'] = tmp.groupby(['ticker'])['year'].shift(lag)
 
-c = 'partisan_match_party1b'
-df[c] = np.where(     ((df[e].isin(ae)) & (df[a1] == df[bp1b])), "YES",
-            np.where( ((df[e].isin(ae)) & (df[a1] != df[bp1b])), "NO",
-            np.where( ((df[e].isin(de)) & (df[d1] == df[bp1b])), "YES",
-            np.where( ((df[e].isin(de)) & (df[d1] != df[bp1b])), "NO", None))))
+    #Get Board Change Results
+    tmp = tmp.dropna(subset=['prior_board'])
+    tmp['prior_board_year'] = tmp[['prior_board_year']].astype(int)
+    tmp =  tmp.apply(get_board_metrics, axis=1)
+
+    #Add Yearly Board Member Change Metrics
+    dm0 = dm.merge(tmp)
 
 
-c = 'partisan_match_pid2ni_med2a'
-df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2a])), "YES",
-            np.where( ((df[e].isin(ae)) & (df[a2] != df[bp2a])), "NO",
-            np.where( ((df[e].isin(de)) & (df[d2] == df[bp2a])), "YES",
-            np.where( ((df[e].isin(de)) & (df[d2] != df[bp2a])), "NO", None))))
+    #################################################################
+    #Get Board Party Change Metrics
+    #################################################################
 
-c = 'partisan_match_pid2ni_med2b'
-df[c] = np.where(     ((df[e].isin(ae)) & (df[a2] == df[bp2b])), "YES",
-            np.where( ((df[e].isin(ae)) & (df[a2] != df[bp2b])), "NO",
-            np.where( ((df[e].isin(de)) & (df[d2] == df[bp2b])), "YES",
-            np.where( ((df[e].isin(de)) & (df[d2] != df[bp2b])), "NO", None))))
+    print('[*] calculating board member party changes...')
+
+    #Add Board Change Flags
+    dma = add_board_change_flags(dm0)
+
+    #Fullname and Party Columns
+    fn = fullname_var
+    pv = 'party'
+
+    #Get Party Change with Original Party Variable
+    df1 = get_party_change_cols(fn, pv, lag, dm, dma)
+
+    #Get Party Change with Imputed Party Variable
+    pv = 'pid2ni_med_str'
+    df2 = get_party_change_cols(fn, pv, lag, dm, dma)
+
+    #Combine
+    df = df1.merge(df2)
+
+    #Convert to Company, Year Data
+    df = df.astype(str)
+    df = df.drop_duplicates(subset=['cid_master', 'ticker', 'year'])
+
+    #Drop Non-Board-Level Cols
+    drop_cols = [fullname_var, 'party', 'party_na',
+                 'pid3n', 'pid2n', 'pid2ni_mean', 
+                 'pid2ni_med', 'pid2ni_med_str']
+    df = df.drop(drop_cols, axis=1)
 
 
+    #################################################################
+    #Convert Multi-Change Events to Event Rows
+    #################################################################
 
+
+    print('[*] converting compound events to rows...')
+
+    #make duplicate cols of originals
+    df['cp_board_change_events_list'] = df['board_change_events_list']
+    df['cp_new_bm_pid2ni_med_str'] = df['new_bm_pid2ni_med_str']
+    df['cp_dropped_bm_pid2ni_med_str'] = df['dropped_bm_pid2ni_med_str']
+    df['cp_new_bm_party'] = df['new_bm_party']
+    df['cp_dropped_bm_party'] = df['dropped_bm_party']
+
+    #Convert Events
+    change_cols = []
+    change_cols.append(['board_change_events_list', ','])
+    df = split_subjects_nvars(change_cols, df)
+
+    #Extract Event Action Codes
+    df = df.apply(extract_event_action_counts, axis=1)
+
+
+    #Core Aliases
+    e = 'board_change_events_list'
+    c = 'event_count'
+
+    #Recode Party Events
+    a = 'new_bm_party'
+    d = 'dropped_bm_party'
+    df = df.apply(recode_add_drop_events,
+        events = e,
+        event_count = c,
+        add_col = a,
+        drop_col = d,
+        axis=1)
+
+
+    #Recode PID2NI Events
+    a = 'new_bm_pid2ni_med_str'
+    d = 'dropped_bm_pid2ni_med_str'
+    df = df.apply(recode_add_drop_events,
+        events = e,
+        event_count = c,
+        add_col = a,
+        drop_col = d,
+        axis=1)
+
+
+    #################################################################
+    #Add Matching Columns
+    #################################################################
+
+    print('[*] coding results...')
+
+    #Key Cols, Abbreviations
+
+    #BP Party NA (pid2n)
+    bp1a = 'bp_pid2n_mean' 
+    bp1b = 'bp_pid2n_median'
+
+    #BP Party NA (pid2n imputed)
+    bp2a = 'bp_pid2ni_med_mean'
+    bp2b = 'bp_pid2ni_med_median'
+
+    #Add/Drop Cols
+    a1 = 'new_bm_party'
+    a2 = 'new_bm_pid2ni_med_str'
+
+    d1 = 'dropped_bm_party'
+    d2 = 'dropped_bm_pid2ni_med_str'
+
+    #Make Equal Swap Columns
+    df = make_equal_swap_col(df, a1, d1)
+    df = make_equal_swap_col(df, a2, d2)
+
+
+    #Make Event Match Cols (Party)
+    df = make_event_match_cols(df, bp1a, a1, d1)
+    df = make_event_match_cols(df, bp1b, a1, d1)
+
+
+    #Make Event Match Cols (PID2NI)
+    df = make_event_match_cols(df, bp2a, a2, d2)
+    df = make_event_match_cols(df, bp2b, a2, d2)
+
+    print(df.shape)
+    return df
+
+
+#################################################################
+#Run Lag Loop
+#################################################################
+
+max_years = dm.board_years.max()
+lag_dfs = []
+
+for lag in range(1, max_years):
+    print('[*] requested yearly lag is {} year(s)...'.format(lag))
+
+    #Add Lag Year Column
+    dm['lag_years'] = lag
+
+    ldf = main()
+    lag_dfs.append(ldf)
+
+
+#print(lag_dfs)
+
+df = pd.concat(lag_dfs, axis=0)
 print(df)
 print(df.columns)
+
 print('[*] saving result {} : {}...'.format(outfile, df.shape))
 df.to_csv(outfile, index=False)
 df.to_csv("test_metrics.csv", index=False)

@@ -369,7 +369,7 @@ dm = dm.drop_duplicates(subset=['ticker', 'year', fullname_var])
 
 #Isolate Subset for Draft
 #dm = dm.loc[(dm['cid_master'] == 'Air Products & Chemicals') | (dm['cid_master'] == 'Apple' )]
-#dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
+dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
 
 
 dm = dm[['cid_master', 'ticker', 'year', 'cycle', fullname_var, 'party']]
@@ -645,7 +645,6 @@ df = split_subjects_nvars(change_cols, df)
 #Extract Event Action Codes
 df = df.apply(extract_event_action_counts, axis=1)
 
-print(df)
 
 
 
