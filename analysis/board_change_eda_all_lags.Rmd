@@ -1,0 +1,531 @@
+---
+title: "Board Exchange EDA - All Year Lags"
+author: "Joshua G. Mausolf"
+date: "1/23/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = FALSE, message=FALSE, warning=FALSE)
+```
+
+
+
+```{r cars, echo=FALSE}
+source("analysis_source.R")
+
+######################################
+## Load Libraries & Data
+######################################
+
+
+library(Rmisc)
+library(Hmisc)
+library(tidyverse)
+library(bbplot)
+library(scales)
+library(RColorBrewer)
+library(ggthemes)
+
+
+colors_neutral = rev(brewer.pal(n = 8, name = "Purples")[5:8])
+colors_dem = rev(brewer.pal(n = 8, name = "Blues")[5:8])
+colors_rep = c("#700009", "#99000D", "#D80012", "#EF3B2C")
+
+colors_grey = rev(brewer.pal(n = 8, name = "Greys")[5:8])
+#show_col(colors_grey)
+
+colors_parties2 = c("#2129B0", "#969696", "#BF1200")
+colors_parties1 = c(colors_dem[1], colors_neutral[1], colors_rep[1])
+colors_parties0 = c("#2129B0", "#3A084A", "#BF1200")
+#show_col(colors_parties0)
+
+#Display a Pallete
+#show_col(colors_dem)
+
+#Overwrite bbplot finalise_plot() function
+source("bb_finalise_plot_academic.R")
+```
+
+#Set Lags
+
+```{r, echo=TRUE}
+dim(dfb)
+
+table(dfb$lag_years)
+```
+
+
+
+#Examine Partisan Matching (Across All Lag Types)
+
+```{r}
+
+df2 <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean, board_change_events_list, bp_pid2ni_mean_median) %>% 
+  rename(c("event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean" = "em_var",
+         "bp_pid2ni_mean_median" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  mutate(event_match = if_else(em_var == "YES", 1, 0)) %>% 
+  group_by(board_party, event) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+#Get Upper and Lower CI
+df2_err <- binconf(df2$total_event_match, df2$total_events, alpha=0.05, method=c("wilson"))
+df2_err <- as.data.frame(df2_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+df2_full <- bind_cols(df2, df2_err)
+
+party_types <- c(
+  "DEM" = "Democrat",
+  "NEU" = "Neutral",
+  "REP" = "Republican"
+)
+
+ggplot(df2_full, aes(event, proportion_em, fill=em_var)) +
+    geom_bar(stat = "identity", position = "dodge", width = 0.75) +
+    geom_errorbar(aes(ymin=lci, ymax=uci), width=0.2, position = position_dodge(0.75)) + 
+    facet_grid(~board_party, labeller = as_labeller(party_types)) 
+    
+
+```
+
+
+#Examine Results without Imputation, Ignoring Unknown Parties
+
+Still see partisan matching / affective polarization for adds and swaps. Results might be stronger with multiyear swaps. 
+
+
+```{r}
+
+df2 <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_party_bp_pid2n_mean, board_change_events_list, bp_pid2n_median, new_bm_party, dropped_bm_party) %>% 
+  rename(c("event_match_ep_party_bp_pid2n_mean" = "em_var",
+         "bp_pid2n_median" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  filter(new_bm_party != "UNK" | is.na(new_bm_party),
+         dropped_bm_party != "UNK" | is.na(dropped_bm_party)) %>% 
+  mutate(event_match = if_else(em_var  == "YES", 1, 0)) %>% 
+  group_by(board_party, event) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+
+
+#Get Upper and Lower CI
+df2_err <- binconf(df2$total_event_match, df2$total_events, alpha=0.05, method=c("wilson"))
+df2_err <- as.data.frame(df2_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+df2_full <- bind_cols(df2, df2_err)
+
+party_types <- c(
+  "DEM" = "Democrat",
+  "NEU" = "Neutral",
+  "REP" = "Republican"
+)
+
+ggplot(df2_full, aes(event, proportion_em, fill=em_var)) +
+    geom_bar(stat = "identity", position = "dodge", width = 0.75) +
+    geom_errorbar(aes(ymin=lci, ymax=uci), width=0.2, position = position_dodge(0.75)) + 
+    facet_grid(~board_party, labeller = as_labeller(party_types)) 
+    
+
+
+```
+
+
+
+#Multiyear Swaps?
+i.e. add/add; drop/drop over a two year period. Redo version of pipeline with two lag periods?
+
+
+#Results by Election Cycle?
+
+
+```{r}
+
+dfy <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_party_bp_pid2n_mean, board_change_events_list, bp_pid2n_median, cycle, new_bm_party, dropped_bm_party) %>% 
+  rename(c("event_match_ep_party_bp_pid2n_mean" = "em_var",
+         "bp_pid2n_median" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  filter(new_bm_party != "UNK" | is.na(new_bm_party),
+         dropped_bm_party != "UNK" | is.na(dropped_bm_party)) %>% 
+  mutate(event_match = if_else(em_var  == "YES", 1, 0)) %>% 
+  group_by(board_party, event, cycle) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+
+
+#Get Upper and Lower CI
+dfy_err <- binconf(dfy$total_event_match, dfy$total_events, alpha=0.05, method=c("wilson"))
+dfy_err <- as.data.frame(dfy_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+dfy_full <- bind_cols(dfy, dfy_err)
+
+
+```
+
+
+#Some cycle effects, getting stronger, especially for REP firms, more so during presidential election cycles?
+
+```{r}
+
+party_types <- c(
+  "DEM" = "Democrat",
+  "NEU" = "Neutral",
+  "REP" = "Republican"
+)
+
+ggplot(dfy_full, aes(event, proportion_em, fill=em_var)) +
+    geom_bar(stat = "identity", position = "dodge", width = 0.75) +
+    geom_errorbar(aes(ymin=lci, ymax=uci), width=0.2, position = position_dodge(0.75)) + 
+    #facet_grid(cycle~board_party, labeller = as_labeller(party_types)) 
+    facet_grid(cycle~board_party) 
+    
+    
+```
+
+
+
+
+
+```{r}
+
+dfy <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_party_bp_pid2n_mean, board_change_events_list, bp_pid2n_median, year, new_bm_party, dropped_bm_party) %>% 
+  rename(c("event_match_ep_party_bp_pid2n_mean" = "em_var",
+         "bp_pid2n_median" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  filter(new_bm_party != "UNK" | is.na(new_bm_party),
+         dropped_bm_party != "UNK" | is.na(dropped_bm_party)) %>% 
+  mutate(event_match = if_else(em_var  == "YES", 1, 0)) %>% 
+  group_by(board_party, event, year) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+
+
+#Get Upper and Lower CI
+dfy_err <- binconf(dfy$total_event_match, dfy$total_events, alpha=0.05, method=c("wilson"))
+dfy_err <- as.data.frame(dfy_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+dfy_full <- bind_cols(dfy, dfy_err)
+
+
+```
+
+
+
+```{r}
+
+party_types <- c(
+  "DEM" = "Democrat",
+  "NEU" = "Neutral",
+  "REP" = "Republican"
+)
+
+ggplot(dfy_full, aes(event, proportion_em, fill=em_var)) +
+    geom_bar(stat = "identity", position = "dodge", width = 0.75) +
+    geom_errorbar(aes(ymin=lci, ymax=uci), width=0.2, position = position_dodge(0.75)) + 
+    #facet_grid(cycle~board_party, labeller = as_labeller(party_types)) 
+    facet_grid(year~board_party) 
+    
+    
+```
+
+
+
+
+
+```{r}
+
+dfy <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_party_bp_pid2n_mean, board_change_events_list, bp_pid2n_median, year, new_bm_party, dropped_bm_party) %>% 
+  rename(c("event_match_ep_party_bp_pid2n_mean" = "em_var",
+         "bp_pid2n_median" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  filter(new_bm_party != "UNK" | is.na(new_bm_party),
+         dropped_bm_party != "UNK" | is.na(dropped_bm_party)) %>% 
+  mutate(event_match = if_else(em_var  == "YES", 1, 0)) %>% 
+  group_by(event, year) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+
+#Get Upper and Lower CI
+dfy_err <- binconf(dfy$total_event_match, dfy$total_events, alpha=0.05, method=c("wilson"))
+dfy_err <- as.data.frame(dfy_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+dfy_full <- bind_cols(dfy, dfy_err)
+
+
+
+party_types <- c(
+  "DEM" = "Democrat",
+  "NEU" = "Neutral",
+  "REP" = "Republican"
+)
+
+ggplot(dfy_full, aes(event, proportion_em, fill=em_var)) +
+    geom_bar(stat = "identity", position = "dodge", width = 0.75) +
+    geom_errorbar(aes(ymin=lci, ymax=uci), width=0.2, position = position_dodge(0.75)) + 
+    #facet_grid(cycle~board_party, labeller = as_labeller(party_types)) 
+    facet_grid(year~.) 
+
+```
+
+
+
+```{r}
+
+    
+    
+```
+
+
+```{r}
+
+df_var_cycle_graph <- dfy_full %>% 
+    #group_by(event, year) %>% 
+    #summarise(meanvar = mean(proportion_em, na.rm = T)) %>%
+    filter(em_var == "YES") 
+  
+ggplot(df_var_cycle_graph, aes(make_datetime(year), proportion_em)) +
+    geom_smooth(color="#3A084A", alpha=0.15, size=0.5) +
+    geom_line(aes(color=event), alpha=0.9) 
+    #geom_point(aes(shape=occ), alpha=1) 
+```
+
+#Using the non-imputed variable, dropping UNKs, prop em increasing by years
+
+```{r}
+
+dfy <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_party_bp_pid2n_mean, board_change_events_list, bp_pid2n_median, year, new_bm_party, dropped_bm_party) %>% 
+  rename(c("event_match_ep_party_bp_pid2n_mean" = "em_var",
+         "bp_pid2n_median" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  filter(event != "DROP") %>% 
+  filter(new_bm_party != "UNK" | is.na(new_bm_party),
+         dropped_bm_party != "UNK" | is.na(dropped_bm_party)) %>% 
+  mutate(event_match = if_else(em_var  == "YES", 1, 0)) %>% 
+  group_by(event, year) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+
+#Get Upper and Lower CI
+dfy_err <- binconf(dfy$total_event_match, dfy$total_events, alpha=0.05, method=c("wilson"))
+dfy_err <- as.data.frame(dfy_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+dfy_full <- bind_cols(dfy, dfy_err)
+
+
+df_var_cycle_graph <- dfy_full %>% 
+    #group_by(event, year) %>% 
+    #summarise(meanvar = mean(proportion_em, na.rm = T)) %>%
+    filter(em_var == "YES") %>% 
+    filter(event != "DROP")
+  
+ggplot(df_var_cycle_graph, aes(make_datetime(year), proportion_em)) +
+    geom_smooth(color="#3A084A", alpha=0.15, size=0.5) +
+    geom_line(aes(color=event), alpha=0.9) 
+    #geom_point(aes(shape=occ), alpha=1) 
+```
+
+
+
+```{r}
+
+dfy <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean, board_change_events_list, bp_pid2ni_mean_median, year, new_bm_party, dropped_bm_party) %>% 
+  rename(c("event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean" = "em_var",
+         "bp_pid2ni_mean_median" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  filter(event != "DROP") %>% 
+  filter(new_bm_party != "UNK" | is.na(new_bm_party),
+         dropped_bm_party != "UNK" | is.na(dropped_bm_party)) %>% 
+  mutate(event_match = if_else(em_var  == "YES", 1, 0)) %>% 
+  group_by(event, year) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+
+#Get Upper and Lower CI
+dfy_err <- binconf(dfy$total_event_match, dfy$total_events, alpha=0.05, method=c("wilson"))
+dfy_err <- as.data.frame(dfy_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+dfy_full <- bind_cols(dfy, dfy_err)
+
+
+df_var_cycle_graph <- dfy_full %>% 
+    #group_by(event, year) %>% 
+    #summarise(meanvar = mean(proportion_em, na.rm = T)) %>%
+    filter(em_var == "YES") %>% 
+    filter(event != "DROP")
+  
+ggplot(df_var_cycle_graph, aes(make_datetime(year), proportion_em)) +
+    geom_smooth(color="#3A084A", alpha=0.15, size=0.5) +
+    geom_line(aes(color=event), alpha=0.9) 
+    #geom_point(aes(shape=occ), alpha=1) 
+```
+
+
+
+```{r}
+
+dfy <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean, board_change_events_list, bp_pid2ni_mean_median, year, new_bm_party, dropped_bm_party) %>% 
+  rename(c("event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean" = "em_var",
+         "bp_pid2ni_mean_median" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  filter(event != "DROP") %>% 
+  filter(new_bm_party != "UNK" | is.na(new_bm_party),
+         dropped_bm_party != "UNK" | is.na(dropped_bm_party)) %>% 
+  mutate(event_match = if_else(em_var  == "YES", 1, 0)) %>% 
+  group_by(event, year, board_party) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+
+#Get Upper and Lower CI
+dfy_err <- binconf(dfy$total_event_match, dfy$total_events, alpha=0.05, method=c("wilson"))
+dfy_err <- as.data.frame(dfy_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+dfy_full <- bind_cols(dfy, dfy_err)
+
+df_var_cycle_graph <- dfy_full %>% 
+    #group_by(event, year) %>% 
+    #summarise(meanvar = mean(proportion_em, na.rm = T)) %>%
+    filter(em_var == "YES") %>% 
+    filter(event != "DROP")
+  
+ggplot(df_var_cycle_graph, aes(make_datetime(year), proportion_em)) +
+    geom_smooth(color="#3A084A", alpha=0.15, size=0.5) +
+    geom_line(aes(color=event), alpha=0.9)  +
+    #geom_point(aes(shape=occ), alpha=1)
+    facet_grid(~board_party, labeller = as_labeller(party_types)) 
+```
+
+
+
+
+#What about using the HCA cluster parties?
+
+```{r}
+dfy <- dfb %>% 
+  #filter(pair_callback_bin != 2) %>% 
+  select(event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean, board_change_events_list, fec_cluster_party, year, new_bm_party, dropped_bm_party) %>% 
+  rename(c("event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean" = "em_var",
+         "fec_cluster_party" = "board_party",
+         "board_change_events_list" =  "event")) %>%
+  filter(event != "NO_CHANGE") %>% 
+  filter(event != "DROP") %>% 
+  filter(new_bm_party != "UNK" | is.na(new_bm_party),
+         dropped_bm_party != "UNK" | is.na(dropped_bm_party)) %>% 
+  mutate(event_match = if_else(em_var  == "YES", 1, 0)) %>% 
+  group_by(event, year, board_party) %>% 
+  add_tally( name = "total_events") %>% 
+  add_count(event_match, name = "total_event_match") %>% 
+  mutate(proportion_em = total_event_match / total_events) %>% 
+  select(-event_match) %>% 
+  distinct()
+
+
+#Get Upper and Lower CI
+dfy_err <- binconf(dfy$total_event_match, dfy$total_events, alpha=0.05, method=c("wilson"))
+dfy_err <- as.data.frame(dfy_err) %>% 
+  mutate(pe = PointEst, 
+         lci = Lower,
+         uci = Upper) %>% 
+  select(pe, lci, uci)
+dfy_full <- bind_cols(dfy, dfy_err)
+
+
+party_types <- c(
+  "DEM" = "Democrat",
+  "OTH" = "Amphibious",
+  "REP" = "Republican"
+
+)
+
+df_var_cycle_graph <- dfy_full %>% 
+    #group_by(event, year) %>% 
+    #summarise(meanvar = mean(proportion_em, na.rm = T)) %>%
+    filter(em_var == "YES") 
+  
+ggplot(df_var_cycle_graph, aes(make_datetime(year), proportion_em)) +
+    geom_smooth(color="#3A084A", alpha=0.15, size=0.5) +
+    geom_line(aes(color=event), alpha=0.9)  +
+    #geom_point(aes(shape=occ), alpha=1)
+    facet_grid(~board_party, labeller = as_labeller(party_types)) 
+```
