@@ -161,10 +161,13 @@ v = 'race_eth'
 dm['aa_hisp'] = np.where(dm[v] == "AFRICAN-AMERICAN", "YES",
 					np.where(dm[v] == "HISPANIC", "YES", "NO"))
 
+#Non-US Country of Employment
+v = 'country_of_empl'
+dm['non_usa'] = np.where(dm[v] == "USA", "NO",
+				np.where(dm[v].notna(), "YES", None))
 
-
-print(dm.minority.value_counts())
-print(dm.aa_hisp.value_counts())
+print(dm.country_of_empl.value_counts())
+print(dm.non_usa.value_counts())
 
 
 def get_dummy_flags(df, in_var, keep_none=True):
@@ -184,6 +187,8 @@ dm = get_dummy_flags(dm, 'female', keep_none=False)
 dm = get_dummy_flags(dm, 'race_eth', keep_none=False)
 dm = get_dummy_flags(dm, 'minority', keep_none=False)
 dm = get_dummy_flags(dm, 'aa_hisp', keep_none=False)
+dm = get_dummy_flags(dm, 'interlocking', keep_none=False)
+dm = get_dummy_flags(dm, 'non_usa', keep_none=False)
 
 print(dm.columns.tolist())
 
@@ -195,7 +200,15 @@ print(dm.columns.tolist())
 
 
 dl = ['female_yes', 'race_eth_asian', 'race_eth_caucasian']
-dl = ['female_yes', 'minority_yes', 'minority_no', 'aa_hisp_yes', 'aa_hisp_no', ]
+dl1 = ['age', 'outside_public_boards', 'female_yes', 'minority_yes', 'minority_no', 'aa_hisp_yes', 'aa_hisp_no', ]
+
+dl2 = ['age', 'outside_public_boards',
+	   'female_yes', 'minority_yes', 'minority_no',
+	   'aa_hisp_yes', 'aa_hisp_no', 'non_usa_yes' ]
+
+dl = dl1+dl2
+print(dl)
+
 gb1 = ['ticker', 'year']
 sl1 = ['sum', 'mean', 'median']
 
@@ -212,14 +225,14 @@ def get_dummy_stats(groupby_list, stat_list, dummy_list, data):
 		tmp = get_clean_cols(tmp)
 		out_list.append(tmp)
 
-	tmp = reduce(lambda l,r: pd.merge(l,r,on=gb), out_list)
-	return tmp
+	#tmp = reduce(lambda l,r: pd.merge(l,r,on=gb), out_list)
+	#return tmp
 
-	#df = df.merge(tmp)
-	#return df
+	df = df.merge(tmp)
+	return df
 
 
-tmp = get_dummy_stats(gb1, sl1, dl, data=dm)
+tmp = get_dummy_stats(gb1, sl1, dl2, data=dm)
 print(tmp)
 print(tmp.columns.tolist())
 
