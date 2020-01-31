@@ -1,0 +1,191 @@
+---
+title: "Board Exchange Stats, Models"
+author: "Joshua G. Mausolf"
+date: "1/23/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = FALSE, message=FALSE, warning=FALSE)
+```
+
+
+
+```{r cars, echo=FALSE}
+source("analysis_source.R")
+
+######################################
+## Load Libraries & Data
+######################################
+
+
+library(Rmisc)
+library(Hmisc)
+library(tidyverse)
+library(bbplot)
+library(scales)
+library(RColorBrewer)
+library(ggthemes)
+
+
+colors_neutral = rev(brewer.pal(n = 8, name = "Purples")[5:8])
+colors_dem = rev(brewer.pal(n = 8, name = "Blues")[5:8])
+colors_rep = c("#700009", "#99000D", "#D80012", "#EF3B2C")
+
+colors_grey = rev(brewer.pal(n = 8, name = "Greys")[5:8])
+#show_col(colors_grey)
+
+colors_parties2 = c("#2129B0", "#969696", "#BF1200")
+colors_parties1 = c(colors_dem[1], colors_neutral[1], colors_rep[1])
+colors_parties0 = c("#2129B0", "#3A084A", "#BF1200")
+#show_col(colors_parties0)
+
+#Display a Pallete
+#show_col(colors_dem)
+
+#Overwrite bbplot finalise_plot() function
+source("bb_finalise_plot_academic.R")
+```
+
+
+```{r}
+dfb$sector
+```
+
+
+
+```{r}
+table(dfb$new_bm_party_dem)
+```
+
+```{r}
+df <- dfb %>%
+  filter(lag_years == 1)
+
+
+#y, boardparty med, cluster party, 
+
+m1 <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median,
+              data = df, family = "binomial")
+summary(m1)
+```
+
+
+
+```{r}
+df <- dfb %>%
+  filter(lag_years == 1) %>% 
+  filter(sector == "Conglomerates")
+  select("cid_master")
+
+#TODO  
+
+#y, boardparty med, cluster party, 
+
+m1 <- glm(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                minority_yes_mean +
+                aa_hisp_yes_mean +
+                non_usa_yes_mean +              
+            
+                outside_public_boards_median +
+                interlocking_yes_mean +
+
+                sector + 
+                #industry +
+                lag_years + 
+                year,
+              data = df, family = "binomial")
+summary(m1)
+```
+
+
+```{r}
+stargazer2(m1,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+```
+
+
+```{r}
+stargazer2(m1,
+           odd.ratio = T,
+          covariate.labels = c("Board Member Event: Swap", "Republican Board", "Amphibious Firm",
+                               "Republican Firm", "Median Age", "Median No. Outside Boards"),
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+```
+
+
+#Models
+
+Could do logit models for new_bm, drop_bm s.t. party added or dropped is modeled
+Could do a multinomial logit with a new variable where outcomes combine event, new/drop,
+
+
+#Would be good to also do longitudinal models
+
+
+
+e.g. 
+action drop add
+swap dem dem
+swap dem rep
+swap rep dem
+swap rep rep
+
+add rep
+drop rep
+add dem
+drop dem
+
+Could also model logit for whether there is an event match / partisan match for adds, swaps
+
+
+Variables could include
+board party
+cluster party
+board_mean party
+board median party
+
+fec_median_pid2
+fec_median_ps
+
+dime_cfscore_mean
+
+
+board size
+max board size
+mean board size
+
+lag years
+year
+
+equal swap
+
+private firm
+
+
+
+sector
+industry
+
+#might be able to get dummies for
+women on board
+minority on board
+
+%women
+%minority races
+
+
+
+
