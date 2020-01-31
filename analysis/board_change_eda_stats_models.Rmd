@@ -50,43 +50,84 @@ source("bb_finalise_plot_academic.R")
 ```
 
 
-```{r}
-dfb$sector
-```
-
-
-
-```{r}
-table(dfb$new_bm_party_dem)
-```
-
-```{r}
-df <- dfb %>%
-  filter(lag_years == 1)
-
-
-#y, boardparty med, cluster party, 
-
-m1 <- glm(new_bm_party_dem ~ 
-                board_change_events_list +
-                bp_pid2n_median,
-              data = df, family = "binomial")
-summary(m1)
-```
-
 
 
 ```{r}
 df <- dfb %>%
-  filter(lag_years == 1) %>% 
-  filter(sector == "Conglomerates")
-  select("cid_master")
+  filter(lag_years == 1) 
 
-#TODO  
+
+#TODO
+#recode sector with 4cats, if sector has <1 firm, eg. recode
 
 #y, boardparty med, cluster party, 
-
 m1 <- glm(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median, 
+                #fec_cluster_party +
+                #age_median +
+                #female_yes_mean +
+                #minority_yes_mean +
+                #aa_hisp_yes_mean +
+                #non_usa_yes_mean +              
+            
+                #outside_public_boards_median +
+                #interlocking_yes_mean +
+
+                #sector + 
+                #industry +
+                #lag_years + 
+                #year,
+              data = df, family = "binomial")
+
+
+
+m2 <- glm(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                #fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                #minority_yes_mean +
+                aa_hisp_yes_mean +
+                #non_usa_yes_mean +              
+            
+                outside_public_boards_median,
+                #interlocking_yes_mean +
+
+                #sector + 
+                #industry +
+                #lag_years + 
+                #year,
+              data = df, family = "binomial")
+
+
+
+
+m4 <- glm(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                minority_yes_mean +
+                aa_hisp_yes_mean +
+                #non_usa_yes_mean +              
+            
+                outside_public_boards_median +
+                #interlocking_yes_mean +
+
+                sector + 
+                #industry +
+                #lag_years + 
+                year,
+              data = df, family = "binomial")
+
+
+df <- dfb %>%
+  filter(lag_years >= 1) 
+
+m4 <- glm(new_bm_party_rep ~ 
                 board_change_events_list +
                 bp_pid2n_median + 
                 fec_cluster_party +
@@ -97,19 +138,22 @@ m1 <- glm(new_bm_party_rep ~
                 non_usa_yes_mean +              
             
                 outside_public_boards_median +
-                interlocking_yes_mean +
+                #interlocking_yes_mean +
 
                 sector + 
                 #industry +
                 lag_years + 
                 year,
               data = df, family = "binomial")
-summary(m1)
+
+
+models <- list(m1, m2, m3, m4)
+
 ```
 
 
 ```{r}
-stargazer2(m1,
+stargazer2(models,
            odd.ratio = T,
            type = "text",
            star.cutoffs = c(0.05, 0.01, 0.001))
