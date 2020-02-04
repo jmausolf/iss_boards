@@ -1,0 +1,927 @@
+---
+title: "Board Exchange Stats, Models"
+author: "Joshua G. Mausolf"
+date: "1/23/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = FALSE, message=FALSE, warning=FALSE)
+```
+
+
+
+```{r loadsources, echo=FALSE}
+source("analysis_source.R")
+
+######################################
+## Load Libraries & Data
+######################################
+
+
+library(Rmisc)
+library(Hmisc)
+library(tidyverse)
+library(bbplot)
+library(scales)
+library(RColorBrewer)
+library(ggthemes)
+library(lme4)
+
+
+colors_neutral = rev(brewer.pal(n = 8, name = "Purples")[5:8])
+colors_dem = rev(brewer.pal(n = 8, name = "Blues")[5:8])
+colors_rep = c("#700009", "#99000D", "#D80012", "#EF3B2C")
+
+colors_grey = rev(brewer.pal(n = 8, name = "Greys")[5:8])
+#show_col(colors_grey)
+
+colors_parties2 = c("#2129B0", "#969696", "#BF1200")
+colors_parties1 = c(colors_dem[1], colors_neutral[1], colors_rep[1])
+colors_parties0 = c("#2129B0", "#3A084A", "#BF1200")
+#show_col(colors_parties0)
+
+#Display a Pallete
+#show_col(colors_dem)
+
+#Overwrite bbplot finalise_plot() function
+source("bb_finalise_plot_academic.R")
+
+
+dfb <- dfb %>% 
+  filter(new_bm_party != "UNK") %>% 
+  mutate(lnyear = log(year)) %>% 
+  mutate(ticker_id = as.numeric(factor(ticker))) %>%
+  mutate(lnticker = log(ticker_id)) %>% 
+  mutate(lnage_med = log(age_median)) %>% 
+  mutate(sector2 = fct_recode(sector,
+    "Other"   = "Conglomerates",
+    "Other"   = "Consumer Goods")) %>% 
+  mutate(sector2 = factor(sector2))
+
+```
+
+```{r}
+table(df$new_bm_party_dem)
+```
+
+```{r}
+table(df$new_bm_party_rep)
+```
+
+```{r}
+table(df$new_bm_party_unk)
+```
+
+
+```{r inspectsectors, eval=FALSE}
+
+dfx <- dfb %>%
+  filter(lag_years == 1) %>%
+  select(ticker, sector) %>% 
+  distinct()
+  
+table(dfx$sector)
+
+
+dfx <- dfx %>% 
+  mutate(sector2 = fct_recode(sector,
+    "Other"   = "Conglomerates",
+    "Other"   = "Consumer Goods")) %>% 
+  mutate(sector2 = factor(sector2))
+
+
+table(dfx$sector, dfx$sector2)
+```
+
+
+
+```{r}
+df <- dfb %>%
+  filter(lag_years == 1)
+
+table(df$sector)
+
+
+#TODO
+#recode sector with 4cats, if sector has <1 firm, eg. recode
+
+#y, boardparty med, cluster party, 
+m1r <- glm(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median, 
+              data = df, family = binomial(link = "logit"))
+
+
+
+m2r <- glm(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                age_median +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median,
+              data = df, family = binomial(link = "logit"))
+
+
+
+
+m3r <- glm(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                sector,
+              data = df, family = binomial(link = "logit"))
+
+
+df <- dfb %>%
+  filter(lag_years >= 1) 
+
+m4r <- glm(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector + 
+                lag_years,
+              data = df, family = binomial(link = "logit"))
+
+
+models <- list(m1r, m2r, m3r, m4r)
+
+```
+
+
+```{r maketable}
+stargazer2(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001),
+           font.size = "scriptsize",
+           title = "Logit Models of Adding a New Board Member (Republican), Odds Ratios Displayed",
+           dep.var.labels   = "New Board Member: Republican",
+           covariate.labels = c("Board Member Swap", "Republican Board", "Amphibious Firm",
+                               "Republican Firm", "Median Age",
+                               "Proportion Female Board Members",
+                               "Proportion Black or Hispanic Board Members",
+                               "Proportion Minority Board Members",
+                               "Proportion Non-US Board Members",
+                               "Median Outside Board Ties",
+                               "Sector: Capital Goods",
+                               "Sector: Conglomerates",
+                               "Sector: Consumer Cyclical",
+                               "Sector: Consumer Goods",
+                               "Sector: Consumer/Non-Cyclical",
+                               "Sector: Energy",
+                               "Sector: Financial",
+                               "Sector: Healthcare",
+                               "Sector: Services",
+                               "Sector: Technology",
+                               "Sector: Transportation",
+                               "Sector: Utilities",
+                               "Board Lag Years")
+           
+           
+           
+           )
+```
+
+
+
+
+
+```{r}
+df <- dfb %>%
+  filter(lag_years == 1) 
+
+
+#TODO
+#recode sector with 4cats, if sector has <1 firm, eg. recode
+
+#y, boardparty med, cluster party, 
+m1d <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median, 
+              data = df, family = binomial(link = "logit"))
+
+
+
+m2d <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                age_median +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median,
+              data = df, family = binomial(link = "logit"))
+
+
+
+
+m3d <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                sector,
+              data = df, family = binomial(link = "logit"))
+
+
+df <- dfb %>%
+  filter(lag_years >= 1) 
+
+m4d <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector + 
+                lag_years,
+              data = df, family = binomial(link = "logit"))
+
+
+models <- list(m1d, m2d, m3d, m4d)
+
+```
+
+
+```{r}
+stargazer2(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001),
+           font.size = "scriptsize",
+           title = "Logit Models of Adding a New Board Member (Democrat), Odds Ratios Displayed",
+           dep.var.labels   = "New Board Member: Democrat",
+           covariate.labels = c("Board Member Swap", "Republican Board", "Amphibious Firm",
+                               "Republican Firm", "Median Age",
+                               "Proportion Female Board Members",
+                               "Proportion Black or Hispanic Board Members",
+                               "Proportion Minority Board Members",
+                               "Proportion Non-US Board Members",
+                               "Median Outside Board Ties",
+                               "Sector: Capital Goods",
+                               "Sector: Conglomerates",
+                               "Sector: Consumer Cyclical",
+                               "Sector: Consumer Goods",
+                               "Sector: Consumer/Non-Cyclical",
+                               "Sector: Energy",
+                               "Sector: Financial",
+                               "Sector: Healthcare",
+                               "Sector: Services",
+                               "Sector: Technology",
+                               "Sector: Transportation",
+                               "Sector: Utilities",
+                               "Board Lag Years")
+           
+           
+           
+           )
+```
+
+
+
+
+
+```{r testingmodels1, eval=FALSE}
+
+df <- dfb %>%
+  filter(lag_years < 3) 
+
+
+
+#Random Slope for Year
+#Random Slope for Ticker
+#Crossed/Design or Multiple Membership
+m1 <- glmer(new_bm_party_dem ~
+              board_change_events_list +
+              bp_pid2n_median +
+              lag_years +
+              (1|ticker) +
+              (1|year) +
+              (1|lag_years),
+           data = df, family = binomial(link = "logit"))
+
+
+
+
+
+#Tickers Nested in Years  (1|year/ticker)
+#or equivalently (1|year) + (1|ticker:year)
+m2 <- glmer(new_bm_party_dem ~
+              board_change_events_list +
+              bp_pid2n_median +
+              lag_years +
+              (1|year/ticker) +
+              (1|lag_years),
+           data = df, family = binomial(link = "logit"))
+
+#Years nested in tickers
+#use this method
+m3 <- glmer(new_bm_party_dem ~
+              board_change_events_list +
+              bp_pid2n_median +
+              lag_years +
+              (1|ticker/year) +
+              (1|lag_years),
+           data = df, family = binomial(link = "logit"))
+
+
+#Random Slope (BP) + Random Intercept Year
+#+Random Intercept Ticker
+# m4 <- glmer(new_bm_party_dem ~
+#              board_change_events_list +
+#              bp_pid2n_median +
+#              ((1|year) + (0 + bp_pid2n_median | year)) +
+#              (1|ticker),
+#              #(1|year), 
+#            data = df, family = binomial(link = "logit"))
+
+
+
+models <- list(m1, m2, m3)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+summary(m1)
+summary(m2)
+summary(m3)
+
+#Compare Models
+anova(m1, m2, m3) 
+anova(m1, m3)
+
+```
+
+
+```{r testingmodels2, eval=FALSE}
+
+df <- dfb %>%
+  filter(lag_years < 3) 
+
+
+
+#Random Slope for Year
+#Random Slope for Ticker
+#Crossed/Design or Multiple Membership
+m1 <- glmer(new_bm_party_dem ~
+              board_change_events_list +
+              bp_pid2n_median +
+              lag_years +
+              (1|ticker) +
+              (1|year),
+           data = df, family = binomial(link = "logit"))
+
+
+
+
+
+#Tickers Nested in Years  (1|year/ticker)
+#or equivalently (1|year) + (1|ticker:year)
+m2 <- glmer(new_bm_party_dem ~
+              board_change_events_list +
+              bp_pid2n_median +
+              lag_years +
+              (1|year/ticker),
+           data = df, family = binomial(link = "logit"))
+
+#************************
+#Years nested in tickers
+#use this method ****
+#************************
+m3 <- glmer(new_bm_party_dem ~
+              board_change_events_list +
+              bp_pid2n_median +
+              lag_years +
+              (1|ticker/year),
+           data = df, family = binomial(link = "logit"))
+
+
+#Random Slope (BP) + Random Intercept Year
+#+Random Intercept Ticker
+# m4 <- glmer(new_bm_party_dem ~
+#              board_change_events_list +
+#              bp_pid2n_median +
+#              ((1|year) + (0 + bp_pid2n_median | year)) +
+#              (1|ticker),
+#              #(1|year), 
+#            data = df, family = binomial(link = "logit"))
+
+
+
+models <- list(m1, m2, m3)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+summary(m1)
+summary(m2)
+summary(m3)
+
+#Compare Models
+anova(m1, m2, m3) 
+anova(m1, m3)
+
+```
+
+```{r scrap, eval=FALSE}
+df <- dfb %>%
+  filter(lag_years == 1) 
+
+# %>% 
+#   select(year, lnyear, lnticker, ticker_id, ticker)
+
+
+
+#TODO
+#recode sector with 4cats, if sector has <1 firm, eg. recode
+
+#Strategy, do two sets of tables
+#one that has m1-m4, no lag years, for single lag year
+
+#appendix can have differnt lag year slices
+
+#another set of models, m1alr1 variants
+#at different lag-year levels, 
+
+#y, boardparty med, cluster party, 
+m1lr <- glmer(new_bm_party_dem ~
+        board_change_events_list +
+              bp_pid2n_median +
+              (1|ticker) +
+              (1|year),
+              # control=glmerControl(optimizer="bobyqa",
+              #               optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+
+m1lr1 <- glmer(new_bm_party_dem ~
+        board_change_events_list +
+              bp_pid2n_median +
+              (1|ticker/year),
+              # control=glmerControl(optimizer="bobyqa",
+              #               optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+anova(m1lr, m1lr1)
+
+
+
+m1alr1 <- glmer(new_bm_party_dem ~
+        board_change_events_list +
+              bp_pid2n_median +
+              fec_cluster_party +
+              lag_years +
+              (1|lnticker/lnyear),
+              #(1|lag_years),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(m1alr1)
+
+# m2lr <- glmer(new_bm_party_rep ~ 
+#                 board_change_events_list +
+#                 bp_pid2n_median + 
+#                 #age_median +
+#                 lnage_med +
+#                 female_yes_mean +
+#                 aa_hisp_yes_mean +            
+#                 outside_public_boards_median +
+#                 #lag_years +
+#               (1|lag_years) +
+#               # (1|lnticker/lnyear),
+#               #(1|lnticker),
+#               (1|lnyear),
+#               data = df, family = binomial(link = "logit"))
+
+
+m2lr <- glmer(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+              (1|lnticker) +
+              (1|lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+
+
+m2lr1 <- glmer(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+anova(m2lr, m2lr1)
+
+summary(m2lr1)
+
+#breaks
+# m3lr <- glmer(new_bm_party_rep ~ 
+#                 board_change_events_list +
+#                 bp_pid2n_median + 
+#                 fec_cluster_party +
+#                 lnage_med +
+#                 female_yes_mean +
+#                 minority_yes_mean +
+#                 outside_public_boards_median +
+#                 #sector +
+#                 #(1|lag_years) +
+#                 (1|lnticker/lnyear),
+#                 #(1|lnyear),
+#               data = df, family = binomial(link = "logit"))
+
+
+
+
+m3lr <- glmer(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                sector +
+                #(1|lag_years) +
+                (1|lnticker) +
+                (1|lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3lr)
+
+
+m3lr1 <- glmer(new_bm_party_rep ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                sector +
+                #(1|lag_years) +
+                #(1|lnticker) +
+                (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3lr1)
+
+
+anova(m3lr, m3lr1)
+
+
+# df <- dfb %>%
+#   filter(lag_years <= 4) 
+# 
+# m4lr <- glmer(new_bm_party_rep ~ 
+#                 board_change_events_list +
+#                 bp_pid2n_median + 
+#                 fec_cluster_party +
+#                 age_median +
+#                 female_yes_mean +
+#                 aa_hisp_yes_mean +
+#                 minority_yes_mean +
+#                 non_usa_yes_mean +
+#                 outside_public_boards_median +
+#                 sector + 
+#                 lag_years +
+#                 (1|ticker/year),
+#               data = df, family = binomial(link = "logit"))
+
+
+models <- list(m1lr, m2lr, m3lr, m4lr)
+
+```
+
+```{r glmermodels}
+
+df <- dfb %>%
+  filter(lag_years == 1) 
+
+
+m1ld <- glmer(new_bm_party_dem ~
+        board_change_events_list +
+              bp_pid2n_median +
+              (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(m1ld)
+
+
+m2ld <- glmer(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m2ld)
+
+
+m3ld <- glmer(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                sector +
+                (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3ld)
+
+
+m4ld <- glmer(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector +
+                (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m4ld)
+
+
+#models <- list(m1lr, m2lr, m3lr, m4lr)
+models <- list(m1ld, m2ld, m3ld, m4ld)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+
+
+
+#Tables of main coefficients, varying the number of included lag ranges
+
+```{r}
+
+df <- dfb %>%
+  filter(lag_years <= 2)
+
+
+mlr_2 <- glmer(new_bm_party_dem ~
+        board_change_events_list +
+              bp_pid2n_median +
+              fec_cluster_party +
+              lag_years +
+              (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mlr_2)
+
+
+df <- dfb %>%
+  filter(lag_years <= 4)
+
+
+mlr_4 <- glmer(new_bm_party_dem ~
+        board_change_events_list +
+              bp_pid2n_median +
+              fec_cluster_party +
+              lag_years +
+              (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mlr_4)
+
+
+df <- dfb %>%
+  filter(lag_years <= 6)
+
+mlr_6 <- glmer(new_bm_party_dem ~
+        board_change_events_list +
+              bp_pid2n_median +
+              fec_cluster_party +
+              lag_years +
+              (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mlr_6)
+
+
+df <- dfb %>%
+  filter(lag_years <= 8)
+
+mlr_8 <- glmer(new_bm_party_dem ~
+        board_change_events_list +
+              bp_pid2n_median +
+              fec_cluster_party +
+              lag_years +
+              (1|lnticker/lnyear),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mlr_8)
+
+
+
+models <- list(mlr_2, mlr_4, mlr_6, mlr_8)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+```
+
+
+```{r glmertablehelper}
+
+
+#Add Insert Row Function
+insertrow <- function(existingDF, newrow, r) {
+  existingDF[seq(r+1,nrow(existingDF)+1),] <- existingDF[seq(r,nrow(existingDF)),]
+  existingDF[r,] <- newrow
+  existingDF
+}
+
+# Create some standard rows to add.
+randomeffect <- "{\\bf Random Effects} & & & &\\\\"
+hline <- "\\hline"
+hline2 <- "\\hline \\\\[-1.8ex]"
+newline <- "\\\\"
+blankline <- " & & & & \\\\"
+
+
+```
+
+```{r makeglmertable}
+
+models <- list(m1ld, m2ld, m3ld, m4ld)
+
+r = 86
+d = 2
+
+re1l = "lnyear:lnticker"
+re2l = "lnticker"
+
+m1 = models[[1]]
+m2 = models[[2]]
+m3 = models[[3]]
+m4 = models[[4]]
+
+
+#make base tables
+tables <- stargazer3(models,
+                     odd.ratio = T,
+                     star.cutoffs = c(0.05, 0.01, 0.001),
+                     font.size = "scriptsize",
+                     title = "Mixed Effects Models of Adding a New Board Member (Democrat), Odds Ratios Displayed",
+                     dep.var.labels   = "New Board Member: Democrat" )
+
+tables <- as.data.frame(tables)
+tables$tables <- as.character(tables$tables)
+tables
+
+
+#tables <- insertrow(tables, hline2, r)
+tables <- insertrow(tables, blankline, r)
+tables <- insertrow(tables,randomeffect,r+1)
+tables <- insertrow(tables,hline,r+2)
+
+#Get number of RE's
+num.re1.m1 <- sapply(ranef(m1),nrow)[1]
+num.re2.m1 <- sapply(ranef(m1),nrow)[2]
+
+num.re1.m2 <- sapply(ranef(m2),nrow)[1]
+num.re2.m2 <- sapply(ranef(m2),nrow)[2]
+
+num.re1.m3 <- sapply(ranef(m3),nrow)[1]
+num.re2.m3 <- sapply(ranef(m3),nrow)[2]
+
+num.re1.m4 <- sapply(ranef(m4),nrow)[1]
+num.re2.m4 <- sapply(ranef(m4),nrow)[2]
+
+
+#Get Standard Dev
+sd.re1.m1 <- attributes(VarCorr(m1)$"lnyear:lnticker")$stddev
+sd.re2.m1 <- attributes(VarCorr(m1)$"lnticker")$stddev
+
+sd.re1.m2 <- attributes(VarCorr(m2)$"lnyear:lnticker")$stddev
+sd.re2.m2 <- attributes(VarCorr(m2)$"lnticker")$stddev
+
+sd.re1.m3 <- attributes(VarCorr(m3)$"lnyear:lnticker")$stddev
+sd.re2.m3 <- attributes(VarCorr(m3)$"lnticker")$stddev
+
+sd.re1.m4 <- attributes(VarCorr(m4)$"lnyear:lnticker")$stddev
+sd.re2.m4 <- attributes(VarCorr(m4)$"lnticker")$stddev
+
+
+#make RE row entries
+num.re1 <- paste("\\# of ", re1l, " & ", num.re1.m1, "&", num.re1.m2, "&", num.re1.m3, "&", num.re1.m4, "\\\\")
+sd.re1 <- paste(re1l, "Standard Deviation & ", round(sd.re1.m1, d), "&", round(sd.re1.m2, d), "&", round(sd.re1.m3, d), "&", round(sd.re1.m4, d), "\\\\")
+
+num.re2 <- paste("\\# of ", re2l, " & ", num.re2.m1, "&", num.re2.m2, "&", num.re2.m3, "&", num.re2.m4, "\\\\")
+sd.re2 <- paste(re2l, "Standard Deviation & ", round(sd.re2.m1, d), "&", round(sd.re2.m2, d), "&", round(sd.re2.m3, d), "&", round(sd.re2.m4, d), "\\\\")
+
+#add rows
+tables <- insertrow(tables,num.re1, r+3)
+tables <- insertrow(tables,sd.re1, r+4)
+tables <- insertrow(tables,newline, r+5)
+tables <- insertrow(tables,num.re2, r+6)
+tables <- insertrow(tables,sd.re2, r+7)
+tables <- insertrow(tables, hline2, r+8)
+
+write.table(tables,file="glmer_tables_test_dem.tex",sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+```
+
+```{r}
+summary(m4)
+```
+
+
+```{r, eval=FALSE}
+
+sumglmr <- summary(m)
+se_re <- VarCorr(m)
+
+attributes(VarCorr(m))
+
+x <- VarCorr(m)
+
+VarCorr(m)
+
+re_names <- attributes(VarCorr(m)$names)
+re_names
+
+sapply(ranef(m),nrow)[1]
+
+sapply(ranef(m),nrow)[2]
+
+
+ranef(m, condVar=TRUE)
+
+VarCorr(m)
+
+(vc <- VarCorr(m))
+print(vc,comp=c("Variance","Std.Dev."),digits=2)
+```
+

@@ -49,7 +49,27 @@ colors_parties0 = c("#2129B0", "#3A084A", "#BF1200")
 source("bb_finalise_plot_academic.R")
 ```
 
+```{r}
+table(df$new_bm_party_dem)
+```
 
+```{r}
+table(df$new_bm_party_rep)
+```
+
+```{r}
+table(df$new_bm_party_unk)
+```
+
+```{r}
+dfb <- dfb %>% 
+  filter(new_bm_party != "UNK")
+```
+
+
+```{r}
+table(dfb$new_bm_party_unk)
+```
 
 
 ```{r}
@@ -104,14 +124,14 @@ m2 <- glm(new_bm_party_rep ~
 
 
 
-m4 <- glm(new_bm_party_rep ~ 
+m3 <- glm(new_bm_party_rep ~ 
                 board_change_events_list +
                 bp_pid2n_median + 
                 fec_cluster_party +
                 age_median +
                 female_yes_mean +
                 minority_yes_mean +
-                aa_hisp_yes_mean +
+                #aa_hisp_yes_mean +
                 #non_usa_yes_mean +              
             
                 outside_public_boards_median +
@@ -119,8 +139,7 @@ m4 <- glm(new_bm_party_rep ~
 
                 sector + 
                 #industry +
-                #lag_years + 
-                year,
+                lag_years,
               data = df, family = "binomial")
 
 
@@ -156,7 +175,173 @@ models <- list(m1, m2, m3, m4)
 stargazer2(models,
            odd.ratio = T,
            type = "text",
-           star.cutoffs = c(0.05, 0.01, 0.001))
+           star.cutoffs = c(0.05, 0.01, 0.001),
+           font.size = "scriptsize",
+           title = "Logit Models of Adding a New Board Member (Republican), Odds Ratios Displayed",
+           dep.var.labels   = "New Board Member: Republican",
+           covariate.labels = c("Board Member Swap", "Republican Board", "Amphibious Firm",
+                               "Republican Firm", "Median Age",
+                               "Proportion Female Board Members",
+                               "Proportion Minority Board Members",
+                               "Proportion Black or Hispanic Board Members",
+                               "Proportion Non-US Board Members",
+                               "Median Outside Board Ties",
+                               "Sector: Capital Goods",
+                               "Sector: Conglomerates",
+                               "Sector: Consumer Cyclical",
+                               "Sector: Consumer Goods",
+                               "Sector: Consumer/Non-Cyclical",
+                               "Sector: Energy",
+                               "Sector: Financial",
+                               "Sector: Healthcare",
+                               "Sector: Services",
+                               "Sector: Technology",
+                               "Sector: Transportation",
+                               "Sector: Utilities",
+                               "Board Lag Years",
+                               "Year")
+           
+           
+           
+           )
+```
+
+
+
+
+
+```{r}
+df <- dfb %>%
+  filter(lag_years == 1) 
+
+
+#TODO
+#recode sector with 4cats, if sector has <1 firm, eg. recode
+
+#y, boardparty med, cluster party, 
+m1 <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median, 
+                #fec_cluster_party +
+                #age_median +
+                #female_yes_mean +
+                #minority_yes_mean +
+                #aa_hisp_yes_mean +
+                #non_usa_yes_mean +              
+            
+                #outside_public_boards_median +
+                #interlocking_yes_mean +
+
+                #sector + 
+                #industry +
+                #lag_years + 
+                #year,
+              data = df, family = "binomial")
+
+
+
+m2 <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                #fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                #minority_yes_mean +
+                aa_hisp_yes_mean +
+                #non_usa_yes_mean +              
+            
+                outside_public_boards_median,
+                #interlocking_yes_mean +
+
+                #sector + 
+                #industry +
+                #lag_years + 
+                #year,
+              data = df, family = "binomial")
+
+
+
+
+m3 <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                minority_yes_mean +
+                #aa_hisp_yes_mean +
+                #non_usa_yes_mean +              
+            
+                outside_public_boards_median +
+                #interlocking_yes_mean +
+
+                sector + 
+                #industry +
+                lag_years,
+              data = df, family = "binomial")
+
+
+df <- dfb %>%
+  filter(lag_years >= 1) 
+
+m4 <- glm(new_bm_party_dem ~ 
+                board_change_events_list +
+                bp_pid2n_median + 
+                fec_cluster_party +
+                age_median +
+                female_yes_mean +
+                minority_yes_mean +
+                aa_hisp_yes_mean +
+                non_usa_yes_mean +              
+            
+                outside_public_boards_median +
+                #interlocking_yes_mean +
+
+                sector + 
+                #industry +
+                lag_years + 
+                year,
+              data = df, family = "binomial")
+
+
+models <- list(m1, m2, m3, m4)
+
+```
+
+
+```{r}
+stargazer2(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001),
+           font.size = "scriptsize",
+           title = "Logit Models of Adding a New Board Member (Democrat), Odds Ratios Displayed",
+           dep.var.labels   = "New Board Member: Democrat",
+           covariate.labels = c("Board Member Swap", "Republican Board", "Amphibious Firm",
+                               "Republican Firm", "Median Age",
+                               "Proportion Female Board Members",
+                               "Proportion Minority Board Members",
+                               "Proportion Black or Hispanic Board Members",
+                               "Proportion Non-US Board Members",
+                               "Median Outside Board Ties",
+                               "Sector: Capital Goods",
+                               "Sector: Conglomerates",
+                               "Sector: Consumer Cyclical",
+                               "Sector: Consumer Goods",
+                               "Sector: Consumer/Non-Cyclical",
+                               "Sector: Energy",
+                               "Sector: Financial",
+                               "Sector: Healthcare",
+                               "Sector: Services",
+                               "Sector: Technology",
+                               "Sector: Transportation",
+                               "Sector: Utilities",
+                               "Board Lag Years",
+                               "Year")
+           
+           
+           
+           )
 ```
 
 

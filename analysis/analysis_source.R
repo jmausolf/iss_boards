@@ -44,7 +44,7 @@ system("mkdir -p output/tables")
 ## CORE UTIL FUNCTIONS
 ####################################
 
-#Function for Fixing Odds Ratios Pvals
+#Function for Fixing Odds Ratios Pvals (from glm)
 stargazer2 <- function(model, odd.ratio = F, ...) {
 if(!("list" %in% class(model))) model <- list(model)
 
@@ -59,6 +59,21 @@ if (odd.ratio) {
 }
 }
 
+#Function for Fixing Odds Ratios Pvals (from glmer)
+stargazer3 <- function(model, odd.ratio = F, ...) {
+  if(!("list" %in% class(model))) model <- list(model)
+  
+  if (odd.ratio) {
+    coefOR2 <- lapply(model, function(x) exp(fixef(x)))
+    seOR2 <- lapply(model, function(x) exp(fixef(x)) * summary(x)$coef[, 2])
+    p2 <- lapply(model, function(x) summary(x)$coefficients[, 4])
+    stargazer(model, coef = coefOR2, se = seOR2, p = p2, ...)
+    
+  } else {
+    stargazer(model, ...)
+  }
+}
+
 #Change Append = TRUE to Not Overwrite Files
 save_stargazer <- function(output.file, ...) {
   output <- capture.output(stargazer(...))
@@ -69,6 +84,12 @@ save_stargazer <- function(output.file, ...) {
 #Change Append = TRUE to Not Overwrite Files
 save_stargazer2 <- function(output.file, ...) {
   output <- capture.output(stargazer2(...))
+  cat(paste(output, collapse = "\n"), "\n", file=output.file, append = FALSE)
+}
+
+#Change Append = TRUE to Not Overwrite Files
+save_stargazer3 <- function(output.file, ...) {
+  output <- capture.output(stargazer3(...))
   cat(paste(output, collapse = "\n"), "\n", file=output.file, append = FALSE)
 }
 
