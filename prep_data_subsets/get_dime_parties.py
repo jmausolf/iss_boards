@@ -257,7 +257,7 @@ dfA.columns = ['ticker', 'contributor.lname_clean', 'contributor.fname_clean',
 gbi = ['ticker', 'contributor.lname_clean', 'contributor.fname_clean', 'cycle']
 dfB = make_party_metrics(dm2, gbi, pid2_col='pid2', pid2_num_col='pid2n')
 
-dfB['cycle_party'] = np.where(dfB[p] < 0, "DEM",
+dfB['party_cycle'] = np.where(dfB[p] < 0, "DEM",
 					np.where(dfB[p] >= 0, "REP", None))
 dfB = dfB.drop(['idx'], axis=1)
 
