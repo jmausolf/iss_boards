@@ -103,48 +103,43 @@ issn = iss.merge(df_alt, how = 'left', on = 'primary_employer')
 ###############################
 
 #Method A
-df1A = issn.merge(fec, how = "left",
+df1A = issn.merge(fec, how = "inner",
 				left_on=['cid_master', 'fullname_clean_pure'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1A['merge_match_type'] = '1A'
-df1A = df1A.dropna(subset=['party_flag'])
 iss_rem = anti_join(issn, df1A, key='rid')
 print("ISS 1A: remaining:", iss_rem.shape, df1A.shape)
 
 #Method B
-df1B = iss_rem.merge(fec, how = "left",
+df1B = iss_rem.merge(fec, how = "inner",
 				left_on=['cid_master', 'fullname_clean_simple'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1B['merge_match_type'] = '1B'
-df1B = df1B.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1B, key='rid')
 print("ISS 1B: remaining:", iss_rem.shape, df1B.shape)
 
 #Method C
-df1C = iss_rem.merge(fec, how = "left",
+df1C = iss_rem.merge(fec, how = "inner",
 				left_on=['cid_master', 'fullname_clean_nickname'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1C['merge_match_type'] = '1C'
-df1C = df1C.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1C, key='rid')
 print("ISS 1C: remaining:", iss_rem.shape, df1C.shape)
 
 #Method D
-df1D = iss_rem.merge(fec, how = "left",
+df1D = iss_rem.merge(fec, how = "inner",
 				left_on=['cid_master', 'fullname_clean'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1D['merge_match_type'] = '1D'
-df1D = df1D.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1D, key='rid')
 print("ISS 1D: remaining:", iss_rem.shape, df1D.shape)
 
 
 #Method E
-df1E = iss_rem.merge(fec, how = "left",
+df1E = iss_rem.merge(fec, how = "inner",
 				left_on=['cid_master', 'first_name_clean', 'last_name_clean'],
 			  	right_on=['cid_master', 'full_first', 'last'])
 df1E['merge_match_type'] = '1E'
-df1E = df1E.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1E, key='rid')
 print("ISS 1E: remaining:", iss_rem.shape, df1E.shape)
 
@@ -154,22 +149,20 @@ print("ISS 1E: remaining:", iss_rem.shape, df1E.shape)
 #DIME 2 and ISS
 ###############################
 
-df2A = iss_rem.merge(dm2, how = "left",
+df2A = iss_rem.merge(dm2, how = "inner",
 				left_on=['ticker', 'last_name_clean', 'first_name_clean'],
 			  	right_on=['ticker', 'contributor.lname_clean', 'contributor.fname_clean'])
 df2A['merge_match_type'] = '2A'
-df2A = df2A.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2A, key='rid')
 print("ISS 2A: remaining:", iss_rem.shape, df2A.shape)
 
 
 
 
-df2B = iss_rem.merge(dm2, how = "left",
+df2B = iss_rem.merge(dm2, how = "inner",
 				left_on=['ticker', 'last_name_clean'],
 			  	right_on=['ticker', 'contributor.lname_clean'])
 df2B['merge_match_type'] = '2B'
-df2B = df2B.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2B, key='rid')
 print("ISS 2B: remaining:", iss_rem.shape, df2B.shape)
 
@@ -179,20 +172,18 @@ print("ISS 2B: remaining:", iss_rem.shape, df2B.shape)
 #DIME 1 and ISS
 ###############################
 
-df3A = iss_rem.merge(dm1, how = "left",
+df3A = iss_rem.merge(dm1, how = "inner",
 				left_on=['ticker', 'last_name_clean', 'first_name_clean'],
 			  	right_on=['ticker', 'last.name_clean', 'first.name_clean'])
 df3A['merge_match_type'] = '3A'
-df3A = df3A.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3A, key='rid')
 print("ISS 3A: remaining:", iss_rem.shape, df3A.shape)
 
 
-df3B = iss_rem.merge(dm1, how = "left",
+df3B = iss_rem.merge(dm1, how = "inner",
 				left_on=['ticker', 'last_name_clean'],
 			  	right_on=['ticker', 'last.name_clean'])
 df3B['merge_match_type'] = '3B'
-df3B = df3B.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3B, key='rid')
 print("ISS 3B: remaining:", iss_rem.shape, df3B.shape)
 
@@ -209,48 +200,43 @@ print("ISS 3B: remaining:", iss_rem.shape, df3B.shape)
 ###############################
 
 #Method A
-df1A_a = iss_rem.merge(fec, how = "left",
+df1A_a = iss_rem.merge(fec, how = "inner",
 				left_on=['alt_cid_master', 'fullname_clean_pure'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1A_a['merge_match_type'] = '1A_alt'
-df1A_a = df1A_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1A_a, key='rid')
 print("ISS 1A_alt: remaining:", iss_rem.shape, df1A_a.shape)
 
 #Method B
-df1B_a = iss_rem.merge(fec, how = "left",
+df1B_a = iss_rem.merge(fec, how = "inner",
 				left_on=['alt_cid_master', 'fullname_clean_simple'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1B_a['merge_match_type'] = '1B_alt'
-df1B_a = df1B_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1B_a, key='rid')
 print("ISS 1B_alt: remaining:", iss_rem.shape, df1B_a.shape)
 
 #Method C
-df1C_a = iss_rem.merge(fec, how = "left",
+df1C_a = iss_rem.merge(fec, how = "inner",
 				left_on=['alt_cid_master', 'fullname_clean_nickname'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1C_a['merge_match_type'] = '1C_alt'
-df1C_a = df1C_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1C_a, key='rid')
 print("ISS 1C_alt: remaining:", iss_rem.shape, df1C_a.shape)
 
 #Method D
-df1D_a = iss_rem.merge(fec, how = "left",
+df1D_a = iss_rem.merge(fec, how = "inner",
 				left_on=['alt_cid_master', 'fullname_clean'],
 			  	right_on=['cid_master', 'fullname_fec'])
 df1D_a['merge_match_type'] = '1D_alt'
-df1D_a = df1D_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1D_a, key='rid')
 print("ISS 1D_alt: remaining:", iss_rem.shape, df1D_a.shape)
 
 
 #Method E
-df1E_a = iss_rem.merge(fec, how = "left",
+df1E_a = iss_rem.merge(fec, how = "inner",
 				left_on=['alt_cid_master', 'first_name_clean', 'last_name_clean'],
 			  	right_on=['cid_master', 'full_first', 'last'])
 df1E_a['merge_match_type'] = '1E_alt'
-df1E_a = df1E_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df1E_a, key='rid')
 print("ISS 1E_alt: remaining:", iss_rem.shape, df1E_a.shape)
 
@@ -260,22 +246,20 @@ print("ISS 1E_alt: remaining:", iss_rem.shape, df1E_a.shape)
 #DIME 2 and ISS
 ###############################
 
-df2A_a = iss_rem.merge(dm2, how = "left",
+df2A_a = iss_rem.merge(dm2, how = "inner",
 				left_on=['alt_ticker', 'last_name_clean', 'first_name_clean'],
 			  	right_on=['ticker', 'contributor.lname_clean', 'contributor.fname_clean'])
 df2A_a['merge_match_type'] = '2A_alt'
-df2A_a = df2A_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2A_a, key='rid')
 print("ISS 2A_alt: remaining:", iss_rem.shape, df2A_a.shape)
 
 
 
 
-df2B_a = iss_rem.merge(dm2, how = "left",
+df2B_a = iss_rem.merge(dm2, how = "inner",
 				left_on=['alt_ticker', 'last_name_clean'],
 			  	right_on=['ticker', 'contributor.lname_clean'])
 df2B_a['merge_match_type'] = '2B_alt'
-df2B_a = df2B_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2B_a, key='rid')
 print("ISS 2B_alt: remaining:", iss_rem.shape, df2B_a.shape)
 
@@ -285,20 +269,18 @@ print("ISS 2B_alt: remaining:", iss_rem.shape, df2B_a.shape)
 #DIME 1 and ISS
 ###############################
 
-df3A_a = iss_rem.merge(dm1, how = "left",
+df3A_a = iss_rem.merge(dm1, how = "inner",
 				left_on=['alt_ticker', 'last_name_clean', 'first_name_clean'],
 			  	right_on=['ticker', 'last.name_clean', 'first.name_clean'])
 df3A_a['merge_match_type'] = '3A_alt'
-df3A_a = df3A_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3A_a, key='rid')
 print("ISS 3A_alt: remaining:", iss_rem.shape, df3A_a.shape)
 
 
-df3B_a = iss_rem.merge(dm1, how = "left",
+df3B_a = iss_rem.merge(dm1, how = "inner",
 				left_on=['alt_ticker', 'last_name_clean'],
 			  	right_on=['ticker', 'last.name_clean'])
 df3B_a['merge_match_type'] = '3B_alt'
-df3B_a = df3B_a.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3B_a, key='rid')
 print("ISS 3B_alt: remaining:", iss_rem.shape, df3B_a.shape)
 
@@ -313,11 +295,10 @@ print("ISS 3B_alt: remaining:", iss_rem.shape, df3B_a.shape)
 #Alt General
 ###############################
 
-df2A_g = iss_rem.merge(dm2, how = "left",
+df2A_g = iss_rem.merge(dm2, how = "inner",
 				left_on=['last_name_clean', 'first_name_clean'],
 			  	right_on=['contributor.lname_clean', 'contributor.fname_clean'])
 df2A_g['merge_match_type'] = '2A_g'
-df2A_g = df2A_g.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df2A_g, key='rid')
 print("ISS 2A_g: remaining:", iss_rem.shape, df2A_g.shape)
 
@@ -326,11 +307,10 @@ print("ISS 2A_g: remaining:", iss_rem.shape, df2A_g.shape)
 #DIME 1 and ISS
 ###############################
 
-df3A_g = iss_rem.merge(dm1, how = "left",
+df3A_g = iss_rem.merge(dm1, how = "inner",
 				left_on=['last_name_clean', 'first_name_clean'],
 			  	right_on=['last.name_clean', 'first.name_clean'])
 df3A_g['merge_match_type'] = '3A_g'
-df3A_g = df3A_g.dropna(subset=['party_flag'])
 iss_rem = anti_join(iss_rem, df3A_g, key='rid')
 print("ISS 3A_g: remaining:", iss_rem.shape, df3A_g.shape)
 
