@@ -31,7 +31,7 @@ def clean_col(col):
 fec = pd.read_csv("../data/FEC/clean_fec_df_analysis.csv", low_memory=False)
 print(fec.shape)
 fec_out = "../data/FEC/clean_fec_df_analysis_party.csv"
-
+fec_cycle_out = "../data/FEC/clean_fec_df_analysis_party_cycle.csv"
 
 
 #################################################################
@@ -47,17 +47,24 @@ fec['ps_party'] = np.where(fec[ps] < 0, "DEM",
 
 #Consolidate Party Columns
 fec['party_cycle'] = np.where(fec['pid2'].notna(), fec['pid2'],
-					np.where(fec['ps_party'].notna(), fec['ps_party'],
-						None))
+					np.where(fec['ps_party'].notna(), fec['ps_party'], 	None))
 
+
+#Impute Party Metrics, Keep Copy Original
+#Phase 1: FFILL, Phase 2: BFILL
+fec['party_cycle_org'] = fec['party_cycle']
+gb = ['cid_master', 'fullname_fec',
+	   'full_first', 'first_simple', 'last']
+fec['party_cycle'] = fec.groupby(gb)['party_cycle'].ffill()
+fec['party_cycle'] = fec.groupby(gb)['party_cycle'].bfill()
+
+#Make Columns to Calculate Overall Party
 p = 'party_cycle'
 fec['pc2'] = np.where(fec[p] == "DEM", "DEM",
-					np.where(fec[p] == "REP", "REP",
-					np.where(fec[p].notna(), "IND/OTH", None)))
+					np.where(fec[p] == "REP", "REP", None))
 
 fec['pc2n'] = np.where(fec[p] == "DEM", -1,
-					np.where(fec[p] == "REP", 1,
-					np.where(fec[p].notna(), 0, None)))
+					np.where(fec[p] == "REP", 1, None))
 fec['pc2n'] = pd.to_numeric(fec['pc2n'])
 
 
@@ -133,14 +140,69 @@ dfA = dfA.drop(['idx'], axis=1)
 
 
 #Combine with Yearly Party Metrics (FEC Data)
-df = fec.merge(dfA,
-	how = 'left',
-	on = ['cid_master', 'fullname_fec',
-	   'full_first', 'first_simple', 'last'])
+#inner join because some small missingness on first, last names
+df = fec.merge(dfA, how = 'inner',
+					on = ['cid_master', 'fullname_fec',
+					'full_first', 'first_simple', 'last'])
+
+#Add FEC Key
+#df['fec_row_id'] = df.index.astype(str)
+#df['fec_rid'] = 'fec_' + df['fec_row_id']
+
+
+print(df)
 print(df.shape)
 print(df.columns)
 print(df.isna().sum())
 
-#Save Party File
+#Save Non-Cycle Party File
 df.to_csv(fec_out, index=False)
 
+#import pdb; pdb.set_trace()
+#Artificial Expansion for Cycle Merge
+
+#Get Unique Combination of Names by Firm
+dfu = df[['cid_master', 'fullname_fec', 'full_first', 'first_simple', 'last', 'party']].drop_duplicates()
+
+print(dfu)
+print(dfu.isna().sum())
+
+#Add Artificial Cycles for ISS Range
+iss = pd.read_csv("../data/ISS/cleaned_iss_data.csv", low_memory=False)
+iss = iss[['cid_master', 'cycle']].drop_duplicates()
+
+print(iss)
+print(iss.isna().sum())
+
+
+#Join ISS and FEC by Firm and Cycle
+dfi = iss.merge(dfu, how='inner', on='cid_master')
+dfi = dfi.dropna()
+
+print(dfi)
+print(dfi.isna().sum())
+
+#Make a Subset of Cleaned FEC Party Data
+dfs = df[['cid_master', 'cycle', 'fullname_fec', 'full_first', 'first_simple', 'last', 'party', 'party_cycle']]
+
+#Full Outside Join Between Datasets
+#Captures all years actually in FEC with all years in the ISS for imputing
+dfo = dfi.merge(dfs, how = 'outer', on=['cid_master', 'cycle', 'fullname_fec', 'full_first', 'first_simple', 'last', 'party'])
+dfo = dfo.sort_values(by=['cid_master', 'fullname_fec', 'cycle'])
+
+print(dfo)
+print(dfo.isna().sum())
+
+
+#Re-Impute Party Metrics, Keep Copy Original
+#Phase 1: FFILL, Phase 2: BFILL
+dfo['party_cycle_org'] = dfo['party_cycle']
+gb = ['cid_master', 'fullname_fec', 'full_first', 'first_simple', 'last']
+dfo['party_cycle'] = dfo.groupby(gb)['party_cycle'].ffill()
+dfo['party_cycle'] = dfo.groupby(gb)['party_cycle'].bfill()
+
+print(dfo)
+print(dfo.isna().sum())
+
+#Save Party File
+dfo.to_csv(fec_cycle_out, index=False)

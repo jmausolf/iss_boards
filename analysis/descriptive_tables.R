@@ -2,9 +2,7 @@
 ## Load SOURCE
 ####################################
 
-#source("indiv_source.R")
-#source("indiv_vartab_varplot_fun %>% ctions.R")
-
+#source("analysis_source.R")
 
 dfb <- dfb %>% 
   mutate(id = row_number()) %>% 
@@ -103,7 +101,7 @@ event_matching <-
       ),
     
     #event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean
-    "Event Match (UNK Imputed)" =
+    "Event Match (Imputed)" =
       list("Match" = ~ n_perc(.data$event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean_YES, na_rm = TRUE, show_denom = "never"),
            "Unmatched" = ~ n_perc(.data$event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean_NO, na_rm = TRUE, show_denom = "never"),
            "Missing" = ~ n_perc(.data$event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean_NA, na_rm = TRUE, show_denom = "never")
