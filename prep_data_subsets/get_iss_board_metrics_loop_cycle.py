@@ -524,7 +524,7 @@ dm = dm.drop_duplicates(subset=['ticker', 'year', fullname_var])
 
 #Isolate Subset for Testing
 #dm = dm.loc[(dm['cid_master'] == 'Air Products & Chemicals') | (dm['cid_master'] == 'Apple' )]
-dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
+#dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
 
 #Set Columns
 dm = dm[['cid_master', 'ticker', 'year', 'cycle', fullname_var, pvar]]
