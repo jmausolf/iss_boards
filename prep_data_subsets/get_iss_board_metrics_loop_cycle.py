@@ -9,10 +9,10 @@ from collections import ChainMap
 # Set Options
 #################################################################
 
-infile = '../data/ISS/post_join_drop_ISS_select.csv'
-outfile = '../data/ISS/ISS_board_change_analysis.csv'
+infile = '../data/ISS/post_join_drop_ISS_select_cycle.csv'
+outfile = '../data/ISS/ISS_board_change_analysis_cycle.csv'
 fullname_var = 'fullname_clean_pure'
-pvar = 'party'
+pvar = 'party_cycle'
 
 
 #################################################################
@@ -524,7 +524,7 @@ dm = dm.drop_duplicates(subset=['ticker', 'year', fullname_var])
 
 #Isolate Subset for Testing
 #dm = dm.loc[(dm['cid_master'] == 'Air Products & Chemicals') | (dm['cid_master'] == 'Apple' )]
-#dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
+dm = dm.loc[(dm['cid_master'] == 'Marathon Petroleum') | (dm['cid_master'] == 'Apple' ) | (dm['cid_master'] == 'Air Products & Chemicals' )]
 
 #Set Columns
 dm = dm[['cid_master', 'ticker', 'year', 'cycle', fullname_var, pvar]]
@@ -894,6 +894,5 @@ print(df.columns)
 
 print('[*] saving result {} : {}...'.format(outfile, df.shape))
 df.to_csv(outfile, index=False)
-
 
 
