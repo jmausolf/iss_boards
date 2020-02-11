@@ -110,20 +110,20 @@ dfb <- read_csv("../data/ISS/ISS_ANALYSIS.csv")
 print(df)
 
 
-dfx <- read_csv("../data/ISS/ISS_Boards.csv")
-print(df)
-
-df <- dfx %>% 
-  select(company_id, name, First_name, Last_name, year) %>% 
-  distinct()
-
-df <- dfb %>% 
-  select(ticker, cid_master) %>% 
-  distinct()
-
-table(dfx$Country_of_Empl)
-table(dfx$Interlocking)
-table(dfx$Ethnicity)
-table(dfx$female)
-table(dfx$Age)
-table(dfx$Outside_Public_Boards)
+# dfx <- read_csv("../data/ISS/ISS_Boards.csv")
+# print(df)
+# 
+# df <- dfx %>% 
+#   select(company_id, name, First_name, Last_name, year) %>% 
+#   distinct()
+# 
+# df <- dfb %>% 
+#   select(ticker, cid_master) %>% 
+#   distinct()
+# 
+# table(dfx$Country_of_Empl)
+# table(dfx$Interlocking)
+# table(dfx$Ethnicity)
+# table(dfx$female)
+# table(dfx$Age)
+# table(dfx$Outside_Public_Boards)

@@ -215,13 +215,16 @@ print(iss.isna().sum())
 #Also see if I can get more complete FEC data summary metrics
 #iss.to_csv('test_iss.csv', index=False)
 
+
+
+
 #Join
 print(bc.shape)
 df = bc.merge(iss, how = 'left', on = ['ticker', 'year'])
 print(df.shape)
 print(df.isna().sum())
 
-print(df.columns.tolist())
+#print(df.columns.tolist())
 
 
 #################################################################
@@ -235,8 +238,40 @@ df = get_dummy_flags(df, 'dropped_bm_party', keep_none=True)
 df = get_dummy_flags(df, 'new_bm_pid2ni_med_str', keep_none=True)
 df = get_dummy_flags(df, 'dropped_bm_pid2ni_med_str', keep_none=True)
 
-print(df)
+#Get Dummy Vars for Events
+df = get_dummy_flags(df, 'board_change_events_list', keep_none=True)
 
+
+
+#Get Full Dummy Equal Swap
+df = get_dummy_flags(df, 'equal_swap_ep_party', keep_none=False)
+df = get_dummy_flags(df, 'equal_swap_ep_pid2ni_med_str', keep_none=False)
+
+
+
+#Make Presidential Party Columns
+#*who is president during election cycle (before election)
+v = 'cycle'
+df['who_pres'] = np.where(df[v] == 2008, "REP",
+					np.where(df[v] == 2010, "DEM",
+					np.where(df[v] == 2012, "DEM",
+					np.where(df[v] == 2014, "DEM",
+					np.where(df[v] == 2016, "DEM",
+					np.where(df[v] == 2018, "REP", None))))))
+
+
+#*who becomes president after election cycle
+df['who_becomes_pres'] = np.where(df[v] == 2008, "DEM",
+					np.where(df[v] == 2010, "DEM",
+					np.where(df[v] == 2012, "DEM",
+					np.where(df[v] == 2014, "DEM",
+					np.where(df[v] == 2016, "REP",
+					np.where(df[v] == 2018, "REP", None))))))
+
+
+print(df)
+print(df.columns.tolist())
+print(df.shape)
 #Save 
 df.to_csv(outfile, index=False)
 
