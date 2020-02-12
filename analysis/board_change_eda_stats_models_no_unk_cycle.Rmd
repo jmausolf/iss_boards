@@ -1,0 +1,954 @@
+---
+title: "Board Exchange Stats, Models - Party Cycle"
+author: "Joshua G. Mausolf"
+date: "1/23/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = FALSE, message=FALSE, warning=FALSE)
+```
+
+
+
+```{r loadsources, echo=FALSE}
+source("analysis_source_cycle.R")
+
+######################################
+## Load Libraries & Data
+######################################
+
+
+library(Rmisc)
+library(Hmisc)
+library(tidyverse)
+library(bbplot)
+library(scales)
+library(RColorBrewer)
+library(ggthemes)
+library(lme4)
+library(car)
+
+
+
+
+#Overwrite bbplot finalise_plot() function
+source("bb_finalise_plot_academic.R")
+
+
+dfb <- dfb %>% 
+  filter(new_bm_party != "UNK") %>% 
+  mutate(lnyear = log(year)) %>% 
+  mutate(ticker_id = as.numeric(factor(ticker))) %>%
+  mutate(lnticker = log(ticker_id)) %>% 
+  mutate(lnage_med = log(age_median)) %>% 
+  mutate(lnboard_size = log(board_size)) %>% 
+  mutate(sector2 = fct_recode(sector,
+    "Other"   = "Conglomerates",
+    "Other"   = "Consumer Goods")) %>% 
+  mutate(sector2 = factor(sector2)) %>% 
+  mutate(fec_cluster_party = factor(fec_cluster_party)) %>% 
+  mutate(bp_pid2n_median = factor(bp_pid2n_median)) %>% 
+  mutate(who_pres = factor(who_pres)) %>% 
+  mutate(who_becomes_pres = factor(who_becomes_pres))
+
+table(dfb$bp_pid2n_median)
+table(dfb$new_bm_party_rep)
+
+table(dfb$party_var)
+```
+
+
+
+```{r}
+df <- dfb %>%
+  filter(lag_years == 1)
+
+
+
+m1r <- glm(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median, 
+              data = df, family = binomial(link = "logit"))
+
+
+
+m2r <- glm(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP"),
+              data = df, family = binomial(link = "logit"))
+
+
+m3r <- glm(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                sector +
+                relevel(who_pres, ref = "REP"),
+              data = df, family = binomial(link = "logit"))
+
+
+df <- dfb %>%
+  filter(lag_years >= 1) 
+
+m4r <- glm(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector + 
+                lag_years +
+                relevel(who_pres, ref = "REP"),
+              data = df, family = binomial(link = "logit"))
+
+
+models <- list(m1r, m2r, m3r, m4r)
+
+stargazer2(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+
+
+
+
+
+
+```{r}
+df <- dfb %>%
+  filter(lag_years == 1) 
+
+
+m1d <- glm(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median, 
+              data = df, family = binomial(link = "logit"))
+
+
+
+m2d <- glm(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP"),
+              data = df, family = binomial(link = "logit"))
+
+
+
+
+m3d <- glm(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                sector +
+                relevel(who_pres, ref = "REP"),
+              data = df, family = binomial(link = "logit"))
+
+
+df <- dfb %>%
+  filter(lag_years >= 1) 
+
+m4d <- glm(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector + 
+                lag_years +
+                relevel(who_pres, ref = "REP"),
+              data = df, family = binomial(link = "logit"))
+
+
+models <- list(m1d, m2d, m3d, m4d)
+
+stargazer2(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+
+
+# GLMER Models Full
+
+
+```{r glmermodels_replag1}
+
+df <- dfb %>%
+  filter(lag_years == 1) 
+
+
+m1lr <- glmer(new_bm_party_rep ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(m1lr)
+vif(m1lr)
+
+m2lr <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m2lr)
+vif(m2lr)
+
+m3lr <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3lr)
+vif(m3lr)
+
+m4lr <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m4lr)
+vif(m4lr)
+
+
+models <- list(m1lr, m2lr, m3lr, m4lr)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+```{r glmermodels_demlag1}
+
+df <- dfb %>%
+  filter(lag_years == 1) 
+
+
+m1ld <- glmer(new_bm_party_dem ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(m1ld)
+vif(m1ld)
+
+m2ld <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m2ld)
+vif(m2ld)
+
+m3ld <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3ld)
+vif(m3ld)
+
+m4ld <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m4ld)
+vif(m4ld)
+
+
+models <- list(m1ld, m2ld, m3ld, m4ld)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+```{r glmermodels_replag2}
+
+df <- dfb %>%
+  filter(lag_years == 2) 
+
+
+m1lr2 <- glmer(new_bm_party_rep ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(m1lr2)
+vif(m1lr2)
+
+m2lr2 <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m2lr2)
+vif(m2lr2)
+
+m3lr2 <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3lr2)
+vif(m3lr2)
+
+m4lr2 <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m4lr2)
+vif(m4lr2)
+
+#models <- list(m1lr, m2lr, m3lr, m4lr)
+models <- list(m1lr2, m2lr2, m3lr2, m4lr2)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+
+```{r glmermodels_demlag2}
+
+df <- dfb %>%
+  filter(lag_years == 2) 
+
+
+m1ld2 <- glmer(new_bm_party_dem ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(m1ld2)
+vif(m1ld2)
+
+m2ld2 <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m2ld2)
+vif(m2ld2)
+
+m3ld2 <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3ld2)
+vif(m3ld2)
+
+m4ld2 <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector +
+                relevel(who_pres, ref = "REP") +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m4ld2)
+vif(m4ld2)
+
+models <- list(m1ld2, m2ld2, m3ld2, m4ld2)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+#All Year Lag Models
+
+```{r glmermodels_replag_all}
+
+df <- dfb %>%
+  filter(lag_years >= 1) 
+
+
+m1lr_all <- glmer(new_bm_party_rep ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(m1lr_all)
+vif(m1lr_all)
+
+m2lr_all <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m2lr_all)
+vif(m2lr_all)
+
+m3lr_all <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3lr_all)
+vif(m3lr_all)
+
+m4lr_all <- glmer(new_bm_party_rep ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector +
+                relevel(who_pres, ref = "REP") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m4lr_all)
+vif(m4lr_all)
+
+
+models <- list(m1lr_all, m2lr_all, m3lr_all, m4lr_all)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+
+```{r glmermodels_demlag_all}
+
+df <- dfb %>%
+  filter(lag_years >= 1) 
+
+
+m1ld_all <- glmer(new_bm_party_dem ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(m1ld_all)
+vif(m1ld_all)
+
+m2ld_all <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +            
+                outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m2ld_all)
+vif(m2ld_all)
+
+m3ld_all <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                minority_yes_mean +
+                outside_public_boards_median +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m3ld_all)
+vif(m3ld_all)
+
+m4ld_all <- glmer(new_bm_party_dem ~ 
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median + 
+                relevel(fec_cluster_party, ref = "OTH") +
+                lnboard_size +
+                lnage_med +
+                female_yes_mean +
+                aa_hisp_yes_mean +
+                minority_yes_mean +
+                non_usa_yes_mean +
+                outside_public_boards_median +
+                sector +
+                relevel(who_pres, ref = "REP") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+              data = df, family = binomial(link = "logit"))
+
+summary(m4ld_all)
+vif(m4ld_all)
+
+models <- list(m1ld_all, m2ld_all, m3ld_all, m4ld_all)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+
+```
+
+
+#Tables of main coefficients, varying the number of included lag ranges
+
+
+```{r multilagmodels_dem}
+
+df <- dfb %>%
+  filter(lag_years <= 2)
+
+
+mld_2 <- glmer(new_bm_party_dem ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                relevel(fec_cluster_party, ref = "OTH") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mld_2)
+vif(mld_2)
+
+
+df <- dfb %>%
+  filter(lag_years <= 4)
+
+
+mld_4 <- glmer(new_bm_party_dem ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                relevel(fec_cluster_party, ref = "OTH") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mld_4)
+vif(mld_4)
+
+
+df <- dfb %>%
+  filter(lag_years <= 6)
+
+mld_6 <- glmer(new_bm_party_dem ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                relevel(fec_cluster_party, ref = "OTH") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mld_6)
+vif(mld_6)
+
+
+df <- dfb %>%
+  filter(lag_years <= 8)
+
+mld_8 <- glmer(new_bm_party_dem ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                relevel(fec_cluster_party, ref = "OTH") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mld_8)
+vif(mld_8)
+
+
+models <- list(mld_2, mld_4, mld_6, mld_8)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+```
+
+
+```{r multilagmodels_rep}
+
+df <- dfb %>%
+  filter(lag_years <= 2)
+
+
+mlr_2 <- glmer(new_bm_party_rep ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                relevel(fec_cluster_party, ref = "OTH") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mlr_2)
+vif(mlr_2)
+
+
+df <- dfb %>%
+  filter(lag_years <= 4)
+
+
+mlr_4 <- glmer(new_bm_party_rep ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                relevel(fec_cluster_party, ref = "OTH") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mlr_4)
+vif(mlr_4)
+
+
+df <- dfb %>%
+  filter(lag_years <= 6)
+
+mlr_6 <- glmer(new_bm_party_rep ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                relevel(fec_cluster_party, ref = "OTH") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mlr_6)
+vif(mlr_6)
+
+
+df <- dfb %>%
+  filter(lag_years <= 8)
+
+mlr_8 <- glmer(new_bm_party_rep ~
+                board_change_events_list_add +
+                equal_swap_ep_party_yes +
+                bp_pid2n_median +
+                relevel(fec_cluster_party, ref = "OTH") +
+                (1|lag_years) +
+                (1|ticker) +
+                (1|year),
+              control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)),
+        data = df, family = binomial(link = "logit"))
+
+summary(mlr_8)
+vif(mlr_8)
+
+
+models <- list(mlr_2, mlr_4, mlr_6, mlr_8)
+
+stargazer3(models,
+           odd.ratio = T,
+           type = "text",
+           star.cutoffs = c(0.05, 0.01, 0.001))
+```
