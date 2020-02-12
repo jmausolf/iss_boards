@@ -4,7 +4,7 @@ author: "Joshua G. Mausolf"
 date: "1/23/2020"
 output:
   pdf_document: default
-  html_document: default
+  htmcl_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -68,7 +68,7 @@ df <- dfb %>%
 
 
 
-m1r <- glm(new_bm_party_rep ~ 
+mc1r <- glm(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median, 
@@ -76,7 +76,7 @@ m1r <- glm(new_bm_party_rep ~
 
 
 
-m2r <- glm(new_bm_party_rep ~ 
+mc2r <- glm(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -89,7 +89,7 @@ m2r <- glm(new_bm_party_rep ~
               data = df, family = binomial(link = "logit"))
 
 
-m3r <- glm(new_bm_party_rep ~ 
+mc3r <- glm(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -107,7 +107,7 @@ m3r <- glm(new_bm_party_rep ~
 df <- dfb %>%
   filter(lag_years >= 1) 
 
-m4r <- glm(new_bm_party_rep ~ 
+mc4r <- glm(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -125,7 +125,7 @@ m4r <- glm(new_bm_party_rep ~
               data = df, family = binomial(link = "logit"))
 
 
-models <- list(m1r, m2r, m3r, m4r)
+models <- list(mc1r, mc2r, mc3r, mc4r)
 
 stargazer2(models,
            odd.ratio = T,
@@ -145,7 +145,7 @@ df <- dfb %>%
   filter(lag_years == 1) 
 
 
-m1d <- glm(new_bm_party_dem ~ 
+mc1d <- glm(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median, 
@@ -153,7 +153,7 @@ m1d <- glm(new_bm_party_dem ~
 
 
 
-m2d <- glm(new_bm_party_dem ~ 
+mc2d <- glm(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -168,7 +168,7 @@ m2d <- glm(new_bm_party_dem ~
 
 
 
-m3d <- glm(new_bm_party_dem ~ 
+mc3d <- glm(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -186,7 +186,7 @@ m3d <- glm(new_bm_party_dem ~
 df <- dfb %>%
   filter(lag_years >= 1) 
 
-m4d <- glm(new_bm_party_dem ~ 
+mc4d <- glm(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -204,7 +204,7 @@ m4d <- glm(new_bm_party_dem ~
               data = df, family = binomial(link = "logit"))
 
 
-models <- list(m1d, m2d, m3d, m4d)
+models <- list(mc1d, mc2d, mc3d, mc4d)
 
 stargazer2(models,
            odd.ratio = T,
@@ -224,7 +224,7 @@ df <- dfb %>%
   filter(lag_years == 1) 
 
 
-m1lr <- glmer(new_bm_party_rep ~
+mc1lr <- glmer(new_bm_party_rep ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -234,10 +234,10 @@ m1lr <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(m1lr)
-vif(m1lr)
+summary(mc1lr)
+vif(mc1lr)
 
-m2lr <- glmer(new_bm_party_rep ~ 
+mc2lr <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -253,10 +253,10 @@ m2lr <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m2lr)
-vif(m2lr)
+summary(mc2lr)
+vif(mc2lr)
 
-m3lr <- glmer(new_bm_party_rep ~ 
+mc3lr <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -273,10 +273,10 @@ m3lr <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m3lr)
-vif(m3lr)
+summary(mc3lr)
+vif(mc3lr)
 
-m4lr <- glmer(new_bm_party_rep ~ 
+mc4lr <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -296,11 +296,11 @@ m4lr <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m4lr)
-vif(m4lr)
+summary(mc4lr)
+vif(mc4lr)
 
 
-models <- list(m1lr, m2lr, m3lr, m4lr)
+models <- list(mc1lr, mc2lr, mc3lr, mc4lr)
 
 stargazer3(models,
            odd.ratio = T,
@@ -309,13 +309,13 @@ stargazer3(models,
 
 ```
 
-```{r glmermodels_demlag1}
+```{r glmermodels_demclag1}
 
 df <- dfb %>%
   filter(lag_years == 1) 
 
 
-m1ld <- glmer(new_bm_party_dem ~
+mc1ld <- glmer(new_bm_party_dem ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -325,10 +325,10 @@ m1ld <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(m1ld)
-vif(m1ld)
+summary(mc1ld)
+vif(mc1ld)
 
-m2ld <- glmer(new_bm_party_dem ~ 
+mc2ld <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -344,10 +344,10 @@ m2ld <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m2ld)
-vif(m2ld)
+summary(mc2ld)
+vif(mc2ld)
 
-m3ld <- glmer(new_bm_party_dem ~ 
+mc3ld <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -364,10 +364,10 @@ m3ld <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m3ld)
-vif(m3ld)
+summary(mc3ld)
+vif(mc3ld)
 
-m4ld <- glmer(new_bm_party_dem ~ 
+mc4ld <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -387,11 +387,11 @@ m4ld <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m4ld)
-vif(m4ld)
+summary(mc4ld)
+vif(mc4ld)
 
 
-models <- list(m1ld, m2ld, m3ld, m4ld)
+models <- list(mc1ld, mc2ld, mc3ld, mc4ld)
 
 stargazer3(models,
            odd.ratio = T,
@@ -406,7 +406,7 @@ df <- dfb %>%
   filter(lag_years == 2) 
 
 
-m1lr2 <- glmer(new_bm_party_rep ~
+mc1lr2 <- glmer(new_bm_party_rep ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -416,10 +416,10 @@ m1lr2 <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(m1lr2)
-vif(m1lr2)
+summary(mc1lr2)
+vif(mc1lr2)
 
-m2lr2 <- glmer(new_bm_party_rep ~ 
+mc2lr2 <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -435,10 +435,10 @@ m2lr2 <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m2lr2)
-vif(m2lr2)
+summary(mc2lr2)
+vif(mc2lr2)
 
-m3lr2 <- glmer(new_bm_party_rep ~ 
+mc3lr2 <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -455,10 +455,10 @@ m3lr2 <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m3lr2)
-vif(m3lr2)
+summary(mc3lr2)
+vif(mc3lr2)
 
-m4lr2 <- glmer(new_bm_party_rep ~ 
+mc4lr2 <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -478,11 +478,11 @@ m4lr2 <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m4lr2)
-vif(m4lr2)
+summary(mc4lr2)
+vif(mc4lr2)
 
-#models <- list(m1lr, m2lr, m3lr, m4lr)
-models <- list(m1lr2, m2lr2, m3lr2, m4lr2)
+#models <- list(mc1lr, mc2lr, mc3lr, mc4lr)
+models <- list(mc1lr2, mc2lr2, mc3lr2, mc4lr2)
 
 stargazer3(models,
            odd.ratio = T,
@@ -492,13 +492,13 @@ stargazer3(models,
 ```
 
 
-```{r glmermodels_demlag2}
+```{r glmermodels_demclag2}
 
 df <- dfb %>%
   filter(lag_years == 2) 
 
 
-m1ld2 <- glmer(new_bm_party_dem ~
+mc1ld2 <- glmer(new_bm_party_dem ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -508,10 +508,10 @@ m1ld2 <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(m1ld2)
-vif(m1ld2)
+summary(mc1ld2)
+vif(mc1ld2)
 
-m2ld2 <- glmer(new_bm_party_dem ~ 
+mc2ld2 <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -527,10 +527,10 @@ m2ld2 <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m2ld2)
-vif(m2ld2)
+summary(mc2ld2)
+vif(mc2ld2)
 
-m3ld2 <- glmer(new_bm_party_dem ~ 
+mc3ld2 <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -546,10 +546,10 @@ m3ld2 <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m3ld2)
-vif(m3ld2)
+summary(mc3ld2)
+vif(mc3ld2)
 
-m4ld2 <- glmer(new_bm_party_dem ~ 
+mc4ld2 <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -569,10 +569,10 @@ m4ld2 <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m4ld2)
-vif(m4ld2)
+summary(mc4ld2)
+vif(mc4ld2)
 
-models <- list(m1ld2, m2ld2, m3ld2, m4ld2)
+models <- list(mc1ld2, mc2ld2, mc3ld2, mc4ld2)
 
 stargazer3(models,
            odd.ratio = T,
@@ -589,7 +589,7 @@ df <- dfb %>%
   filter(lag_years >= 1) 
 
 
-m1lr_all <- glmer(new_bm_party_rep ~
+mc1lr_all <- glmer(new_bm_party_rep ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -600,10 +600,10 @@ m1lr_all <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(m1lr_all)
-vif(m1lr_all)
+summary(mc1lr_all)
+vif(mc1lr_all)
 
-m2lr_all <- glmer(new_bm_party_rep ~ 
+mc2lr_all <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -620,10 +620,10 @@ m2lr_all <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m2lr_all)
-vif(m2lr_all)
+summary(mc2lr_all)
+vif(mc2lr_all)
 
-m3lr_all <- glmer(new_bm_party_rep ~ 
+mc3lr_all <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -641,10 +641,10 @@ m3lr_all <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m3lr_all)
-vif(m3lr_all)
+summary(mc3lr_all)
+vif(mc3lr_all)
 
-m4lr_all <- glmer(new_bm_party_rep ~ 
+mc4lr_all <- glmer(new_bm_party_rep ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -665,11 +665,11 @@ m4lr_all <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m4lr_all)
-vif(m4lr_all)
+summary(mc4lr_all)
+vif(mc4lr_all)
 
 
-models <- list(m1lr_all, m2lr_all, m3lr_all, m4lr_all)
+models <- list(mc1lr_all, mc2lr_all, mc3lr_all, mc4lr_all)
 
 stargazer3(models,
            odd.ratio = T,
@@ -679,13 +679,13 @@ stargazer3(models,
 ```
 
 
-```{r glmermodels_demlag_all}
+```{r glmermodels_demclag_all}
 
 df <- dfb %>%
   filter(lag_years >= 1) 
 
 
-m1ld_all <- glmer(new_bm_party_dem ~
+mc1ld_all <- glmer(new_bm_party_dem ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -696,10 +696,10 @@ m1ld_all <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(m1ld_all)
-vif(m1ld_all)
+summary(mc1ld_all)
+vif(mc1ld_all)
 
-m2ld_all <- glmer(new_bm_party_dem ~ 
+mc2ld_all <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -716,10 +716,10 @@ m2ld_all <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m2ld_all)
-vif(m2ld_all)
+summary(mc2ld_all)
+vif(mc2ld_all)
 
-m3ld_all <- glmer(new_bm_party_dem ~ 
+mc3ld_all <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -736,10 +736,10 @@ m3ld_all <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m3ld_all)
-vif(m3ld_all)
+summary(mc3ld_all)
+vif(mc3ld_all)
 
-m4ld_all <- glmer(new_bm_party_dem ~ 
+mc4ld_all <- glmer(new_bm_party_dem ~ 
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median + 
@@ -760,10 +760,10 @@ m4ld_all <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
               data = df, family = binomial(link = "logit"))
 
-summary(m4ld_all)
-vif(m4ld_all)
+summary(mc4ld_all)
+vif(mc4ld_all)
 
-models <- list(m1ld_all, m2ld_all, m3ld_all, m4ld_all)
+models <- list(mc1ld_all, mc2ld_all, mc3ld_all, mc4ld_all)
 
 stargazer3(models,
            odd.ratio = T,
@@ -782,7 +782,7 @@ df <- dfb %>%
   filter(lag_years <= 2)
 
 
-mld_2 <- glmer(new_bm_party_dem ~
+mcld_2 <- glmer(new_bm_party_dem ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -794,15 +794,15 @@ mld_2 <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(mld_2)
-vif(mld_2)
+summary(mcld_2)
+vif(mcld_2)
 
 
 df <- dfb %>%
   filter(lag_years <= 4)
 
 
-mld_4 <- glmer(new_bm_party_dem ~
+mcld_4 <- glmer(new_bm_party_dem ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -814,14 +814,14 @@ mld_4 <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(mld_4)
-vif(mld_4)
+summary(mcld_4)
+vif(mcld_4)
 
 
 df <- dfb %>%
   filter(lag_years <= 6)
 
-mld_6 <- glmer(new_bm_party_dem ~
+mcld_6 <- glmer(new_bm_party_dem ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -833,14 +833,14 @@ mld_6 <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(mld_6)
-vif(mld_6)
+summary(mcld_6)
+vif(mcld_6)
 
 
 df <- dfb %>%
   filter(lag_years <= 8)
 
-mld_8 <- glmer(new_bm_party_dem ~
+mcld_8 <- glmer(new_bm_party_dem ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -852,11 +852,11 @@ mld_8 <- glmer(new_bm_party_dem ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(mld_8)
-vif(mld_8)
+summary(mcld_8)
+vif(mcld_8)
 
 
-models <- list(mld_2, mld_4, mld_6, mld_8)
+models <- list(mcld_2, mcld_4, mcld_6, mcld_8)
 
 stargazer3(models,
            odd.ratio = T,
@@ -871,7 +871,7 @@ df <- dfb %>%
   filter(lag_years <= 2)
 
 
-mlr_2 <- glmer(new_bm_party_rep ~
+mclr_2 <- glmer(new_bm_party_rep ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -883,15 +883,15 @@ mlr_2 <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(mlr_2)
-vif(mlr_2)
+summary(mclr_2)
+vif(mclr_2)
 
 
 df <- dfb %>%
   filter(lag_years <= 4)
 
 
-mlr_4 <- glmer(new_bm_party_rep ~
+mclr_4 <- glmer(new_bm_party_rep ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -903,14 +903,14 @@ mlr_4 <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(mlr_4)
-vif(mlr_4)
+summary(mclr_4)
+vif(mclr_4)
 
 
 df <- dfb %>%
   filter(lag_years <= 6)
 
-mlr_6 <- glmer(new_bm_party_rep ~
+mclr_6 <- glmer(new_bm_party_rep ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -922,14 +922,14 @@ mlr_6 <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(mlr_6)
-vif(mlr_6)
+summary(mclr_6)
+vif(mclr_6)
 
 
 df <- dfb %>%
   filter(lag_years <= 8)
 
-mlr_8 <- glmer(new_bm_party_rep ~
+mclr_8 <- glmer(new_bm_party_rep ~
                 board_change_events_list_add +
                 equal_swap_ep_party_yes +
                 bp_pid2n_median +
@@ -941,11 +941,11 @@ mlr_8 <- glmer(new_bm_party_rep ~
                             optCtrl=list(maxfun=2e5)),
         data = df, family = binomial(link = "logit"))
 
-summary(mlr_8)
-vif(mlr_8)
+summary(mclr_8)
+vif(mclr_8)
 
 
-models <- list(mlr_2, mlr_4, mlr_6, mlr_8)
+models <- list(mclr_2, mclr_4, mclr_6, mclr_8)
 
 stargazer3(models,
            odd.ratio = T,
