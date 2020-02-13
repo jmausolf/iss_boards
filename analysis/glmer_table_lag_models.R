@@ -1,31 +1,54 @@
-
+##########################################
+## Fixed Party Models
+##########################################
 
 
 #Set Options
 # models <- list(mlr_2, mlr_4, mlr_6, mlr_8)
-# ttitle = "Mixed Effects Models of Adding a New Board Member (Republican), Odds Ratios Displayed"
+# ttitle = "Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Republican, Odds Ratios Displayed"
 # dvar = "Pr\\{New Board Member: Republican\\}"
 # outfile = "output/tables/glmer_models_republican_multilag.tex"
-
+# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 
 
 #Set Options
-models <- list(mld_2, mld_4, mld_6, mld_8)
-ttitle = "Mixed Effects Models of Adding a New Board Member (Democrat), Odds Ratios Displayed"
-dvar = "Pr\\{New Board Member: Democrat\\}"
-outfile = "output/tables/glmer_models_democrat_multilag.tex"
+# models <- list(mld_2, mld_4, mld_6, mld_8)
+# ttitle = "Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Democrat, Odds Ratios Displayed"
+# dvar = "Pr\\{New Board Member: Democrat\\}"
+# outfile = "output/tables/glmer_models_democrat_multilag.tex"
+# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 
+
+##########################################
+## Varying Party Cycle Models
+##########################################
+
+#Set Options
+# models <- list(mclr_2, mclr_4, mclr_6, mclr_8)
+# ttitle = "Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Republican, Odds Ratios Displayed"
+# dvar = "Pr\\{New Board Member: Republican\\}"
+# outfile = "output/tables/glmer_models_republican_multilag_cycle.tex"
+# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
+
+
+#Set Options
+# models <- list(mcld_2, mcld_4, mcld_6, mcld_8)
+# ttitle = "Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Democrat, Odds Ratios Displayed"
+# dvar = "Pr\\{New Board Member: Democrat\\}"
+# outfile = "output/tables/glmer_models_democrat_multilag_cycle.tex"
+# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 
 
 
 
 
 #asr
-r = 16
+r = 19
+r2 = 23
+r3 = 9
 d = 3
 
 
-#outfile = "glmer_tables_test_dem_lag2.tex"
 
 re1l = "Firm"
 re2l = "Year"
@@ -39,13 +62,19 @@ insertrow <- function(existingDF, newrow, r) {
 }
 
 # Create some standard rows to add.
-#randomeffect <- "{\\bf Random Effects} & & & &\\\\"
 randomeffect <- "{\\textit{Level-2 Random Intercepts}} & & & &\\\\"
 hline <- "\\hline"
 hline2 <- "\\hline \\\\[-1.8ex]"
 newline <- "\\\\"
+newline_space <- "\\\\[-1em]"
 blankline <- " & & & & \\\\"
 
+
+
+# Make Note
+note_form <- "\\multicolumn{5}{l}{\\parbox[t]{0.9\\textwidth}{{\\textit{Notes:}}"
+tnote <- paste(note_form, note_content, "}}", "\\\\", sep=" ")
+tnote
 
 
 m1 = models[[1]]
@@ -62,27 +91,36 @@ tables <- stargazer3(models,
                      initial.zero = TRUE,
                      # no.space = TRUE,
                      column.sep.width = "0pt",
+                     #type = "text",
                      header = FALSE,
                      font.size = "scriptsize",
                      style = "asr",
                      title = ttitle,
                      dep.var.labels   = dvar,
-                     covariate.labels = c("Board Member Swap",
+                     column.labels = c("1-2 \\par Year Lags", "1-4 \\par Year Lags", "1-6 \\par Year Lags", "1-8 \\par Year Lags"),
+                     covariate.labels = c("Board Member Added",
+                                          "Board Member Equal Swap",
                                           "Republican Board",
-                                          "Amphibious Firm",
+                                          "Democratic Firm",
                                           "Republican Firm",
-                                          "Constant")
+                                          "Constant"),
+                      notes.append = TRUE, notes.align = "l"
                      )
 
 tables <- as.data.frame(tables)
 tables$tables <- as.character(tables$tables)
 tables
 
+#Add Table Note
+tables <- insertrow(tables, tnote, r2)
 
-#tables <- insertrow(tables, hline2, r)
+#Add Space to DV Label
+tables <- insertrow(tables, newline_space, r3)
+
+#Start Random Effects
 tables <- insertrow(tables, blankline, r)
 tables <- insertrow(tables,randomeffect,r+1)
-#tables <- insertrow(tables,hline,r+2)
+
 
 #Get number of RE's
 num.re1.m1 <- sapply(ranef(m1),nrow)[1]
@@ -136,7 +174,7 @@ tables <- insertrow(tables,var.re1, r+2)
 tables <- insertrow(tables,var.re2, r+3)
 tables <- insertrow(tables,var.re3, r+4)
 tables <- insertrow(tables, hline2, r+5)
-tables <- insertrow(tables,newline, r+6)
+tables <- insertrow(tables,newline_space, r+6)
 
 tables <- insertrow(tables,num.re1, r+8)
 tables <- insertrow(tables,num.re2, r+9)

@@ -1,33 +1,37 @@
 
 \begin{table}[!htbp] \centering 
-  \caption{Mixed Effects Models of Adding a New Board Member (Republican), Odds Ratios Displayed} 
+  \caption{Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Republican, Odds Ratios Displayed} 
   \label{} 
 \scriptsize 
 \begin{tabular}{@{\extracolsep{0pt}}lD{.}{.}{-3} D{.}{.}{-3} D{.}{.}{-3} D{.}{.}{-3} } 
 \\[-1.8ex]\hline \\[-1.8ex] 
 \\[-1.8ex] & \multicolumn{4}{c}{Pr\{New Board Member: Republican\}} \\ 
+\\[-1em]
+ & \multicolumn{1}{c}{1-2 \par Year Lags} & \multicolumn{1}{c}{1-4 \par Year Lags} & \multicolumn{1}{c}{1-6 \par Year Lags} & \multicolumn{1}{c}{1-8 \par Year Lags} \\ 
 \\[-1.8ex] & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)}\\ 
 \hline \\[-1.8ex] 
- Board Member Swap & 0.902 & 0.904 & 0.920 & 0.882^{*} \\ 
-  Republican Board & 5.211^{***} & 4.521^{***} & 3.540^{***} & 2.940^{***} \\ 
-  Amphibious Firm & 1.382 & 1.465 & 1.757 & 1.729 \\ 
-  Republican Firm & 2.120^{*} & 2.773^{**} & 4.069^{**} & 4.578^{**} \\ 
-  Constant & 0.591^{*} & 0.756 & 0.824 & 1.055 \\ 
+ Board Member Added & 1.385^{**} & 1.314^{***} & 1.302^{***} & 1.366^{***} \\ 
+  Board Member Equal Swap & 2.049^{***} & 2.070^{***} & 2.162^{***} & 2.208^{***} \\ 
+  Republican Board & 4.902^{***} & 4.021^{***} & 3.363^{***} & 2.945^{***} \\ 
+  Democratic Firm & 0.706 & 0.735 & 0.666 & 0.685 \\ 
+  Republican Firm & 2.034^{**} & 3.076^{***} & 4.142^{***} & 4.891^{***} \\ 
+  Constant & 0.597^{**} & 0.829 & 1.034 & 1.172 \\ 
  & & & & \\
 {\textit{Level-2 Random Intercepts}} & & & &\\
-Firm Variance &1.02&2.61&3.631&4.264\\
-Year Variance &0.038&0.053&0.045&0.038\\
+Firm Variance &1.013&2.762&3.949&4.454\\
+Year Variance &0.027&0.031&0.025&0.022\\
 Lag Year Variance &0&0&0&0\\
 \hline \\[-1.8ex]
-\\
+\\[-1em]
  \textit{N} & \multicolumn{1}{c}{3,346} & \multicolumn{1}{c}{9,067} & \multicolumn{1}{c}{15,373} & \multicolumn{1}{c}{20,852} \\ 
 Firms &206&208&209&209\\
 Years &11& 11& 11& 11\\
 Lag Years & [1,2] & [1,4] & [1,6] & [1,8] \\
-Log Likelihood & \multicolumn{1}{c}{-1,801.736} & \multicolumn{1}{c}{-4,498.402} & \multicolumn{1}{c}{-7,336.451} & \multicolumn{1}{c}{-9,786.004} \\ 
-AIC & \multicolumn{1}{c}{3,619.473} & \multicolumn{1}{c}{9,012.804} & \multicolumn{1}{c}{14,688.900} & \multicolumn{1}{c}{19,588.010} \\ 
-BIC & \multicolumn{1}{c}{3,668.397} & \multicolumn{1}{c}{9,069.703} & \multicolumn{1}{c}{14,750.020} & \multicolumn{1}{c}{19,651.570} \\ 
+Log Likelihood & \multicolumn{1}{c}{-1,724.902} & \multicolumn{1}{c}{-4,273.586} & \multicolumn{1}{c}{-6,905.128} & \multicolumn{1}{c}{-9,165.326} \\ 
+AIC & \multicolumn{1}{c}{3,467.804} & \multicolumn{1}{c}{8,565.173} & \multicolumn{1}{c}{13,828.250} & \multicolumn{1}{c}{18,348.650} \\ 
+BIC & \multicolumn{1}{c}{3,522.843} & \multicolumn{1}{c}{8,629.184} & \multicolumn{1}{c}{13,897.020} & \multicolumn{1}{c}{18,420.160} \\ 
 \hline \\[-1.8ex] 
+\multicolumn{5}{l}{\parbox[t]{0.9\textwidth}{{\textit{Notes:}} Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \textit{party}, which is fixed across election cycles. }} \\
 \multicolumn{5}{l}{$^{*}$p $<$ .05; $^{**}$p $<$ .01; $^{***}$p $<$ .001} \\ 
 \end{tabular} 
 \end{table} 
