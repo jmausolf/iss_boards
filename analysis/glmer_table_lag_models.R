@@ -8,7 +8,7 @@
 # ttitle = "Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Republican, Odds Ratios Displayed"
 # dvar = "Pr\\{New Board Member: Republican\\}"
 # outfile = "output/tables/glmer_models_republican_multilag.tex"
-# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
+# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags as follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 
 
 #Set Options
@@ -16,7 +16,7 @@
 # ttitle = "Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Democrat, Odds Ratios Displayed"
 # dvar = "Pr\\{New Board Member: Democrat\\}"
 # outfile = "output/tables/glmer_models_democrat_multilag.tex"
-# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
+# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags as follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 
 
 ##########################################
@@ -28,7 +28,7 @@
 # ttitle = "Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Republican, Odds Ratios Displayed"
 # dvar = "Pr\\{New Board Member: Republican\\}"
 # outfile = "output/tables/glmer_models_republican_multilag_cycle.tex"
-# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
+# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags as follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 
 
 #Set Options
@@ -36,7 +36,7 @@
 # ttitle = "Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Democrat, Odds Ratios Displayed"
 # dvar = "Pr\\{New Board Member: Democrat\\}"
 # outfile = "output/tables/glmer_models_democrat_multilag_cycle.tex"
-# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
+# note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags as follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 
 
 
