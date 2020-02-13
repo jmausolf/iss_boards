@@ -1,6 +1,6 @@
 
 \begin{table}[!htbp] \centering 
-  \caption{Mixed Effects Models of Adding a New Board Member (Democrat), Odds Ratios Displayed} 
+  \caption{Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Democrat, 1 Year Lag, Odds Ratios Displayed} 
   \label{} 
 \scriptsize 
 \begin{tabular}{@{\extracolsep{0pt}}lD{.}{.}{-3} D{.}{.}{-3} D{.}{.}{-3} D{.}{.}{-3} } 
@@ -8,42 +8,48 @@
 \\[-1.8ex] & \multicolumn{4}{c}{Pr\{New Board Member: Democrat\}} \\ 
 \\[-1.8ex] & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)}\\ 
 \hline \\[-1.8ex] 
- \textit{Boards and Firm Politics} \\Board Member Swap & 1.101 & 1.098 & 1.051 & 1.017 \\ 
-  Republican Board & 0.197^{***} & 0.194^{***} & 0.240^{***} & 0.236^{***} \\ 
-  Amphibious Firm &  &  & 0.727 & 0.748 \\ 
-  Republican Firm &  &  & 0.471^{**} & 0.523^{*} \\ 
-  \\ \textit{Board Features} \\ Median Age &  & 0.334 & 0.175 & 0.141 \\ 
-  Proportion Female &  & 0.808 & 0.822 & 0.633 \\ 
-  Proportion Black or Hispanic &  & 1.513 &  & 0.751 \\ 
-  Proportion Minority &  &  & 1.914 & 1.726 \\ 
-  Proportion Non-US &  &  &  & 1.263 \\ 
-  Median Outside Board Ties &  & 0.978 & 1.023 & 1.080 \\ 
-  \\ \textit{Firm Sectors} \\ Capital Goods &  &  &  & 1.288 \\ 
-  Conglomerates &  &  &  & 7.723 \\ 
-  Consumer Cyclical &  &  &  & 4.505^{**} \\ 
-  Consumer Goods &  &  &  & 1.922 \\ 
-  Consumer/Non-Cyclical &  &  &  & 2.198 \\ 
-  Energy &  &  &  & 2.634^{*} \\ 
-  Financial &  &  &  & 2.593^{*} \\ 
-  Healthcare &  &  &  & 2.447^{*} \\ 
-  Services &  &  &  & 2.452^{*} \\ 
-  Technology &  &  &  & 2.565^{*} \\ 
-  Transportation &  &  &  & 3.559^{**} \\ 
-  Utilities &  &  &  & 2.356 \\ 
-  Constant & 1.435^{*} & 138.499 & 2,222.007 & 2,244.169 \\ 
+ \textit{Boards and Firm Politics} \\Board Member Added & 0.704^{**} & 0.706^{*} & 0.770 & 0.782 \\ 
+  Board Member Equal Swap & 0.532^{***} & 0.531^{***} & 0.573^{**} & 0.540^{***} \\ 
+  Republican Board & 0.177^{***} & 0.176^{***} & 0.234^{***} & 0.224^{***} \\ 
+  Democratic Firm &  &  & 1.336 & 1.351 \\ 
+  Republican Firm &  &  & 0.536^{**} & 0.630^{*} \\ 
+  \\ \textit{Board Features} \\ Board Size (Log) &  & 0.989 & 0.861 & 0.811 \\ 
+  Median Age (Log) &  & 0.932 & 0.174 & 0.151 \\ 
+  Proportion Female &  & 0.848 & 0.778 & 0.556 \\ 
+  Proportion Black or Hispanic &  & 2.382 &  & 1.539 \\ 
+  Proportion Minority &  &  & 1.512 & 1.335 \\ 
+  Proportion Non-US &  &  &  & 0.587 \\ 
+  Median Outside Board Ties &  & 0.989 & 1.088 & 1.144 \\ 
+  \\ \textit{Firm Sectors} \\ Capital Goods &  &  &  & 0.993 \\ 
+  Conglomerates &  &  &  & 5.911 \\ 
+  Consumer Cyclical &  &  &  & 3.236^{*} \\ 
+  Consumer Goods &  &  &  & 1.653 \\ 
+  Consumer/Non-Cyclical &  &  &  & 1.609 \\ 
+  Energy &  &  &  & 1.651 \\ 
+  Financial &  &  &  & 1.897 \\ 
+  Healthcare &  &  &  & 1.751 \\ 
+  Services &  &  &  & 1.698 \\ 
+  Technology &  &  &  & 2.007 \\ 
+  Transportation &  &  &  & 2.859^{*} \\ 
+  Utilities &  &  &  & 1.576 \\ 
+  \\ \textit{Other Features} \\ U.S. President (Democrat) &  & 0.791 & 0.854 & 0.887 \\ 
+  Constant & 2.016^{***} & 3.145 & 3,419.748 & 3,799.836 \\ 
  & & & & \\
 {\textit{Level-2 Random Intercepts}} & & & &\\
-Firm Variance &0.062&0.058&0&0\\
-Year Variance &0.003&0.003&0&0\\
+Firm Variance &0.065&0.075&0.014&0\\
+Year Variance &0.002&0&0&0\\
+Lag-Year Variance &NA&NA&NA&NA\\
 \hline \\[-1.8ex]
 \\
  \textit{N} & \multicolumn{1}{c}{1,638} & \multicolumn{1}{c}{1,638} & \multicolumn{1}{c}{1,248} & \multicolumn{1}{c}{1,222} \\ 
 Firms &269&269&204&197\\
 Years &11& 11& 11& 11\\
-Log Likelihood & \multicolumn{1}{c}{-930.016} & \multicolumn{1}{c}{-929.335} & \multicolumn{1}{c}{-705.542} & \multicolumn{1}{c}{-678.645} \\ 
-AIC & \multicolumn{1}{c}{1,870.031} & \multicolumn{1}{c}{1,876.670} & \multicolumn{1}{c}{1,433.083} & \multicolumn{1}{c}{1,407.290} \\ 
-BIC & \multicolumn{1}{c}{1,897.037} & \multicolumn{1}{c}{1,925.281} & \multicolumn{1}{c}{1,489.505} & \multicolumn{1}{c}{1,534.996} \\ 
+Lag-Years &NA& NA& NA& NA\\
+Log Likelihood & \multicolumn{1}{c}{-890.108} & \multicolumn{1}{c}{-887.894} & \multicolumn{1}{c}{-678.226} & \multicolumn{1}{c}{-651.393} \\ 
+AIC & \multicolumn{1}{c}{1,792.216} & \multicolumn{1}{c}{1,799.788} & \multicolumn{1}{c}{1,384.453} & \multicolumn{1}{c}{1,358.786} \\ 
+BIC & \multicolumn{1}{c}{1,824.624} & \multicolumn{1}{c}{1,864.603} & \multicolumn{1}{c}{1,456.263} & \multicolumn{1}{c}{1,501.817} \\ 
 \hline \\[-1.8ex] 
+\multicolumn{5}{l}{\parbox[t]{\textwidth}{{\textit{Notes:}} Cross-classified random effects (CCRE) logistic regression model with fixed 1-year lag. Cross-classifed andom intercepts include firm and year. Measure of board-member partisanship: \textit{party}, which is fixed across election cycles. }} \\
 \multicolumn{5}{l}{$^{*}$p $<$ .05; $^{**}$p $<$ .01; $^{***}$p $<$ .001} \\ 
 \end{tabular} 
 \end{table} 

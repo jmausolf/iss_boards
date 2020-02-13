@@ -1,0 +1,33 @@
+
+\begin{table}[!htbp] \centering 
+  \caption{Summary of Found Partisans by Merge Match Type, Party} 
+  \label{} 
+\scriptsize 
+\begin{tabular}{@{\extracolsep{5pt}} ccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Merge Type & Partisan Data & Left Columns & Right Columns & Count \\ 
+\hline \\[-1.8ex] 
+1A & FEC-CPD & 'cid\_master', 'fullname\_clean\_pure' & 'cid\_master', 'fullname\_fec' & $7,977$ \\ 
+1B & FEC-CPD & 'cid\_master', 'fullname\_clean\_simple' & 'cid\_master', 'fullname\_fec' & $0$ \\ 
+1C & FEC-CPD & 'cid\_master', 'fullname\_clean\_nickname' & 'cid\_master', 'fullname\_fec' & $1$ \\ 
+1D & FEC-CPD & 'cid\_master', 'fullname\_clean' & 'cid\_master', 'fullname\_fec' & $0$ \\ 
+1E & FEC-CPD & 'cid\_master', 'first\_name\_clean', 'last\_name\_clean' & 'cid\_master', 'full\_first', 'last' & $0$ \\ 
+2A & DM2 & 'ticker', 'last\_name\_clean', 'first\_name\_clean' & 'ticker', 'contributor.lname\_clean', 'contributor.fname\_clean' & $11,242$ \\ 
+2B & DM2 & 'ticker', 'last\_name\_clean' & 'ticker', 'contributor.lname\_clean' & $594$ \\ 
+3A & DM1 & 'ticker', 'last\_name\_clean', 'first\_name\_clean' & 'ticker', 'last.name\_clean', 'first.name\_clean' & $6,462$ \\ 
+3B & DM1 & 'ticker', 'last\_name\_clean' & 'ticker', 'last.name\_clean' & $736$ \\ 
+1A (Alt) & FEC-CPD & 'alt\_cid\_master', 'fullname\_clean\_pure' & 'cid\_master', 'fullname\_fec' & $463$ \\ 
+1B (Alt) & FEC-CPD & 'alt\_cid\_master', 'fullname\_clean\_simple' & 'cid\_master', 'fullname\_fec' & $0$ \\ 
+1C (Alt) & FEC-CPD & 'alt\_cid\_master', 'fullname\_clean\_nickname' & 'cid\_master', 'fullname\_fec' & $1$ \\ 
+1D (Alt) & FEC-CPD & 'alt\_cid\_master', 'fullname\_clean' & 'cid\_master', 'fullname\_fec' & $0$ \\ 
+1E (Alt) & FEC-CPD & 'alt\_cid\_master', 'first\_name\_clean', 'last\_name\_clean' & 'cid\_master', 'full\_first', 'last' & $0$ \\ 
+2A (Alt) & DM2 & 'alt\_ticker', 'last\_name\_clean', 'first\_name\_clean' & 'ticker', 'contributor.lname\_clean', 'contributor.fname\_clean' & $11$ \\ 
+2B (Alt) & DM2 & 'alt\_ticker', 'last\_name\_clean' & 'ticker', 'contributor.lname\_clean' & $0$ \\ 
+3A (Alt) & DM1 & 'alt\_ticker', 'last\_name\_clean', 'first\_name\_clean' & 'ticker', 'last.name\_clean', 'first.name\_clean' & $8$ \\ 
+3B (Alt) & DM1 & 'alt\_ticker', 'last\_name\_clean' & 'ticker', 'last.name\_clean' & $0$ \\ 
+2A (Gen) & DM2 & 'last\_name\_clean', 'first\_name\_clean' & 'contributor.lname\_clean', 'contributor.fname\_clean' & $1,667$ \\ 
+3A (Gen) & DM1 & 'last\_name\_clean', 'first\_name\_clean' & 'last.name\_clean', 'first.name\_clean' & $197$ \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}  

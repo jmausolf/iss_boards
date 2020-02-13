@@ -1,0 +1,55 @@
+
+\begin{table}[!htbp] \centering 
+  \caption{Cross-Classified Random Effects Logit Models of the Likelihood that the New Board Member is a Democrat, 2 Year Lag, Odds Ratios Displayed} 
+  \label{} 
+\scriptsize 
+\begin{tabular}{@{\extracolsep{0pt}}lD{.}{.}{-3} D{.}{.}{-3} D{.}{.}{-3} D{.}{.}{-3} } 
+\\[-1.8ex]\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{4}{c}{Pr\{New Board Member: Democrat\}} \\ 
+\\[-1.8ex] & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)}\\ 
+\hline \\[-1.8ex] 
+ \textit{Boards and Firm Politics} \\Board Member Added & 0.736^{**} & 0.724^{**} & 0.705^{**} & 0.701^{**} \\ 
+  Board Member Equal Swap & 0.526^{***} & 0.525^{***} & 0.533^{***} & 0.540^{***} \\ 
+  Republican Board & 0.190^{***} & 0.188^{***} & 0.204^{***} & 0.206^{***} \\ 
+  Democratic Firm &  &  & 0.988 & 0.955 \\ 
+  Republican Firm &  &  & 0.702 & 0.772 \\ 
+  \\ \textit{Board Features} \\ Board Size (Log) &  & 1.225 & 1.093 & 1.161 \\ 
+  Median Age (Log) &  & 0.733 & 0.433 & 0.400 \\ 
+  Proportion Female &  & 0.652 & 0.612 & 0.508 \\ 
+  Proportion Black or Hispanic &  & 1.182 &  & 0.491 \\ 
+  Proportion Minority &  &  & 2.489^{*} & 2.452^{*} \\ 
+  Proportion Non-US &  &  &  & 3.468 \\ 
+  Median Outside Board Ties &  & 0.975 & 1.033 & 1.071 \\ 
+  \\ \textit{Firm Sectors} \\ Capital Goods &  &  &  & 0.565 \\ 
+  Conglomerates &  &  &  & 1.500 \\ 
+  Consumer Cyclical &  &  &  & 1.766 \\ 
+  Consumer Goods &  &  &  & 1.173 \\ 
+  Consumer/Non-Cyclical &  &  &  & 1.240 \\ 
+  Energy &  &  &  & 1.632 \\ 
+  Financial &  &  &  & 1.700 \\ 
+  Healthcare &  &  &  & 1.341 \\ 
+  Services &  &  &  & 1.551 \\ 
+  Technology &  &  &  & 1.752 \\ 
+  Transportation &  &  &  & 1.654 \\ 
+  Utilities &  &  &  & 1.062 \\ 
+  \\ \textit{Other Features} \\ U.S. President (Democrat) &  & 0.920 &  & 1.005 \\ 
+  Constant & 2.127^{***} & 5.597 & 50.183 & 41.977 \\ 
+ & & & & \\
+{\textit{Level-2 Random Intercepts}} & & & &\\
+Firm Variance &0.539&0.534&0.522&0.449\\
+Year Variance &0.024&0.022&0.007&0\\
+Lag-Year Variance &NA&NA&NA&NA\\
+\hline \\[-1.8ex]
+\\
+ \textit{N} & \multicolumn{1}{c}{2,768} & \multicolumn{1}{c}{2,768} & \multicolumn{1}{c}{2,098} & \multicolumn{1}{c}{2,057} \\ 
+Firms &269&269&205&198\\
+Years &10& 10& 10& 10\\
+Lag-Years &NA& NA& NA& NA\\
+Log Likelihood & \multicolumn{1}{c}{-1,577.552} & \multicolumn{1}{c}{-1,577.046} & \multicolumn{1}{c}{-1,187.575} & \multicolumn{1}{c}{-1,152.853} \\ 
+AIC & \multicolumn{1}{c}{3,167.103} & \multicolumn{1}{c}{3,178.092} & \multicolumn{1}{c}{2,401.150} & \multicolumn{1}{c}{2,361.706} \\ 
+BIC & \multicolumn{1}{c}{3,202.659} & \multicolumn{1}{c}{3,249.202} & \multicolumn{1}{c}{2,474.584} & \multicolumn{1}{c}{2,519.318} \\ 
+\hline \\[-1.8ex] 
+\multicolumn{5}{l}{\parbox[t]{\textwidth}{{\textit{Notes:}} Cross-classified random effects (CCRE) logistic regression model with fixed 2-year lag. Cross-classifed andom intercepts include firm and year. Measure of board-member partisanship: \textit{party-cycle}, which may vary across election cycles. }} \\
+\multicolumn{5}{l}{$^{*}$p $<$ .05; $^{**}$p $<$ .01; $^{***}$p $<$ .001} \\ 
+\end{tabular} 
+\end{table} 
