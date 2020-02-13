@@ -2,7 +2,7 @@
 ## Load SOURCE
 ####################################
 
-source("analysis_source.R")
+source("analysis_source_cycle.R")
 
 dfb <- dfb %>% 
   mutate(id = row_number()) %>% 
@@ -330,4 +330,4 @@ capture.output(print(final_table,
                      booktabs = TRUE,
                      rtitle = "Summary Statistics",
                      cnames = c("1 Year Lag", "2 Year Lag", "2-4 Year Lags", "All Year Lags")), 
-               file="output/tables/table_descriptive_stats.tex")
+               file="output/tables/table_descriptive_stats_cycle.tex")
