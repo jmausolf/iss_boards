@@ -54,9 +54,7 @@ source("bb_finalise_plot_academic.R")
 
 ```
 
-```{r}
-table(df2_full$em_var_party)
-```
+
 
 
 
