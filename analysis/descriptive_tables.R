@@ -106,7 +106,12 @@ event_matching <-
 
 firm_parties <-
   list(
-    "Firm FEC Type X Events" =
+    "Board Party X Events" =
+      list("Democratic Board" = ~ n_perc(.data$bp_pid2n_median_DEM, na_rm = TRUE, show_denom = "never"),
+           "Republican Board" = ~ n_perc(.data$bp_pid2n_median_REP, na_rm = TRUE, show_denom = "never")
+      ),
+    
+    "Firm Party X Events" =
       list("Polarized Democratic" = ~ n_perc(.data$fec_cluster_party_DEM, na_rm = TRUE, show_denom = "never"),
            "Amphibious Firm" = ~ n_perc(.data$fec_cluster_party_OTH, na_rm = TRUE, show_denom = "never"),
            "Polarized Republican" = ~ n_perc(.data$fec_cluster_party_REP, na_rm = TRUE, show_denom = "never")
@@ -166,9 +171,11 @@ observations <- df %>%
 #Make Additional Dummies
 df_stats <- dummy_cols(df, select_columns = c("board_change_events_list",
                                               "fec_cluster_party",
+                                              "bp_pid2n_median",
                                               "who_pres",
                                               "event_match_ep_party_bp_pid2n_mean",
                                               "event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean"))
+
 #Get Board Events
 events <- df_stats %>%
   summary_table(board_events)
@@ -210,9 +217,11 @@ observations <- df %>%
 #Make Additional Dummies
 df_stats <- dummy_cols(df, select_columns = c("board_change_events_list",
                                               "fec_cluster_party",
+                                              "bp_pid2n_median",
                                               "who_pres",
                                               "event_match_ep_party_bp_pid2n_mean",
                                               "event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean"))
+
 #Get Board Events
 events <- df_stats %>%
   summary_table(board_events)
@@ -253,9 +262,11 @@ observations <- df %>%
 #Make Additional Dummies
 df_stats <- dummy_cols(df, select_columns = c("board_change_events_list",
                                               "fec_cluster_party",
+                                              "bp_pid2n_median",
                                               "who_pres",
                                               "event_match_ep_party_bp_pid2n_mean",
                                               "event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean"))
+
 #Get Board Events
 events <- df_stats %>%
   summary_table(board_events)
@@ -295,9 +306,11 @@ observations <- df %>%
 #Make Additional Dummies
 df_stats <- dummy_cols(df, select_columns = c("board_change_events_list",
                                               "fec_cluster_party",
+                                              "bp_pid2n_median",
                                               "who_pres",
                                               "event_match_ep_party_bp_pid2n_mean",
                                               "event_match_ep_pid2ni_med_str_bp_pid2ni_med_mean"))
+
 #Get Board Events
 events <- df_stats %>%
   summary_table(board_events)
