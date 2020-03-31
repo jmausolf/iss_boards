@@ -540,6 +540,7 @@ mc3ld2 <- glmer(new_bm_party_dem ~
                 female_yes_mean +
                 minority_yes_mean +
                 outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
                 (1|ticker) +
                 (1|year),
               control=glmerControl(optimizer="bobyqa",
@@ -729,6 +730,7 @@ mc3ld_all <- glmer(new_bm_party_dem ~
                 female_yes_mean +
                 minority_yes_mean +
                 outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
                 (1|lag_years) +
                 (1|ticker) +
                 (1|year),
@@ -920,6 +922,7 @@ mc3ld_all_repref <- glmer(new_bm_party_dem ~
                 female_yes_mean +
                 minority_yes_mean +
                 outside_public_boards_median +
+                relevel(who_pres, ref = "REP") +
                 (1|lag_years) +
                 (1|ticker) +
                 (1|year),
