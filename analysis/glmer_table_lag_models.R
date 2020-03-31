@@ -9,6 +9,7 @@
 # dvar = "Pr\\{New Board Member: Republican\\}"
 # outfile = "output/tables/glmer_models_republican_multilag.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags as follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
+# mlabel = "tab:rep_multilag"
 
 
 #Set Options
@@ -17,6 +18,7 @@
 # dvar = "Pr\\{New Board Member: Democrat\\}"
 # outfile = "output/tables/glmer_models_democrat_multilag.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags as follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
+# mlabel = "tab:dem_multilag"
 
 
 ##########################################
@@ -29,6 +31,7 @@
 # dvar = "Pr\\{New Board Member: Republican\\}"
 # outfile = "output/tables/glmer_models_republican_multilag_cycle.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags as follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
+# mlabel = "tab:rep_multilag_cycle"
 
 
 #Set Options
@@ -37,7 +40,7 @@
 # dvar = "Pr\\{New Board Member: Democrat\\}"
 # outfile = "output/tables/glmer_models_democrat_multilag_cycle.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with discrete multiyear lags. That is, each model uses a discrete set of year lags as follows: 1-2 year lags, 1-4 year lags, 1-6 year lags, and 1-8 year lags. Cross-classified random intercepts include firm, year, and lag years. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
-
+# mlabel = "tab:dem_multilag_cycle"
 
 
 
@@ -97,6 +100,7 @@ tables <- stargazer3(models,
                      style = "asr",
                      title = ttitle,
                      dep.var.labels   = dvar,
+                     label = mlabel,
                      column.labels = c("1-2 \\par Year Lags", "1-4 \\par Year Lags", "1-6 \\par Year Lags", "1-8 \\par Year Lags"),
                      covariate.labels = c("Board Member Added",
                                           "Board Member Equal Swap",

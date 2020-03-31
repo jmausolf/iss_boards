@@ -9,6 +9,7 @@
 # outfile = "output/tables/glmer_models_republican_lag1.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with fixed 1-year lag. Cross-classified random intercepts include firm and year. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 # all_lags = FALSE
+# mlabel = "tab:rep_lag1"
 
 
 #Set Options
@@ -18,6 +19,7 @@
 # outfile = "output/tables/glmer_models_republican_lag2.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with fixed 2-year lag. Cross-classified random intercepts include firm and year. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 # all_lags = FALSE
+# mlabel = "tab:rep_lag2"
 
 
 #Set Options
@@ -27,6 +29,7 @@
 # outfile = "output/tables/glmer_models_republican_lag_all.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model, all lags (1-year, 11-year) included. Cross-classified random intercepts include firm, year, and lag-year. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 # all_lags = TRUE
+# mlabel = "tab:rep_lag_all"
 
 
 #Set Options
@@ -36,6 +39,7 @@
 # outfile = "output/tables/glmer_models_democrat_lag1.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with fixed 1-year lag. Cross-classified random intercepts include firm and year. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 # all_lags = FALSE
+# mlabel = "tab:dem_lag1"
 
 
 #Set Options
@@ -45,6 +49,7 @@
 # outfile = "output/tables/glmer_models_democrat_lag2.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with fixed 2-year lag. Cross-classified random intercepts include firm and year. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 # all_lags = FALSE
+# mlabel = "tab:dem_lag2"
 
 
 #Set Options
@@ -54,6 +59,7 @@
 # outfile = "output/tables/glmer_models_democrat_lag_all.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model, all lags (1-year, 11-year) included. Cross-classified random intercepts include firm, year, and lag-year. Measure of board-member partisanship: \\textit{party}, which is fixed across election cycles."
 # all_lags = TRUE
+# mlabel = "tab:dem_lag_all"
 
 
 
@@ -68,6 +74,7 @@
 # outfile = "output/tables/glmer_models_republican_lag1_cycle.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with fixed 1-year lag. Cross-classified random intercepts include firm and year. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 # all_lags = FALSE
+# mlabel = "tab:rep_lag1_cycle"
 
 
 #Set Options
@@ -77,6 +84,7 @@
 # outfile = "output/tables/glmer_models_republican_lag2_cycle.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with fixed 2-year lag. Cross-classified random intercepts include firm and year. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 # all_lags = FALSE
+# mlabel = "tab:rep_lag2_cycle"
 
 
 #Set Options
@@ -86,6 +94,7 @@
 # outfile = "output/tables/glmer_models_republican_lag_all_cycle.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model, all lags (1-year, 11-year) included. Cross-classified random intercepts include firm, year, and lag-year. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 # all_lags = TRUE
+# mlabel = "tab:glmer_mod_rep_lag_all_cycle"
 
 
 #Set Options
@@ -95,6 +104,7 @@
 # outfile = "output/tables/glmer_models_democrat_lag1_cycle.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with fixed 1-year lag. Cross-classified random intercepts include firm and year. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 # all_lags = FALSE
+# mlabel = "tab:dem_lag1_cycle"
 
 
 #Set Options
@@ -104,6 +114,7 @@
 # outfile = "output/tables/glmer_models_democrat_lag2_cycle.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model with fixed 2-year lag. Cross-classified random intercepts include firm and year. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 # all_lags = FALSE
+# mlabel = "tab:dem_lag2_cycle"
 
 
 #Set Options
@@ -113,7 +124,7 @@
 # outfile = "output/tables/glmer_models_democrat_lag_all_cycle.tex"
 # note_content <- "Cross-classified random effects (CCRE) logistic regression model, all lags (1-year, 11-year) included. Cross-classified random intercepts include firm, year, and lag-year. Measure of board-member partisanship: \\textit{party-cycle}, which may vary across election cycles."
 # all_lags = TRUE
-
+# mlabel = "tab:glmer_mod_dem_lag_all_cycle"
 
 
 
@@ -169,6 +180,7 @@ tables <- stargazer3(models,
                      style = "asr",
                      title = ttitle,
                      dep.var.labels   = dvar,
+                     label = mlabel,
                      covariate.labels = c("\\textit{Boards and Firm Politics} \\\\Board Member Added",
                                           "Board Member Equal Swap",
                                           "Republican Board",
