@@ -1,1 +1,1 @@
-# Code - Party in the Boardroom: The Role of Affective Polarization in Corporate Board Appointments
+# Reproducible Code - Party in the Boardroom: The Role of Affective Polarization in Corporate Board Appointments
